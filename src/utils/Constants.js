@@ -12,6 +12,7 @@ const RESOURCES = {
   PERMISSION: 'permission',
   SESSION: 'session',
   AUDIT: 'audit',
+  CATEGORY: 'category',
 };
 
 const ACTIONS = {
@@ -45,6 +46,11 @@ const PERMISSIONS = {
   PERMISSION_DELETE: 'permission:delete',
 
   AUDIT_READ: 'audit:read',
+
+  CATEGORY_READ: 'category:read',
+  CATEGORY_CREATE: 'category:create',
+  CATEGORY_UPDATE: 'category:update',
+  CATEGORY_DELETE: 'category:delete',
 };
 
 module.exports = { ROLES, RESOURCES, ACTIONS, AUTH_ACTIONS, PERMISSIONS };

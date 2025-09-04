@@ -2,7 +2,7 @@
 
 ## Description
 
-A comprehensive admin panel dashboard built with Node.js, Express.js, and MongoDB. This application provides a complete role-based access control (RBAC) system with user management, session handling, audit logging, and authentication features. The system is designed for secure administration with JWT-based authentication, permission management, and comprehensive audit trails.
+A comprehensive admin panel dashboard built with Node.js, Express.js, and MongoDB. This application provides a complete role-based access control (RBAC) system with user management, session handling, audit logging, category management, and authentication features. The system is designed for secure administration with JWT-based authentication, permission management, and comprehensive audit trails.
 
 ## Features
 
@@ -12,6 +12,7 @@ A comprehensive admin panel dashboard built with Node.js, Express.js, and MongoD
 - **Session Management**: Track and manage user sessions with device information
 - **Audit Logging**: Comprehensive logging of all system activities and user actions
 - **Permission System**: Granular permissions for different resources and actions
+- **Category Management**: Manage categories with CRUD operations and parent-child hierarchy
 - **Input Validation**: Robust validation using express-validator
 - **Rate Limiting**: Protection against brute force attacks on authentication endpoints
 - **Error Handling**: Centralized error handling with detailed error responses
