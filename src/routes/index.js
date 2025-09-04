@@ -8,6 +8,7 @@ const roleRoutes = require('./RoleRoutes');
 const permissionRoutes = require('./PermissionRoutes');
 const sessionRoutes = require('./SessionRoutes');
 const auditLogRoutes = require('./AuditLogRoutes');
+const profileRoutes = require('./ProfileRoutes');
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -46,5 +47,6 @@ router.use('/roles', roleRoutes);
 router.use('/permissions', permissionRoutes);
 router.use('/sessions', sessionRoutes);
 router.use('/audit-logs', auditLogRoutes);
+router.use('/profile', profileRoutes);
 
 module.exports = router;

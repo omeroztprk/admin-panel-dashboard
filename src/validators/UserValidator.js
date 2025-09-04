@@ -69,6 +69,11 @@ const UserValidator = {
       .exists()
       .withMessage('Email cannot be updated'),
 
+    body('avatar')
+      .not()
+      .exists()
+      .withMessage('Avatar cannot be updated'),
+
     body('password')
       .optional()
       .isLength({ min: 8 })

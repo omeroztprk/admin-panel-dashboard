@@ -38,6 +38,12 @@ const userSchema = new mongoose.Schema({
   },
   lastLogin: {
     type: Date
+  },
+  avatar: {
+    type: String,
+    trim: true,
+    minlength: 2,
+    maxlength: 100
   }
 }, {
   timestamps: true
@@ -45,6 +51,19 @@ const userSchema = new mongoose.Schema({
 
 userSchema.virtual('fullName').get(function () {
   return `${this.firstName} ${this.lastName}`;
+});
+
+userSchema.virtual('initials').get(function () {
+  const fi = this.firstName?.[0] || '';
+  const li = this.lastName?.[0] || '';
+  return (fi + li).toUpperCase();
+});
+
+userSchema.pre('save', function deriveAvatar(next) {
+  if (this.isModified('firstName') || this.isModified('lastName') || !this.avatar) {
+    this.avatar = this.initials;
+  }
+  next();
 });
 
 userSchema.pre('save', async function (next) {
