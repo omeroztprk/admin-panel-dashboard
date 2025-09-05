@@ -5,6 +5,7 @@ const Role = require('../models/RoleModel');
 const Session = require('../models/SessionModel');
 const config = require('../config');
 const auditLogService = require('./AuditLogService');
+const tfaService = require('./TfaService');
 const { ROLES, RESOURCES, AUTH_ACTIONS } = require('../utils/Constants');
 
 const authService = {
@@ -48,6 +49,12 @@ const authService = {
         err.statusCode = 401;
         throw err;
       }
+
+      if (config.TFA_ENABLED) {
+        const tfaId = await tfaService.createChallenge(user);
+        return { tfaRequired: true, tfaId };
+      }
+
       const jti = crypto.randomUUID();
       const accessToken = jwt.sign(
         { userId: user._id, jti },
@@ -61,7 +68,6 @@ const authService = {
       );
       const decodedRT = jwt.decode(refreshToken);
       const expiresAt = decodedRT?.exp ? new Date(decodedRT.exp * 1000) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-
       const token = Session.hashToken(refreshToken);
 
       await Session.create({

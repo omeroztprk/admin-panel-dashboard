@@ -15,6 +15,11 @@ const authController = {
     const ip = req.ip;
     const userAgent = req.get('User-Agent');
     const result = await authService.login(email, password, ip, userAgent);
+
+    if (result.tfaRequired) {
+      return res.json({ data: { tfaRequired: true, tfaId: result.tfaId } });
+    }
+
     res.json({ data: { user: result.user, accessToken: result.accessToken, refreshToken: result.refreshToken } });
   }),
 
