@@ -1,0 +1,40 @@
+<div class="tfa-container">
+  <div class="tfa-card">
+    <h2>Two-Factor Authentication</h2>
+    <p>Please enter the 6-digit code sent to your email.</p>
+    
+    <form [formGroup]="tfaForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="code">Verification Code</label>
+        <input 
+          type="text" 
+          id="code" 
+          formControlName="code"
+          placeholder="000000"
+          maxlength="6"
+          [class.error]="tfaForm.get('code')?.invalid && tfaForm.get('code')?.touched"
+        >
+        <div class="error-message" *ngIf="tfaForm.get('code')?.invalid && tfaForm.get('code')?.touched">
+          <span *ngIf="tfaForm.get('code')?.errors?.['required']">Verification code is required</span>
+          <span *ngIf="tfaForm.get('code')?.errors?.['pattern']">Code must be 6 digits</span>
+        </div>
+      </div>
+
+      <div class="error-message" *ngIf="error()">
+        {{ error() }}
+      </div>
+
+      <button 
+        type="submit" 
+        [disabled]="tfaForm.invalid || loading()"
+        class="submit-btn"
+      >
+        {{ loading() ? 'Verifying...' : 'Verify' }}
+      </button>
+    </form>
+
+    <p class="back-link">
+      <a routerLink="/auth/login">Back to login</a>
+    </p>
+  </div>
+</div>

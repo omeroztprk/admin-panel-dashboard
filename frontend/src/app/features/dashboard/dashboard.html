@@ -1,0 +1,22 @@
+<div class="dashboard-layout">
+  <header class="dashboard-header">
+    <div class="brand">Admin Panel</div>
+    <div class="user-box" *ngIf="user$ | async as user">
+      <span>{{ user.fullName || (user.firstName + ' ' + user.lastName) }}</span>
+      <button (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="dashboard-body">
+    <nav class="sidebar">
+      <ul>
+        <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Overview</a></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <h2>Dashboard</h2>
+      <p>Welcome.</p>
+    </main>
+  </div>
+</div>

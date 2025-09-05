@@ -29,4 +29,5 @@ module.exports = {
   TFA_MAX_ATTEMPTS: parseInt(process.env.TFA_MAX_ATTEMPTS || '5', 10),
   GMAIL_USER: process.env.GMAIL_USER,
   GMAIL_PASS: process.env.GMAIL_PASS,
+  CORS_ORIGIN: process.env.CORS_ORIGIN || '*',
 };

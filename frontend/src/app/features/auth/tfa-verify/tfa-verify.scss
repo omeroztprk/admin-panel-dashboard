@@ -1,0 +1,119 @@
+:host { display:block; font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif; }
+
+.tfa-container {
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5f6f7;
+  padding: 40px 18px;
+}
+
+.tfa-card {
+  width: 100%;
+  max-width: 400px;
+  background: #ffffffd6;
+  backdrop-filter: blur(18px);
+  border: 1px solid #e7e7e9;
+  border-radius: 26px;
+  padding: 38px 34px 44px;
+  box-shadow: 0 4px 18px rgba(0,0,0,.06);
+  animation: fadeUp .5s ease;
+}
+
+h2 {
+  margin: 0 0 10px;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -.4px;
+  text-align: center;
+}
+
+p {
+  margin: 0 0 28px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555;
+  text-align: center;
+}
+
+form { display:grid; gap:24px; }
+
+.form-group { display:grid; gap:10px; }
+
+label { font-size:13px; font-weight:500; color:#555; letter-spacing:.2px; }
+
+input {
+  font: inherit;
+  padding: 14px 16px;
+  font-size: 20px;
+  letter-spacing: 4px;
+  text-align: center;
+  border: 1px solid #d5d6d9;
+  border-radius: 18px;
+  background:#fff;
+  transition: border .2s, box-shadow .2s;
+}
+
+input:focus {
+  outline:none;
+  border-color:#0071e3;
+  box-shadow:0 0 0 3px rgba(0,113,227,.25);
+}
+
+input.error {
+  border-color:#d93025;
+  box-shadow:0 0 0 3px rgba(217,48,37,.15);
+}
+
+.error-message {
+  font-size:12.5px;
+  line-height:1.4;
+  padding:8px 12px;
+  border-radius:12px;
+  background:#fef2f2;
+  color:#b3261e;
+}
+
+button.submit-btn {
+  font: 500 15px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+  padding: 14px 18px;
+  border: none;
+  border-radius: 18px;
+  background: linear-gradient(145deg,#0077ed,#0a64c5);
+  color:#fff;
+  cursor:pointer;
+  transition: background .25s, transform .15s, box-shadow .25s;
+  box-shadow:0 4px 12px rgba(0,118,237,.35);
+}
+
+button.submit-btn:hover:not(:disabled) {
+  background: linear-gradient(145deg,#0a64c5,#005bb5);
+}
+
+button.submit-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+button.submit-btn:disabled {
+  opacity:.55;
+}
+
+.back-link {
+  margin-top: 26px;
+  text-align:center;
+  font-size:13px;
+}
+
+.back-link a {
+  text-decoration:none;
+  color:#0071e3;
+  font-weight:500;
+}
+
+.back-link a:hover { text-decoration:underline; }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(14px); }
+  to { opacity:1; transform:translateY(0); }
+}
