@@ -80,6 +80,25 @@ userSchema.set('toJSON', {
   transform: function (doc, ret) {
     delete ret.password;
     delete ret.__v;
+    if (Array.isArray(ret.roles)) {
+      ret.roles = ret.roles.map(r => {
+        if (!r) return r;
+        if (typeof r === 'object') {
+          return {
+            _id: r._id,
+            name: r.name,
+            displayName: r.displayName || r.name,
+            permissions: r.permissions || []
+          };
+        }
+        return {
+          _id: r,
+          name: r,
+          displayName: r,
+          permissions: []
+        };
+      });
+    }
     return ret;
   }
 });

@@ -1,8 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { RegisterRequest } from '../../../core/models/auth.model';
 import { finalize } from 'rxjs';
@@ -19,6 +18,7 @@ export class Register {
   loading = signal(false);
   error = signal<string | null>(null);
   success = signal<string | null>(null);
+  showPassword = signal(false);
 
   constructor(
     private fb: FormBuilder,
@@ -32,9 +32,13 @@ export class Register {
       password: ['', [
         Validators.required,
         Validators.minLength(8),
-        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/)
+        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/)
       ]]
     });
+  }
+
+  togglePassword(): void {
+    this.showPassword.set(!this.showPassword());
   }
 
   onSubmit(): void {

@@ -11,13 +11,13 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrls: ['./dashboard.scss']
 })
 export class Dashboard {
-  private auth = inject(AuthService);
+  private authSvc = inject(AuthService);
   private router = inject(Router);
 
-  user$ = this.auth.currentUser$;
+  userFullName = this.authSvc.userFullName;
 
   logout(): void {
-    this.auth.logout().subscribe({
+    this.authSvc.logout().subscribe({
       next: () => this.router.navigate(['/auth/login']),
       error: () => this.router.navigate(['/auth/login'])
     });

@@ -14,7 +14,8 @@ const authGuard = asyncHandler(async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, config.JWT_ACCESS_SECRET);
-    const user = await User.findById(decoded.userId).populate('roles');
+    const user = await User.findById(decoded.userId)
+      .populate('roles', 'name displayName permissions');
 
     if (!user || !user.isActive) {
       return res.status(401).json({ error: { message: 'Invalid token.' } });

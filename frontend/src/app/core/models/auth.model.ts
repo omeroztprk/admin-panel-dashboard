@@ -12,11 +12,6 @@ export interface RegisterRequest {
   password: string;
 }
 
-export interface AuthTokens {
-  accessToken: string;
-  refreshToken: string;
-}
-
 export interface LoginResponse {
   user?: User;
   accessToken?: string;

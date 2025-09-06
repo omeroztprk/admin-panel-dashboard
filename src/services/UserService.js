@@ -8,13 +8,15 @@ const userService = {
   list: async (options = {}) => {
     return paginate(User, {}, {
       ...options,
-      populate: 'roles',
+      populate: { path: 'roles', select: 'name displayName permissions' },
       select: '-__v'
     });
   },
 
   getById: async (id) => {
-    const user = await User.findById(id).populate('roles').select('-__v');
+    const user = await User.findById(id)
+      .populate('roles', 'name displayName permissions')
+      .select('-__v');
     if (!user) {
       const err = new Error('User not found');
       err.statusCode = 404;

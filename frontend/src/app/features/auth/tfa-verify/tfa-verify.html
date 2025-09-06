@@ -2,39 +2,28 @@
   <div class="tfa-card">
     <h2>Two-Factor Authentication</h2>
     <p>Please enter the 6-digit code sent to your email.</p>
-    
+
     <form [formGroup]="tfaForm" (ngSubmit)="onSubmit()">
+      <!-- Verification Code -->
       <div class="form-group">
         <label for="code">Verification Code</label>
-        <input 
-          type="text" 
-          id="code" 
-          formControlName="code"
-          placeholder="000000"
-          maxlength="6"
-          [class.error]="tfaForm.get('code')?.invalid && tfaForm.get('code')?.touched"
-        >
-        <div class="error-message" *ngIf="tfaForm.get('code')?.invalid && tfaForm.get('code')?.touched">
-          <span *ngIf="tfaForm.get('code')?.errors?.['required']">Verification code is required</span>
-          <span *ngIf="tfaForm.get('code')?.errors?.['pattern']">Code must be 6 digits</span>
+        <input id="code" type="text" placeholder="000000" maxlength="6" formControlName="code"
+          [class.error]="tfaForm.get('code')?.invalid && tfaForm.get('code')?.touched">
+        <div class="error-message" *ngIf="tfaForm.get('code')?.touched && tfaForm.get('code')?.invalid">
+          <div *ngIf="tfaForm.get('code')?.errors?.['required']">Verification code is required</div>
+          <div *ngIf="tfaForm.get('code')?.errors?.['pattern']">Code must be 6 digits</div>
         </div>
       </div>
 
-      <div class="error-message" *ngIf="error()">
-        {{ error() }}
-      </div>
+      <!-- Error Message -->
+      <div class="error-message" *ngIf="error()">{{ error() }}</div>
 
-      <button 
-        type="submit" 
-        [disabled]="tfaForm.invalid || loading()"
-        class="submit-btn"
-      >
+      <!-- Submit Button -->
+      <button class="submit-btn" type="submit" [disabled]="tfaForm.invalid || loading()">
         {{ loading() ? 'Verifying...' : 'Verify' }}
       </button>
     </form>
 
-    <p class="back-link">
-      <a routerLink="/auth/login">Back to login</a>
-    </p>
+    <p class="back-link"><a routerLink="/auth/login">Back to login</a></p>
   </div>
 </div>

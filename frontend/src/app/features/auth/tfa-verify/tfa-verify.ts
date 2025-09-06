@@ -1,8 +1,7 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TfaService } from '../../../core/services/tfa.service';
 import { TfaVerifyRequest } from '../../../core/models/auth.model';
 import { finalize } from 'rxjs';

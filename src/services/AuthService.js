@@ -22,6 +22,7 @@ const authService = {
         ...userData,
         roles: [userRole._id]
       });
+      await user.populate('roles', 'name displayName permissions');
 
       await auditLogService.log({
         user: user._id,
@@ -43,7 +44,8 @@ const authService = {
 
   login: async (email, password, ip, userAgent) => {
     try {
-      const user = await User.findOne({ email, isActive: true });
+      const user = await User.findOne({ email, isActive: true })
+        .populate('roles', 'name displayName permissions');
       if (!user || !(await user.comparePassword(password))) {
         const err = new Error('Invalid credentials');
         err.statusCode = 401;
@@ -117,7 +119,8 @@ const authService = {
       throw err;
     }
 
-    const user = await User.findById(decoded.userId);
+    const user = await User.findById(decoded.userId)
+      .populate('roles', 'name displayName permissions');
     if (!user || !user.isActive) {
       const err = new Error('Invalid token');
       err.statusCode = 401;

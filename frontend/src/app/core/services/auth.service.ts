@@ -1,9 +1,10 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoginRequest, RegisterRequest, LoginResponse } from '../models/auth.model';
 import { User } from '../models/user.model';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +20,29 @@ export class AuthService {
   
   public readonly isAuthenticated = signal(false);
 
+  public currentUserSig = toSignal(this.currentUser$, { initialValue: null });
+  
+  public userFullName = computed(() => {
+    const u = this.currentUserSig();
+    if (!u) return '';
+    return u.fullName ?? `${u.firstName} ${u.lastName}`;
+  });
+
   constructor(private http: HttpClient) {
     this.initializeAuth();
+   window.addEventListener('storage', (e) => {
+     if (e.key === this.userKey) {
+       if (!e.newValue) {
+         this.currentUserSubject.next(null);
+         this.isAuthenticated.set(false);
+       } else {
+         try {
+           this.currentUserSubject.next(JSON.parse(e.newValue));
+           if (this.getAccessToken()) this.isAuthenticated.set(true);
+         } catch {}
+       }
+     }
+   });
   }
 
   private initializeAuth(): void {
@@ -88,7 +110,7 @@ export class AuthService {
     localStorage.setItem(this.tokenKey, accessToken);
   }
 
-  private setCurrentUser(user: User): void {
+  public setCurrentUser(user: User): void {
     this.currentUserSubject.next(user);
     localStorage.setItem(this.userKey, JSON.stringify(user));
   }

@@ -1,0 +1,120 @@
+import { Component, OnInit, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { RouterModule, Router } from '@angular/router';
+import { ProfileService } from '../../../core/services/profile.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { finalize } from 'rxjs';
+import { ProfileUpdateRequest } from '../../../core/models/user.model';
+import { UserSyncService } from '../../../core/services/user-sync.service';
+
+@Component({
+  selector: 'app-profile-update',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  templateUrl: './profile-update.html',
+  styleUrls: ['./profile-update.scss']
+})
+export class ProfileUpdate implements OnInit {
+  form!: FormGroup;
+  loading = signal(true);
+  saving = signal(false);
+  error = signal<string | null>(null);
+
+  showCurrent = signal(false);
+  showNew = signal(false);
+
+  constructor(
+    private fb: FormBuilder,
+    private profile: ProfileService,
+    public auth: AuthService,
+    private router: Router,
+    private userSync: UserSyncService
+  ) {}
+
+  ngOnInit(): void {
+    this.buildForm();
+    this.profile.getProfile().pipe(
+      finalize(() => this.loading.set(false))
+    ).subscribe({
+      next: res => {
+        this.form.patchValue({
+          firstName: res.data.firstName,
+          lastName:  res.data.lastName,
+          email:     res.data.email
+        });
+      },
+      error: e => this.error.set(e.error?.error?.message || 'Profile load failed')
+    });
+  }
+
+  private buildForm(): void {
+    this.form = this.fb.group({
+      firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)]],
+      lastName:  ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)]],
+      email:     [{ value: '', disabled: true }],
+      currentPassword: [''],
+      newPassword:     ['', [
+        Validators.minLength(8),
+        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/)
+      ]]
+    }, { validators: this.passwordPairValidator });
+  }
+
+  private passwordPairValidator(group: AbstractControl): ValidationErrors | null {
+    const current = (group.get('currentPassword')?.value || '').trim();
+    const next    = (group.get('newPassword')?.value || '').trim();
+    if (!current && !next) return null;
+    if ((current && !next) || (!current && next)) return { passwordPair: true };
+    return null;
+  }
+
+  toggleCurrent(): void { this.showCurrent.set(!this.showCurrent()); }
+  toggleNew():     void { this.showNew.set(!this.showNew()); }
+
+  submit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    this.error.set(null);
+    this.saving.set(true);
+
+    const { firstName, lastName, currentPassword, newPassword } =
+      this.form.getRawValue() as ProfileUpdateRequest;
+
+    const payload: ProfileUpdateRequest = { firstName, lastName };
+    if (currentPassword && newPassword) {
+      payload.currentPassword = currentPassword;
+      payload.newPassword     = newPassword;
+    }
+
+    this.profile.updateProfile(payload).pipe(
+      finalize(() => this.saving.set(false))
+    ).subscribe({
+      next: () => {
+        this.form.get('currentPassword')?.reset('');
+        this.form.get('newPassword')?.reset('');
+        this.userSync.trigger(true);
+        this.router.navigate(['/profile'], {
+          replaceUrl: true,
+          state: { success: 'Profile updated successfully' }
+        });
+      },
+      error: e => this.error.set(e.error?.error?.message || 'Update failed')
+    });
+  }
+
+  goBack(): void {
+    this.router.navigate(['/profile'], { replaceUrl: true });
+  }
+
+  passwordFormError(code: string): boolean {
+    return !!this.form.errors?.[code];
+  }
+
+  isRenderableAvatar(src: string): boolean {
+    if (!src) return false;
+    return /^(https?:\/\/|\/|data:image\/|assets\/|blob:)/.test(src);
+  }
+}

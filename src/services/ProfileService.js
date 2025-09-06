@@ -5,7 +5,9 @@ const bcrypt = require('bcryptjs');
 
 const profileService = {
   get: async (userId) => {
-    const user = await User.findById(userId).populate('roles').select('-__v');
+    const user = await User.findById(userId)
+      .populate('roles', 'name displayName permissions')
+      .select('-__v');
     if (!user) {
       const err = new Error('User not found');
       err.statusCode = 404;
@@ -22,7 +24,8 @@ const profileService = {
       if ('password' in updateData) delete updateData.password;
       if ('avatar' in updateData) delete updateData.avatar;
 
-      const user = await User.findById(userId).populate('roles');
+      const user = await User.findById(userId)
+        .populate('roles', 'name displayName permissions');
       if (!user) {
         const err = new Error('User not found');
         err.statusCode = 404;

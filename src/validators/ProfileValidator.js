@@ -6,7 +6,7 @@ const profileValidator = {
       .optional()
       .trim()
       .notEmpty()
-      .withMessage('First name cannot be empty')
+      .withMessage('First name is required')
       .isLength({ min: 2, max: 25 })
       .withMessage('First name must be between 2 and 25 characters'),
 
@@ -14,7 +14,7 @@ const profileValidator = {
       .optional()
       .trim()
       .notEmpty()
-      .withMessage('Last name cannot be empty')
+      .withMessage('Last name is required')
       .isLength({ min: 2, max: 25 })
       .withMessage('Last name must be between 2 and 25 characters'),
 
@@ -57,7 +57,7 @@ const profileValidator = {
         (req.body.currentPassword && !req.body.newPassword) ||
         (!req.body.currentPassword && req.body.newPassword)
       ) {
-        throw new Error('Both currentPassword and newPassword are required together');
+        throw new Error('Both current and new passwords are required together');
       }
       return true;
     })

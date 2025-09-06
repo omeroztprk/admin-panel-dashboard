@@ -13,7 +13,7 @@ const categoryRoutes = require('./CategoryRoutes');
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10,
+  max: 100,
   message: {
     error: {
       message: 'Too many authentication attempts, please try again later.'

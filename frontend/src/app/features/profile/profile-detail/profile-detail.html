@@ -1,0 +1,75 @@
+<div class="profile-container" *ngIf="!loading(); else loadingTpl">
+  <div class="profile-card">
+    <div class="nav-bar">
+      <button type="button" class="back-btn" (click)="goBack()" aria-label="Back to dashboard">
+        <span class="icon">←</span><span class="txt">Back</span>
+      </button>
+    </div>
+    <h2>Profile</h2>
+
+    <div class="avatar" *ngIf="auth.currentUserSig() as u">
+      <ng-container *ngIf="u.avatar && isRenderableAvatar(u.avatar); else initialsTpl">
+        <img [src]="u.avatar" [alt]="auth.userFullName()" decoding="async" loading="lazy" />
+      </ng-container>
+      <ng-template #initialsTpl>
+        <span>{{ u.initials || (u.firstName[0].toUpperCase() + u.lastName[0].toUpperCase()) }}</span>
+      </ng-template>
+    </div>
+
+    <div class="info-block" *ngIf="auth.currentUserSig() as u">
+      <!-- Firstname -->
+      <div class="row">
+        <span class="label">Firstname</span>
+        <span class="value">{{ u.firstName }}</span>
+      </div>
+
+      <!-- Lastname -->
+      <div class="row">
+        <span class="label">Lastname</span>
+        <span class="value">{{ u.lastName }}</span>
+      </div>
+
+      <!-- Email -->
+      <div class="row">
+        <span class="label">Email</span>
+        <span class="value">{{ u.email }}</span>
+      </div>
+
+      <!-- Roles -->
+      <div class="row" *ngIf="rolesList().length">
+        <span class="label">Roles</span>
+        <span class="value">
+          <ng-container *ngFor="let r of rolesList(); let last = last">
+            <span>{{ roleLabel(r) }}</span><span *ngIf="!last">, </span>
+          </ng-container>
+        </span>
+      </div>
+
+      <!-- Created At -->
+      <div class="row" *ngIf="u.lastLogin">
+        <span class="label">Last Login</span>
+        <span class="value">{{ u.lastLogin | date:'medium' }}</span>
+      </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message" *ngIf="success()">{{ success() }}</div>
+
+    <!-- Error Message -->
+    <div class="error-message" *ngIf="error()">{{ error() }}</div>
+
+    <!-- Submit Button -->
+    <button class="submit-btn" type="button" (click)="goEdit()">Edit Profile</button>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="profile-container">
+    <div class="profile-card skeleton">
+      <div class="skeleton-line title"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line half"></div>
+    </div>
+  </div>
+</ng-template>

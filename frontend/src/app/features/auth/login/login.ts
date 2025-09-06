@@ -1,8 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { LoginRequest } from '../../../core/models/auth.model';
 import { finalize } from 'rxjs';
@@ -18,6 +17,7 @@ export class Login {
   loginForm: FormGroup;
   loading = signal(false);
   error = signal<string | null>(null);
+  showPassword = signal(false);
 
   constructor(
     private fb: FormBuilder,
@@ -28,6 +28,10 @@ export class Login {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
+  }
+
+  togglePassword(): void {
+    this.showPassword.set(!this.showPassword());
   }
 
   onSubmit(): void {

@@ -5,7 +5,7 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
-  roles: Role[] | string[];
+  roles: Role[];
   isActive: boolean;
   lastLogin?: Date;
   avatar?: string;
@@ -13,4 +13,11 @@ export interface User {
   initials?: string;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface ProfileUpdateRequest {
+  firstName?: string;
+  lastName?: string;
+  currentPassword?: string;
+  newPassword?: string;
 }

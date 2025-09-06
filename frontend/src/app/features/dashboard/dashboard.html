@@ -1,8 +1,8 @@
 <div class="dashboard-layout">
   <header class="dashboard-header">
     <div class="brand">Admin Panel</div>
-    <div class="user-box" *ngIf="user$ | async as user">
-      <span>{{ user.fullName || (user.firstName + ' ' + user.lastName) }}</span>
+    <div class="user-box" *ngIf="userFullName() as name">
+      <span>{{ name }}</span>
       <button (click)="logout()">Logout</button>
     </div>
   </header>
@@ -11,6 +11,7 @@
     <nav class="sidebar">
       <ul>
         <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Overview</a></li>
+        <li><a routerLink="/profile" routerLinkActive="active">Profile</a></li>
       </ul>
     </nav>
 
