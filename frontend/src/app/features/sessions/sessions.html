@@ -1,0 +1,89 @@
+<div class="sessions-container" *ngIf="!loading(); else loadingTpl">
+  <div class="sessions-card">
+    <div class="nav-bar">
+      <button type="button" class="back-btn" (click)="goBack()" aria-label="Back to dashboard">
+        <span class="icon">←</span><span class="txt">Back</span>
+      </button>
+    </div>
+
+    <h2>Active Sessions</h2>
+    <p class="subtitle">Manage your active login sessions</p>
+
+    <div class="success-message" *ngIf="success()">{{ success() }}</div>
+    <div class="error-message" *ngIf="error()">{{ error() }}</div>
+
+    <div class="sessions-actions" *ngIf="sessions().length">
+      <button class="danger-btn" type="button" (click)="removeAllSessions()" [disabled]="actionLoading()">
+        {{ actionLoading() ? 'Revoking...' : 'Revoke All Sessions' }}
+      </button>
+    </div>
+
+    <div class="sessions-list" *ngIf="sessions().length; else noSessionsTpl">
+      <div class="session-item" *ngFor="let session of sessions()">
+        <div class="session-info">
+          <div class="session-header">
+            <div class="device-info">
+              <span class="browser">{{ getBrowserName(session.userAgent || '') }}</span>
+              <span class="device-type">{{ getDeviceType(session.userAgent || '') }}</span>
+            </div>
+            <span class="ip-address">{{ session.ip || 'Unknown IP' }}</span>
+          </div>
+
+          <div class="session-details">
+            <div class="detail-row">
+              <span class="label">Created:</span>
+              <span class="value">{{ formatDate(session.createdAt) }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Expires:</span>
+              <span class="value">{{ formatDate(session.expiresAt) }}</span>
+            </div>
+            <div class="detail-row" *ngIf="session.userAgent">
+              <span class="label">User Agent:</span>
+              <span class="value user-agent">{{ session.userAgent }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="session-actions">
+          <button class="revoke-btn" type="button" (click)="removeSession(session._id)" [disabled]="actionLoading()">
+            Revoke
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pagination" *ngIf="pagination() && pagination().pages > 1">
+      <button class="page-btn" type="button" [disabled]="pagination().page === 1"
+        (click)="changePage(pagination().page - 1)">
+        Previous
+      </button>
+
+      <span class="page-info">
+        Page {{ pagination().page }} of {{ pagination().pages }}
+      </span>
+
+      <button class="page-btn" type="button" [disabled]="pagination().page === pagination().pages"
+        (click)="changePage(pagination().page + 1)">
+        Next
+      </button>
+    </div>
+
+    <ng-template #noSessionsTpl>
+      <div class="no-sessions">
+        <p>No active sessions found.</p>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="sessions-container">
+    <div class="sessions-card skeleton">
+      <div class="skeleton-line title"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line half"></div>
+    </div>
+  </div>
+</ng-template>

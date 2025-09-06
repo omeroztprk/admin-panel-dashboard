@@ -16,6 +16,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/dashboard/dashboard').then(m => m.Dashboard)
   },
   {
+    path: 'sessions',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/sessions/sessions').then(m => m.SessionsList)
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'dashboard'

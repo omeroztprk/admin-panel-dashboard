@@ -144,4 +144,20 @@ export class AuthService {
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
+
+  private decode(token: string): any | null {
+    try {
+      const payload = token.split('.')[1];
+      return JSON.parse(atob(payload.replace(/-/g,'+').replace(/_/g,'/')));
+    } catch {
+      return null;
+    }
+  }
+
+  getCurrentJti(): string | null {
+    const t = this.getAccessToken();
+    if (!t) return null;
+    const decoded = this.decode(t);
+    return decoded?.jti || null;
+  }
 }

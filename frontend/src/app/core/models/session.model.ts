@@ -1,12 +1,10 @@
 export interface Session {
   _id: string;
   user: string;
-  jti: string;
-  token?: string;
+  jti?: string;
   ip?: string;
   userAgent?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  expiresAt: Date;
-  revokedAt?: Date | null;
+  createdAt: string | Date;
+  expiresAt: string | Date;
+  revokedAt?: string | Date | null;
 }
