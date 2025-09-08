@@ -4,6 +4,6 @@ export interface Category {
   description?: string;
   parent?: string | null;
   children?: Category[];
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
 }

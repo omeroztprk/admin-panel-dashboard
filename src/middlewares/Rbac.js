@@ -10,7 +10,8 @@ const rbac = (requiredPermission) => {
     if (needsPopulation) {
       await req.user.populate({
         path: 'roles',
-        populate: { path: 'permissions', model: 'Permission' }
+        populate: { path: 'permissions', model: 'Permission', select: 'name resource action description isSystem' },
+        select: 'name displayName permissions'
       });
     }
 

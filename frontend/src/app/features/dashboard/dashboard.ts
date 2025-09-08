@@ -1,25 +1,22 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss']
 })
 export class Dashboard {
-  private authSvc = inject(AuthService);
-  private router = inject(Router);
+  private auth = inject(AuthService);
+  user = computed(() => this.auth.currentUserSig());
 
-  userFullName = this.authSvc.userFullName;
-
-  logout(): void {
-    this.authSvc.logout().subscribe({
-      next: () => this.router.navigate(['/auth/login']),
-      error: () => this.router.navigate(['/auth/login'])
-    });
+  roleLabels(): string[] {
+    const u = this.user();
+    return Array.isArray(u?.roles)
+      ? u.roles.map((r: any) => r?.displayName ?? r?.name ?? String(r))
+      : [];
   }
 }

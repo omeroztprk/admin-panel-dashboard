@@ -4,7 +4,8 @@ export interface Session {
   jti?: string;
   ip?: string;
   userAgent?: string;
-  createdAt: string | Date;
-  expiresAt: string | Date;
-  revokedAt?: string | Date | null;
+  createdAt: string;
+  updatedAt?: string;
+  expiresAt: string;
+  revokedAt?: string | null;
 }

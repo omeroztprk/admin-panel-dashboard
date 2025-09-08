@@ -1,65 +1,52 @@
-<div class="profile-container" *ngIf="!loading(); else loadingTpl">
-  <div class="profile-card">
-    <div class="nav-bar">
-      <button type="button" class="back-btn" (click)="goBack()" aria-label="Back to dashboard">
-        <span class="icon">←</span><span class="txt">Back</span>
+<div class="page-wrap">
+  <h1 class="page-title gradient-text">Profile Details</h1>
+
+  <div class="app-card profile-detail-card with-accent">
+    <section class="profile-detail__header">
+      <button class="back-btn" type="button" (click)="goBack()" aria-label="Back to dashboard">
+        <svg class="icon-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <span>Back</span>
       </button>
-    </div>
-    <h2>Profile</h2>
 
-    <div class="avatar" *ngIf="auth.currentUserSig() as u">
-      <ng-container *ngIf="u.avatar && isRenderableAvatar(u.avatar); else initialsTpl">
-        <img [src]="u.avatar" [alt]="auth.userFullName()" decoding="async" loading="lazy" />
-      </ng-container>
-      <ng-template #initialsTpl>
-        <span>{{ u.initials || (u.firstName[0].toUpperCase() + u.lastName[0].toUpperCase()) }}</span>
-      </ng-template>
-    </div>
+      <div class="profile-detail__actions">
+        <button class="btn--ghost" type="button" (click)="goEdit()" aria-label="Edit profile">
+          Edit Profile
+        </button>
+      </div>
+    </section>
 
-    <div class="info-block" *ngIf="auth.currentUserSig() as u">
-      <!-- Firstname -->
-      <div class="row">
-        <span class="label">Firstname</span>
-        <span class="value">{{ u.firstName }}</span>
+    <div class="alert alert-success" *ngIf="success()" aria-live="polite">{{ success() }}</div>
+
+    <section class="profile-section profile-section--top" *ngIf="user() as u">
+      <div class="app-avatar" aria-label="Avatar">{{ u.avatar }}</div>
+      <div class="identity">
+        <div class="fullname">{{ u.firstName }} {{ u.lastName }}</div>
+        <div class="email">{{ u.email }}</div>
+      </div>
+    </section>
+
+    <section class="profile-section profile-section--meta" *ngIf="user() as u">
+      <div class="meta-grid">
+        <div class="meta-item" *ngIf="u.createdAt">
+          <span class="label">Created</span>
+          <span class="value">{{ u.createdAt | date:'mediumDate' }}</span>
+        </div>
+        <div class="meta-item" *ngIf="u.lastLogin">
+          <span class="label">Last Login</span>
+          <span class="value">{{ u.lastLogin | date:'short' }}</span>
+        </div>
       </div>
 
-      <!-- Lastname -->
-      <div class="row">
-        <span class="label">Lastname</span>
-        <span class="value">{{ u.lastName }}</span>
+      <div class="roles-block" *ngIf="roles().length">
+        <div class="label">Roles</div>
+        <div class="chip-row">
+          <span class="chip" *ngFor="let r of roles()">{{ roleLabel(r) }}</span>
+        </div>
       </div>
-
-      <!-- Email -->
-      <div class="row">
-        <span class="label">Email</span>
-        <span class="value">{{ u.email }}</span>
-      </div>
-
-      <!-- Roles -->
-      <div class="row" *ngIf="rolesList().length">
-        <span class="label">Roles</span>
-        <span class="value">
-          <ng-container *ngFor="let r of rolesList(); let last = last">
-            <span>{{ roleLabel(r) }}</span><span *ngIf="!last">, </span>
-          </ng-container>
-        </span>
-      </div>
-
-      <!-- Created At -->
-      <div class="row" *ngIf="u.lastLogin">
-        <span class="label">Last Login</span>
-        <span class="value">{{ u.lastLogin | date:'medium' }}</span>
-      </div>
-    </div>
-
-    <!-- Success Message -->
-    <div class="success-message" *ngIf="success()">{{ success() }}</div>
-
-    <!-- Error Message -->
-    <div class="error-message" *ngIf="error()">{{ error() }}</div>
-
-    <!-- Submit Button -->
-    <button class="submit-btn" type="button" (click)="goEdit()">Edit Profile</button>
+    </section>
   </div>
 </div>
 

@@ -5,24 +5,17 @@ const { ACTIONS, RESOURCES } = require('../utils/Constants');
 
 const sessionService = {
   list: async (userId, options = {}) => {
-    const baseQuery = {
-      user: userId,
-      revokedAt: null,
-      expiresAt: { $gt: new Date() }
-    };
+    const baseQuery = { user: userId, expiresAt: { $gt: new Date() } };
     return paginate(Session, baseQuery, {
       ...options,
-      populate: 'user',
       select: '-__v'
     });
   },
 
   remove: async (sessionId, userId, currentUserId) => {
     try {
-      const session = await Session.findOneAndUpdate(
-        { _id: sessionId, user: userId, revokedAt: null },
-        { $set: { revokedAt: new Date() } },
-        { new: true }
+      const session = await Session.findOneAndDelete(
+        { _id: sessionId, user: userId }
       );
 
       if (!session) {
@@ -54,13 +47,12 @@ const sessionService = {
 
   removeAll: async (userId, currentUserId) => {
     try {
-      const res = await Session.updateMany(
-        { user: userId, revokedAt: null },
-        { $set: { revokedAt: new Date() } }
+      const res = await Session.deleteMany(
+        { user: userId }
       );
 
-      if (res.modifiedCount === 0) {
-        const err = new Error('No active sessions to revoke');
+      if (!res.deletedCount) {
+        const err = new Error('No sessions to delete');
         err.statusCode = 404;
         throw err;
       }
@@ -72,7 +64,7 @@ const sessionService = {
         status: 'success'
       });
 
-      return { revoked: res.modifiedCount };
+      return { deleted: res.deletedCount };
     } catch (error) {
       await auditLogService.log({
         user: currentUserId,

@@ -5,6 +5,6 @@ export interface Permission {
   action: string;
   description?: string;
   isSystem?: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
 }

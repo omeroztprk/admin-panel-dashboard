@@ -4,18 +4,24 @@ const auditLogService = require('./AuditLogService');
 const { ACTIONS, RESOURCES } = require('../utils/Constants');
 const Session = require('../models/SessionModel');
 
+const rolePermissionPopulate = {
+  path: 'roles',
+  select: 'name displayName permissions',
+  populate: { path: 'permissions', select: 'name resource action description isSystem' }
+};
+
 const userService = {
   list: async (options = {}) => {
     return paginate(User, {}, {
       ...options,
-      populate: { path: 'roles', select: 'name displayName permissions' },
+      populate: rolePermissionPopulate,
       select: '-__v'
     });
   },
 
   getById: async (id) => {
     const user = await User.findById(id)
-      .populate('roles', 'name displayName permissions')
+      .populate(rolePermissionPopulate)
       .select('-__v');
     if (!user) {
       const err = new Error('User not found');
@@ -52,7 +58,7 @@ const userService = {
   update: async (id, updateData, currentUserId) => {
     try {
       if ('email' in updateData) delete updateData.email;
-      const user = await User.findById(id).populate('roles');
+      const user = await User.findById(id).populate(rolePermissionPopulate);
       if (!user) {
         const err = new Error('User not found');
         err.statusCode = 404;
@@ -65,6 +71,7 @@ const userService = {
 
       Object.assign(user, updateData);
       await user.save();
+      await user.populate(rolePermissionPopulate);
 
       if (willChangeActive && !user.isActive) {
         await Session.updateMany(

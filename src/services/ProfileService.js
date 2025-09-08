@@ -2,11 +2,18 @@ const User = require('../models/UserModel');
 const auditLogService = require('./AuditLogService');
 const { ACTIONS, RESOURCES } = require('../utils/Constants');
 const bcrypt = require('bcryptjs');
+const Session = require('../models/SessionModel');
+
+const rolePermissionPopulate = {
+  path: 'roles',
+  select: 'name displayName permissions',
+  populate: { path: 'permissions', select: 'name resource action description isSystem' }
+};
 
 const profileService = {
   get: async (userId) => {
     const user = await User.findById(userId)
-      .populate('roles', 'name displayName permissions')
+      .populate(rolePermissionPopulate)
       .select('-__v');
     if (!user) {
       const err = new Error('User not found');
@@ -25,7 +32,7 @@ const profileService = {
       if ('avatar' in updateData) delete updateData.avatar;
 
       const user = await User.findById(userId)
-        .populate('roles', 'name displayName permissions');
+        .populate(rolePermissionPopulate);
       if (!user) {
         const err = new Error('User not found');
         err.statusCode = 404;

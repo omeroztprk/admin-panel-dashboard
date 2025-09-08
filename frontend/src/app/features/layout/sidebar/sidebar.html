@@ -1,0 +1,52 @@
+<aside class="app-sidebar surface-glass" aria-label="Main navigation">
+  <div class="app-sidebar__inner">
+    <header class="app-sidebar__header">
+      <div class="brand">
+        <div class="app-avatar avatar-sm" aria-label="Logo">Ö</div>
+        <div class="brand__meta">
+          <span class="brand__title">Admin Panel</span>
+          <span class="brand__subtitle">Control Center</span>
+        </div>
+      </div>
+      <button type="button" class="btn--ghost btn--sm sidebar-close-btn" *ngIf="mobileSidebarOpen()"
+        (click)="onCloseSidebar()" aria-label="Close sidebar">
+        <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
+    </header>
+
+    <nav class="nav scrollbar-thin">
+      <ng-container *ngFor="let group of navGroups()">
+        <section class="nav-group">
+          <h2 class="nav-group__title">{{ group.title }}</h2>
+          <ul class="nav-list">
+            <li *ngFor="let item of group.items">
+              <a class="nav-link" [routerLink]="item.route" routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: item.exact === true }" [class.disabled]="item.disabled"
+                (click)="onCloseSidebar()" [attr.aria-disabled]="item.disabled ? 'true': null">
+                <span class="nav-link__icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                    [innerHTML]="getIcon(item.icon)">
+                  </svg>
+                </span>
+                <span class="nav-link__label">{{ item.label }}</span>
+              </a>
+            </li>
+          </ul>
+        </section>
+      </ng-container>
+    </nav>
+
+    <footer class="app-sidebar__footer" *ngIf="user() as u">
+      <div class="user-card">
+        <div class="app-avatar avatar-sm" aria-hidden="true">{{ u.avatar }}</div>
+        <div class="user-card__info">
+          <span class="user-card__name">{{ u.firstName }} {{ u.lastName }}</span>
+          <span class="user-card__email">{{ u.email }}</span>
+        </div>
+      </div>
+      <button type="button" class="btn--ghost btn--danger btn--sm sidebar__logout" (click)="logout()">Logout</button>
+    </footer>
+  </div>
+</aside>

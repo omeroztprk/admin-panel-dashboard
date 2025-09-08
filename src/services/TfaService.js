@@ -9,6 +9,12 @@ const auditLogService = require('./AuditLogService');
 const { RESOURCES, AUTH_ACTIONS } = require('../utils/Constants');
 const User = require('../models/UserModel');
 
+const rolePermissionPopulate = {
+  path: 'roles',
+  select: 'name displayName permissions',
+  populate: { path: 'permissions', select: 'name resource action description isSystem' }
+};
+
 const transporter = config.TFA_ENABLED
   ? nodemailer.createTransport({
     service: 'gmail',
@@ -71,7 +77,7 @@ const tfaService = {
       throw err;
     }
 
-    const user = await User.findById(tokenDoc.user);
+    let user = await User.findById(tokenDoc.user);
     if (!user || !user.isActive) {
       const err = new Error('User not found or inactive');
       err.statusCode = 400;
@@ -126,6 +132,8 @@ const tfaService = {
       resource: RESOURCES.AUTH,
       status: 'success'
     });
+
+    user = await User.findById(user._id).populate(rolePermissionPopulate);
 
     return { user, accessToken, refreshToken };
   }

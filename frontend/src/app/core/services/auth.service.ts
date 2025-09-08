@@ -1,64 +1,48 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap, throwError } from 'rxjs';
+import { Observable, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoginRequest, RegisterRequest, LoginResponse } from '../models/auth.model';
 import { User } from '../models/user.model';
-import { toSignal } from '@angular/core/rxjs-interop';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly apiUrl = `${environment.apiUrl}/auth`;
-  private readonly tokenKey = 'accessToken';
-  private readonly refreshTokenKey = 'refreshToken';
-  private readonly userKey = 'currentUser';
+  private readonly K = {
+    access: 'accessToken',
+    refresh: 'refreshToken',
+    user: 'currentUser'
+  };
 
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
-  
-  public readonly isAuthenticated = signal(false);
+  private readonly userSig = signal<User | null>(null);
+  readonly isAuthenticated = signal(false);
 
-  public currentUserSig = toSignal(this.currentUser$, { initialValue: null });
-  
-  public userFullName = computed(() => {
-    const u = this.currentUserSig();
-    if (!u) return '';
-    return u.fullName ?? `${u.firstName} ${u.lastName}`;
+  currentUserSig = this.userSig;
+  userFullName = computed(() => {
+    const u = this.userSig();
+    return u ? (u.fullName ?? `${u.firstName} ${u.lastName}`) : '';
   });
 
   constructor(private http: HttpClient) {
-    this.initializeAuth();
-   window.addEventListener('storage', (e) => {
-     if (e.key === this.userKey) {
-       if (!e.newValue) {
-         this.currentUserSubject.next(null);
-         this.isAuthenticated.set(false);
-       } else {
-         try {
-           this.currentUserSubject.next(JSON.parse(e.newValue));
-           if (this.getAccessToken()) this.isAuthenticated.set(true);
-         } catch {}
-       }
-     }
-   });
-  }
-
-  private initializeAuth(): void {
-    const token = this.getAccessToken();
-    const raw = localStorage.getItem(this.userKey);
-    if (raw) {
-      try {
-        this.currentUserSubject.next(JSON.parse(raw));
-      } catch {
-        this.clear();
-        return;
+    this.restore();
+    window.addEventListener('storage', e => {
+      if (e.key === this.K.user) {
+        if (!e.newValue) {
+          this.userSig.set(null);
+          this.isAuthenticated.set(false);
+        } else {
+          try {
+            this.userSig.set(JSON.parse(e.newValue));
+            if (this.token(this.K.access)) this.isAuthenticated.set(true);
+          } catch {
+            this.clear();
+          }
+        }
       }
-    }
-    if (token) {
-      this.isAuthenticated.set(true);
-    }
+      if (e.key === this.K.access && !e.newValue) {
+        this.clear();
+      }
+    });
   }
 
   register(data: RegisterRequest): Observable<{ data: User }> {
@@ -66,92 +50,68 @@ export class AuthService {
   }
 
   login(data: LoginRequest): Observable<{ data: LoginResponse }> {
-    return this.http.post<{ data: LoginResponse }>(`${this.apiUrl}/login`, data)
-      .pipe(
-        tap(response => {
-          const result = response.data;
-          if (result.accessToken && result.refreshToken && result.user) {
-            this.applyAuth(result.user, result.accessToken, result.refreshToken);
-          }
-        })
-      );
+    return this.http.post<{ data: LoginResponse }>(`${this.apiUrl}/login`, data).pipe(
+      tap(res => {
+        const r = res.data;
+        if (r.accessToken && r.refreshToken && r.user) {
+          this.applyAuth(r.user, r.accessToken, r.refreshToken);
+        }
+      })
+    );
   }
 
   refresh(): Observable<{ data: { accessToken: string } }> {
-    const refreshToken = this.getRefreshToken();
-    if (!refreshToken) {
+    const rt = this.getRefreshToken();
+    if (!rt) {
       this.clear();
       return throwError(() => new Error('No refresh token'));
     }
-    return this.http.post<{ data: { accessToken: string } }>(`${this.apiUrl}/refresh`, { refreshToken })
-      .pipe(
-        tap(response => {
-          this.setAccessToken(response.data.accessToken);
-        })
-      );
+    return this.http.post<{ data: { accessToken: string } }>(`${this.apiUrl}/refresh`, { refreshToken: rt })
+      .pipe(tap(res => this.setAccess(res.data.accessToken)));
   }
 
   logout(): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/logout`, {})
-      .pipe(tap(() => this.clear()));
+    return this.http.post<void>(`${this.apiUrl}/logout`, {}).pipe(tap(() => this.clear()));
   }
 
   logoutAll(): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/logout-all`, {})
-      .pipe(tap(() => this.clear()));
+    return this.http.post<void>(`${this.apiUrl}/logout-all`, {}).pipe(tap(() => this.clear()));
   }
 
-  private setTokens(accessToken: string, refreshToken: string): void {
-    localStorage.setItem(this.tokenKey, accessToken);
-    localStorage.setItem(this.refreshTokenKey, refreshToken);
+  setCurrentUser(user: User): void {
+    this.userSig.set(user);
+    localStorage.setItem(this.K.user, JSON.stringify(user));
   }
 
-  private setAccessToken(accessToken: string): void {
-    localStorage.setItem(this.tokenKey, accessToken);
-  }
-
-  public setCurrentUser(user: User): void {
-    this.currentUserSubject.next(user);
-    localStorage.setItem(this.userKey, JSON.stringify(user));
-  }
-
-  public clear(): void {
-    localStorage.removeItem(this.tokenKey);
-    localStorage.removeItem(this.refreshTokenKey);
-    localStorage.removeItem(this.userKey);
-    this.currentUserSubject.next(null);
-    this.isAuthenticated.set(false);
-  }
-
-  public applyAuth(user: User, accessToken: string, refreshToken: string): void {
-    this.setTokens(accessToken, refreshToken);
+  applyAuth(user: User, at: string, rt: string): void {
+    localStorage.setItem(this.K.access, at);
+    localStorage.setItem(this.K.refresh, rt);
     this.setCurrentUser(user);
     this.isAuthenticated.set(true);
   }
 
-  public isAuth(): boolean {
+  clear(): void {
+    localStorage.removeItem(this.K.access);
+    localStorage.removeItem(this.K.refresh);
+    localStorage.removeItem(this.K.user);
+    this.userSig.set(null);
+    this.isAuthenticated.set(false);
+  }
+
+  isAuth(): boolean {
     return this.isAuthenticated();
   }
 
+  getCurrentUser(): User | null {
+    return this.userSig();
+  }
+
   getAccessToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    return this.token(this.K.access);
   }
 
   getRefreshToken(): string | null {
-    return localStorage.getItem(this.refreshTokenKey);
-  }
-
-  getCurrentUser(): User | null {
-    return this.currentUserSubject.value;
-  }
-
-  private decode(token: string): any | null {
-    try {
-      const payload = token.split('.')[1];
-      return JSON.parse(atob(payload.replace(/-/g,'+').replace(/_/g,'/')));
-    } catch {
-      return null;
-    }
+    return this.token(this.K.refresh);
   }
 
   getCurrentJti(): string | null {
@@ -159,5 +119,28 @@ export class AuthService {
     if (!t) return null;
     const decoded = this.decode(t);
     return decoded?.jti || null;
+  }
+
+  private token(key: string): string | null {
+    return localStorage.getItem(key);
+  }
+
+  private setAccess(at: string) {
+    localStorage.setItem(this.K.access, at);
+  }
+
+  private restore() {
+    const rawUser = localStorage.getItem(this.K.user);
+    if (rawUser) {
+      try { this.userSig.set(JSON.parse(rawUser)); } catch { this.clear(); return; }
+    }
+    if (this.getAccessToken()) this.isAuthenticated.set(true);
+  }
+
+  private decode(token: string): any | null {
+    try {
+      const payload = token.split('.')[1];
+      return JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+    } catch { return null; }
   }
 }

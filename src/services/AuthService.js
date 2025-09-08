@@ -8,6 +8,12 @@ const auditLogService = require('./AuditLogService');
 const tfaService = require('./TfaService');
 const { ROLES, RESOURCES, AUTH_ACTIONS } = require('../utils/Constants');
 
+const rolePermissionPopulate = {
+  path: 'roles',
+  select: 'name displayName permissions',
+  populate: { path: 'permissions', select: 'name resource action description isSystem' }
+};
+
 const authService = {
   register: async (userData, ip, userAgent) => {
     try {
@@ -22,7 +28,7 @@ const authService = {
         ...userData,
         roles: [userRole._id]
       });
-      await user.populate('roles', 'name displayName permissions');
+      await user.populate(rolePermissionPopulate);
 
       await auditLogService.log({
         user: user._id,
@@ -45,7 +51,7 @@ const authService = {
   login: async (email, password, ip, userAgent) => {
     try {
       const user = await User.findOne({ email, isActive: true })
-        .populate('roles', 'name displayName permissions');
+        .populate(rolePermissionPopulate);
       if (!user || !(await user.comparePassword(password))) {
         const err = new Error('Invalid credentials');
         err.statusCode = 401;
@@ -109,7 +115,6 @@ const authService = {
     const session = await Session.findOne({
       jti: decoded.jti,
       user: decoded.userId,
-      revokedAt: null,
       expiresAt: { $gt: new Date() }
     }).select('+token');
 
@@ -120,7 +125,7 @@ const authService = {
     }
 
     const user = await User.findById(decoded.userId)
-      .populate('roles', 'name displayName permissions');
+      .populate(rolePermissionPopulate);
     if (!user || !user.isActive) {
       const err = new Error('Invalid token');
       err.statusCode = 401;
@@ -138,11 +143,8 @@ const authService = {
 
   logout: async (userId, jti) => {
     try {
-      const result = await Session.updateOne(
-        { user: userId, jti, revokedAt: null },
-        { revokedAt: new Date() }
-      );
-      if (result.matchedCount === 0) {
+      const result = await Session.deleteOne({ user: userId, jti });
+      if (result.deletedCount === 0) {
         const err = new Error('Session not found or already revoked');
         err.statusCode = 404;
         throw err;
@@ -166,25 +168,19 @@ const authService = {
 
   logoutAll: async (userId) => {
     try {
-      const res = await Session.updateMany(
-        { user: userId, revokedAt: null },
-        { revokedAt: new Date() }
-      );
-
-      if (res.modifiedCount === 0) {
-        const err = new Error('No active sessions to revoke');
+      const res = await Session.deleteMany({ user: userId });
+      if (!res.deletedCount) {
+        const err = new Error('No active sessions to delete');
         err.statusCode = 404;
         throw err;
       }
-
       await auditLogService.log({
         user: userId,
         action: AUTH_ACTIONS.LOGOUT_ALL,
         resource: RESOURCES.AUTH,
         status: 'success'
       });
-
-      return { revoked: res.modifiedCount };
+      return { deleted: res.deletedCount };
     } catch (error) {
       await auditLogService.log({
         user: userId,

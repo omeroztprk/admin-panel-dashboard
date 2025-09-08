@@ -1,55 +1,76 @@
-<div class="login-container">
-  <div class="login-card">
-    <h2>Login</h2>
+<div class="auth-page-wrap">
+  <div class="app-card auth-card with-accent narrow">
+    <h2 class="card-title gradient-text">Login</h2>
+    <div class="card-subtitle">Access your account</div>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <!-- Email -->
-      <div class="form-group">
+      <div class="input-group">
         <label for="email">Email</label>
-        <input id="email" type="email" formControlName="email"
-          [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-        <div class="error-message" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+        <div class="input-wrapper" [class.error]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+          <input id="email" type="email" formControlName="email" placeholder="you@example.com">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+              <polyline points="2,6 12,13 22,6" />
+            </svg>
+          </span>
+        </div>
+        <div class="field-error" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
           <div *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</div>
           <div *ngIf="loginForm.get('email')?.errors?.['email']">Please provide a valid email</div>
         </div>
       </div>
 
-      <!-- Password -->
-      <div class="form-group">
+      <div class="input-group">
         <label for="password">Password</label>
-        <div class="password-field">
-          <input id="password" [type]="showPassword() ? 'text' : 'password'" formControlName="password"
-            [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-          <button type="button" class="toggle-visibility" (click)="togglePassword()"
-            [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">
-            <svg *ngIf="!showPassword()" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <div class="input-wrapper"
+          [class.error]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+          <input id="password" [type]="showPassword() ? 'text':'password'" formControlName="password"
+            placeholder="••••••••">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="10" rx="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+          </span>
+          <button type="button" class="password-toggle" (click)="togglePassword()"
+            [attr.aria-label]="showPassword() ? 'Hide password':'Show password'">
+            <svg *ngIf="!showPassword()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z" />
               <circle cx="12" cy="12" r="3" />
             </svg>
-            <svg *ngIf="showPassword()" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-              <path
-                d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.81 21.81 0 0 1-2.87 4.18M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.82 21.82 0 0 1-2.87 4.18M14.12 14.12a3 3 0 0 1-4.24-4.24M1 1l22 22" />
+            <svg *ngIf="showPassword()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.83 21.83 0 0 1 3.06-4.58" />
+              <path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.83 21.83 0 0 1-4.06 5.06" />
+              <path d="M14.12 14.12a3 3 0 0 1-4.24-4.24" />
+              <line x1="1" y1="1" x2="22" y2="22" />
             </svg>
           </button>
         </div>
-        <div class="error-message" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+        <div class="field-error" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
           <div *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</div>
         </div>
       </div>
 
-      <!-- Error Message -->
-      <div class="error-message" *ngIf="error()">{{ error() }}</div>
+      <div class="alert alert-error" *ngIf="error()" aria-live="assertive">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="15" y1="9" x2="9" y2="15" />
+          <line x1="9" y1="9" x2="15" y2="15" />
+        </svg>
+        {{ error() }}
+      </div>
 
-      <!-- Submit Button -->
-      <button class="submit-btn" type="submit" [disabled]="loginForm.invalid || loading()">
-        {{ loading() ? 'Logging in...' : 'Login' }}
+      <button class="btn" type="submit" [disabled]="loginForm.invalid || loading()" [class.loading]="loading()">
+        <span *ngIf="!loading()">Login</span>
       </button>
     </form>
 
-    <p class="register-link">
-      Don't have an account? <a routerLink="/auth/register">Register here</a>
-    </p>
+    <p class="auth-alt">Don't have an account? <a routerLink="/auth/register">Register here</a></p>
   </div>
 </div>

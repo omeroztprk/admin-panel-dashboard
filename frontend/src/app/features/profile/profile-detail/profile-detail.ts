@@ -1,9 +1,8 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-import { Role } from '../../../core/models/role.model';
-import { UserSyncService } from '../../../core/services/user-sync.service';
+import { ProfileService } from '../../../core/services/profile.service';
 
 @Component({
   selector: 'app-profile-detail',
@@ -12,46 +11,45 @@ import { UserSyncService } from '../../../core/services/user-sync.service';
   templateUrl: './profile-detail.html',
   styleUrls: ['./profile-detail.scss']
 })
-export class ProfileDetail implements OnInit {
+export class ProfileDetail implements OnInit, OnDestroy {
+  private clearTimer: any;
+  private auth = inject(AuthService);
+  private profile = inject(ProfileService);
+  private router = inject(Router);
+
   loading = signal(true);
-  error = signal<string | null>(null);
   success = signal<string | null>(null);
 
-  rolesList = computed(() => this.auth.currentUserSig()?.roles || []);
-  roleLabel(r: Role) { return r?.displayName || r?.name || ''; }
-
-  constructor(
-    public auth: AuthService,
-    private router: Router,
-    private userSync: UserSyncService
-  ) { }
+  user = computed(() => this.auth.currentUserSig());
+  roles = computed(() => this.user()?.roles || []);
+  roleLabel = (r: any) => r?.displayName || r?.name || '';
 
   ngOnInit(): void {
-    const check = () => {
-      if (this.auth.currentUserSig()) this.loading.set(false);
-    };
-    check();
-    queueMicrotask(check);
-    setTimeout(check, 150);
-    setTimeout(() => { if (this.loading()) this.loading.set(false); }, 2000);
+    const msg = history.state?.success;
+    if (msg) this.showSuccess(msg);
 
-    const { success } = history.state || {};
-    if (success) {
-      this.success.set(success);
-      setTimeout(() => this.success.set(null), 2500);
-    }
+    this.profile.getProfile().subscribe({
+      next: () => this.loading.set(false),
+      error: () => this.loading.set(false)
+    });
   }
 
-  isRenderableAvatar(src: string): boolean {
-    if (!src) return false;
-    return /^(https?:\/\/|\/|data:image\/|assets\/|blob:)/.test(src);
+  private showSuccess(message: string) {
+    this.success.set(message);
+    this.clearTimer && clearTimeout(this.clearTimer);
+    this.clearTimer = setTimeout(() => {
+      if (this.success() === message) this.success.set(null);
+    }, 2500);
   }
-
-  goEdit(): void {
-    this.router.navigate(['/profile/edit'], { replaceUrl: true });
+  ngOnDestroy(): void {
+    if (this.clearTimer) clearTimeout(this.clearTimer);
   }
 
   goBack(): void {
     this.router.navigate(['/dashboard']);
+  }
+
+  goEdit(): void {
+    this.router.navigate(['/profile/edit']);
   }
 }

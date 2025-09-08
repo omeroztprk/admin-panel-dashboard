@@ -1,0 +1,91 @@
+@use "../../../../styles/core" as *;
+
+.app-footer {
+  position: relative;
+  padding: 0;
+
+  &.surface-glass {
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+}
+
+.app-footer__inner {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-xl;
+  padding: $spacing-sm $spacing-xl;
+
+  @media (max-width: 880px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-sm;
+    padding: $spacing-md $spacing-lg;
+  }
+}
+
+.app-footer__primary {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.app-footer__copyright {
+  font-size: 12px;
+  font-weight: $font-weight-medium;
+  color: $text-secondary;
+  letter-spacing: .2px;
+  line-height: 1.3;
+  white-space: nowrap;
+
+  @media (max-width: 880px) {
+    white-space: normal;
+  }
+}
+
+.app-footer__links {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @media (max-width: 880px) {
+    gap: $spacing-md;
+    flex-wrap: wrap;
+  }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    font-size: 12px;
+    font-weight: $font-weight-medium;
+    color: $text-secondary;
+    text-decoration: none;
+    padding: 4px 0;
+    letter-spacing: .15px;
+    transition: color $transition-speed ease, transform $transition-speed ease;
+
+    &:hover {
+      color: $primary-color;
+      transform: translateY(-1px);
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    &:focus-visible {
+      outline: 0;
+      color: $primary-color;
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9), 0 0 0 4px rgba($primary-color, 0.45);
+      border-radius: 4px;
+      padding-inline: 4px;
+      margin-inline: -4px;
+    }
+  }
+}

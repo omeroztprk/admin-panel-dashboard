@@ -5,5 +5,5 @@ export interface AuditLog {
   resource: string;
   resourceId?: string;
   status: 'success' | 'failure';
-  createdAt: Date;
+  createdAt: string;
 }

@@ -7,12 +7,11 @@ export interface User {
   email: string;
   roles: Role[];
   isActive: boolean;
-  lastLogin?: Date;
-  avatar?: string;
+  lastLogin?: string;    
+  avatar: string;
   fullName?: string;
-  initials?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;       
+  updatedAt?: string;       
 }
 
 export interface ProfileUpdateRequest {

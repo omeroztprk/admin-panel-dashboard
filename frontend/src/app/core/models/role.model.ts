@@ -6,6 +6,6 @@ export interface Role {
   displayName?: string;
   permissions: Permission[];
   isSystem?: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
 }

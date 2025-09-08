@@ -4,26 +4,36 @@ import { authGuard } from './core/guards/auth.guard';
 export const routes: Routes = [
   {
     path: 'auth',
-    loadChildren: () => import('./features/auth/auth.routes').then(m => m.authRoutes)
-  },
-  {
-    path: 'profile',
-    loadChildren: () => import('./features/profile/profile.routes').then(m => m.profileRoutes)
-  },
-  {
-    path: 'dashboard',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/dashboard/dashboard').then(m => m.Dashboard)
-  },
-  {
-    path: 'sessions',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/sessions/sessions').then(m => m.SessionsList)
+    loadChildren: () =>
+      import('./features/auth/auth.routes').then(m => m.authRoutes)
   },
   {
     path: '',
-    pathMatch: 'full',
-    redirectTo: 'dashboard'
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/layout/layout').then(m => m.Layout),
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/dashboard/dashboard').then(m => m.Dashboard)
+      },
+      {
+        path: 'profile',
+        loadChildren: () =>
+          import('./features/profile/profile.routes').then(m => m.profileRoutes)
+      },
+      {
+        path: 'sessions',
+        loadComponent: () =>
+          import('./features/sessions/sessions').then(m => m.SessionsList)
+      },
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'dashboard'
+      }
+    ]
   },
   { path: '**', redirectTo: '/auth/login' }
 ];

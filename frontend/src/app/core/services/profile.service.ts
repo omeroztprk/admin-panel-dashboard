@@ -8,21 +8,15 @@ import { AuthService } from './auth.service';
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
   private readonly apiUrl = `${environment.apiUrl}/profile`;
-
-  constructor(
-    private http: HttpClient,
-    private auth: AuthService
-  ) {}
+  constructor(private http: HttpClient, private auth: AuthService) {}
 
   getProfile(): Observable<{ data: User }> {
-    return this.http.get<{ data: User }>(this.apiUrl).pipe(
-      tap(res => this.auth.setCurrentUser(res.data))
-    );
+    return this.http.get<{ data: User }>(this.apiUrl)
+      .pipe(tap(res => this.auth.setCurrentUser(res.data)));
   }
 
   updateProfile(payload: ProfileUpdateRequest): Observable<{ data: User }> {
-    return this.http.patch<{ data: User }>(this.apiUrl, payload).pipe(
-      tap(res => this.auth.setCurrentUser(res.data))
-    );
+    return this.http.patch<{ data: User }>(this.apiUrl, payload)
+      .pipe(tap(res => this.auth.setCurrentUser(res.data)));
   }
 }

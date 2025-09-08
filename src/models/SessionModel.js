@@ -39,9 +39,7 @@ sessionSchema.statics.hashToken = function (token) {
 };
 
 sessionSchema.index({ user: 1, jti: 1 }, { unique: true });
-
 sessionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
-sessionSchema.index({ revokedAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 }); // 1 day
 
 sessionSchema.set('toJSON', {
   transform: function (doc, ret) {

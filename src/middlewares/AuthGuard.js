@@ -15,7 +15,11 @@ const authGuard = asyncHandler(async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, config.JWT_ACCESS_SECRET);
     const user = await User.findById(decoded.userId)
-      .populate('roles', 'name displayName permissions');
+      .populate({
+        path: 'roles',
+        select: 'name displayName permissions',
+        populate: { path: 'permissions', select: 'name resource action description isSystem' }
+      });
 
     if (!user || !user.isActive) {
       return res.status(401).json({ error: { message: 'Invalid token.' } });
@@ -24,7 +28,6 @@ const authGuard = asyncHandler(async (req, res, next) => {
     const activeSession = await Session.findOne({
       user: decoded.userId,
       jti: decoded.jti,
-      revokedAt: null,
       expiresAt: { $gt: new Date() }
     }).select('_id');
 

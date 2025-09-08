@@ -1,0 +1,307 @@
+@use "../../../../styles/core" as *;
+
+.app-header {
+  height: 78px;
+  position: relative;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset;
+
+  &__inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 $spacing-xl;
+    gap: $spacing-md + 4px;
+
+    @media (max-width: 860px) {
+      padding: 0 $spacing-md;
+      justify-content: space-between;
+    }
+  }
+
+  &__spacer {
+    margin-right: auto;
+  }
+}
+
+.hamburger-btn {
+  @include button-reset;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: $border-radius-sm;
+  transition: all $transition-speed ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba($primary-color, 0.2);
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: 0;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9),
+      0 0 0 4px rgba($primary-color, 0.45);
+  }
+
+  &.active {
+    background: rgba($primary-color, 0.1);
+    border-color: rgba($primary-color, 0.3);
+  }
+
+  @media (max-width: 860px) {
+    display: flex;
+  }
+}
+
+.hamburger-lines {
+  display: flex;
+  flex-direction: column;
+  width: 20px;
+  height: 14px;
+  position: relative;
+
+  span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: $text-color;
+    border-radius: 2px;
+    transition: all $transition-speed ease;
+    transform-origin: center;
+
+    &:nth-child(1) {
+      position: absolute;
+      top: 0;
+    }
+
+    &:nth-child(2) {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    &:nth-child(3) {
+      position: absolute;
+      bottom: 0;
+    }
+  }
+
+  .hamburger-btn.active & {
+    span:nth-child(1) {
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+    }
+
+    span:nth-child(2) {
+      opacity: 0;
+      transform: translateY(-50%) scale(0.9);
+    }
+
+    span:nth-child(3) {
+      bottom: 50%;
+      transform: translateY(50%) rotate(-45deg);
+    }
+  }
+
+  .hamburger-btn:hover & span {
+    background: $primary-color;
+  }
+}
+
+.user-menu {
+  position: relative;
+}
+
+.user-trigger {
+  @include button-reset;
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm + 4px;
+  padding: 12px 16px 12px 12px;
+  border: 1px solid transparent;
+  border-radius: $border-radius-lg;
+  background: transparent;
+  transition: all $transition-speed ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+  }
+
+  &:focus-visible {
+    outline: 0;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9),
+      0 0 0 4px rgba($primary-color, 0.45);
+  }
+
+  &[aria-expanded="true"] {
+    background: rgba($primary-color, 0.08);
+    border-color: rgba($primary-color, 0.25);
+    transform: translateY(-2px);
+  }
+}
+
+.user-trigger__meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.2;
+  text-align: left;
+
+  .user-trigger__name {
+    font-size: 14px;
+    font-weight: $font-weight-semibold;
+    color: $text-color;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+  }
+
+  .user-trigger__email {
+    margin-top: 4px;
+    font-size: 12px;
+    font-weight: $font-weight-medium;
+    color: $text-secondary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+    letter-spacing: .2px;
+  }
+}
+
+.user-trigger__caret {
+  display: flex;
+  align-items: center;
+  color: $text-secondary;
+  transition: transform $transition-speed ease;
+
+  &.open {
+    transform: rotate(180deg);
+  }
+
+  svg {
+    stroke: currentColor;
+  }
+}
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 230px;
+  background: $card-background;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-lg;
+  padding: 16px 14px 14px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-10px);
+  visibility: hidden;
+  transition: all $transition-speed ease;
+  z-index: $z-dropdown;
+
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 1px;
+    right: 1px;
+    height: 4px;
+    background: $primary-gradient;
+    opacity: .9;
+    border-radius: 4px;
+    pointer-events: none;
+  }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 12px;
+  background: transparent;
+  border: none;
+  border-radius: $border-radius-sm;
+  font-size: 14px;
+  font-weight: $font-weight-medium;
+  color: $text-color;
+  text-align: left;
+  cursor: pointer;
+  transition: all $transition-speed ease;
+
+  svg {
+    flex-shrink: 0;
+    opacity: .85;
+  }
+
+  &:hover {
+    background: rgba($primary-color, 0.08);
+    transform: translateX(4px);
+    color: $primary-color;
+  }
+
+  &:focus-visible {
+    outline: 0;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9),
+      0 0 0 4px rgba($primary-color, 0.45);
+  }
+
+  &.danger {
+    color: $error-color;
+
+    &:hover {
+      background: rgba($error-color, 0.12);
+      color: $error-color;
+    }
+  }
+}
+
+.dropdown-separator {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.07);
+  margin: 6px 4px;
+  border-radius: 2px;
+}
+
+.menu-backdrop {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  z-index: $z-dropdown - 1;
+}
+
+@media (max-width: 860px) {
+  .user-trigger {
+    padding-right: 12px;
+    gap: 10px;
+  }
+
+  .user-dropdown {
+    right: -12px;
+    min-width: 200px;
+    z-index: $z-dropdown + 200;
+  }
+}
