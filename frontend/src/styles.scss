@@ -48,11 +48,11 @@ body {
   animation: fadeIn 0.8s ease-out;
 
   @media (max-width:768px) {
-    padding: $spacing-lg $spacing-md;
+    padding: $spacing-md $spacing-sm;
   }
 
   @media (max-width:480px) {
-    padding: $spacing-md;
+    padding: $spacing-sm $spacing-xs;
   }
 }
 
@@ -155,11 +155,11 @@ body {
   }
 
   @media (max-width:768px) {
-    padding: $spacing-lg;
+    padding: $spacing-md;
   }
 
   @media (max-width:480px) {
-    padding: $spacing-lg $spacing-md;
+    padding: $spacing-md $spacing-sm;
     border-radius: $border-radius-sm;
   }
 }
@@ -275,6 +275,31 @@ body {
   &:empty {
     margin-top: 0;
     height: 0;
+  }
+}
+
+.field-hint {
+  font-size: 12px;
+  color: $text-secondary;
+  margin-top: $spacing-xs;
+  min-height: 16px;
+}
+
+.input-wrapper {
+  input[disabled] {
+    background: #f2f3f5;
+    color: $text-secondary;
+    border: 1px dashed rgba($text-secondary, 0.4);
+    cursor: not-allowed;
+
+    &::placeholder {
+      color: color.adjust($text-secondary, $lightness: 10%);
+      opacity: 0.9;
+    }
+  }
+
+  input[disabled]+.icon svg {
+    stroke: $text-muted;
   }
 }
 
@@ -639,11 +664,11 @@ body {
 // ==============================================
 @media (max-width:768px) {
   .container {
-    padding: 0 $spacing-md;
+    padding: 0 $spacing-sm;
   }
 
   .auth-page-wrap {
-    padding: $spacing-md;
+    padding: $spacing-sm;
   }
 
   .card-title {
@@ -698,5 +723,240 @@ body {
     &:last-child {
       margin-bottom: 0;
     }
+  }
+}
+
+// ==============================================
+// DATA TABLE (global reusable)
+// ==============================================
+.data-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.data-table {
+  width: 100%;
+  display: grid;
+  gap: $spacing-sm;
+  --data-col-count: 5;
+  min-width: var(--data-min-width, 960px);
+}
+
+.data-head,
+.data-row {
+  display: grid;
+  grid-template-columns: var(--data-cols,
+      repeat(var(--data-col-count, 5), minmax(180px, 1fr)));
+  align-items: center;
+  column-gap: var(--data-col-gap, 8px);
+  row-gap: 0;
+  padding: $spacing-sm $spacing-sm;
+  border-radius: $border-radius;
+  background: $card-background;
+  border: 1px solid rgba($primary-color, 0.06);
+}
+
+.data-head {
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.02)), $card-background;
+  font-size: 12px;
+  color: $text-secondary;
+  font-weight: $font-weight-semibold;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+}
+
+.data-row {
+  font-size: 14px;
+  transition: box-shadow $transition-speed ease, transform $transition-speed ease, border-color $transition-speed ease;
+
+  &:hover {
+    border-color: rgba($primary-color, 0.14);
+    box-shadow: 0 4px 12px rgba($primary-color, 0.12);
+    transform: translateY(-1px);
+  }
+}
+
+.data-cell {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .muted {
+    color: $text-secondary;
+  }
+
+  .truncate {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 820px) {
+  .data-table {
+    display: block;
+    min-width: 100%;
+    gap: $spacing-xs;
+  }
+
+  .data-head {
+    display: none;
+  }
+
+  .data-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: $spacing-md $spacing-sm;
+    margin-bottom: $spacing-sm;
+  }
+
+  .data-cell {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $spacing-xs 0;
+    font-size: 14px;
+
+    &::before {
+      content: attr(data-label);
+      font-weight: $font-weight-medium;
+      color: $text-secondary;
+      text-transform: uppercase;
+      font-size: 12px;
+      margin-right: $spacing-md;
+    }
+  }
+
+  .data-cell[data-label="Actions"] {
+    justify-content: flex-start;
+    gap: $spacing-sm;
+
+    &::before {
+      margin-right: $spacing-sm;
+    }
+
+    button {
+      flex: 1 1 auto;
+      max-width: none;
+    }
+  }
+}
+
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: $font-weight-medium;
+  line-height: 1.2;
+  background: rgba($primary-color, 0.08);
+  color: $primary-color;
+  white-space: nowrap;
+
+  &--success {
+    background: rgba($success-color, .12);
+    color: $success-color;
+  }
+
+  &--danger {
+    background: rgba($error-color, .12);
+    color: $error-color;
+  }
+
+  &--muted {
+    background: rgba(0, 0, 0, .05);
+    color: $text-secondary;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+}
+
+// ==============================================
+// FORM CONTROLS (global - checkbox, checklist, switch)
+// ==============================================
+.form-check {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  font-size: 14px;
+
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: $primary-color;
+    flex-shrink: 0;
+  }
+
+  label {
+    color: $text-color;
+    user-select: none;
+    cursor: pointer;
+  }
+}
+
+.checklist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+
+  input[type="checkbox"] {
+    appearance: none;
+    width: 42px;
+    height: 24px;
+    border-radius: 999px;
+    background: #e6e6eb;
+    position: relative;
+    transition: background $transition-fast ease, box-shadow $transition-fast ease;
+    outline: none;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .06);
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .2);
+      transition: transform $transition-fast ease;
+    }
+
+    &:checked {
+      background: $primary-color;
+
+      &::after {
+        transform: translateX(18px);
+      }
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 4px rgba($primary-color, .2);
+    }
+  }
+
+  label {
+    color: $text-color;
+    font-weight: $font-weight-medium;
+    cursor: pointer;
   }
 }

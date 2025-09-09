@@ -10,7 +10,7 @@ const startServer = async () => {
   try {
     await connectDB();
 
-    server = app.listen(config.PORT, () => {
+    server = app.listen(config.PORT, '0.0.0.0', () => {
       logger.info(`Server running on port ${config.PORT} in ${config.NODE_ENV} mode`);
     });
   } catch (error) {

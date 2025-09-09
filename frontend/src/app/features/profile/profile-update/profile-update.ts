@@ -61,7 +61,7 @@ export class ProfileUpdate implements OnInit {
       currentPassword: [''],
       newPassword: ['', [
         Validators.minLength(8),
-        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/)
+        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]).+$/)
       ]]
     }, { validators: this.passwordPairValidator });
   }

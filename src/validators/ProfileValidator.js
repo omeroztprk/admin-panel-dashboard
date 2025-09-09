@@ -47,7 +47,7 @@ const profileValidator = {
       .optional()
       .isLength({ min: 8 })
       .withMessage('New password must be at least 8 characters long')
-      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/)
+      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]).+$/)
       .withMessage(
         'New password must contain at least one lowercase letter, one uppercase letter, one number and one special character'
       ),

@@ -60,7 +60,7 @@ export class Sidebar {
     {
       id: 'g-monitor',
       title: 'Monitoring',
-      items: [{ id: 'audit', label: 'Audit Logs', route: '/audit-logs', icon: 'audit', permissions: ['auditlog:read'] }]
+      items: [{ id: 'audit', label: 'Audit Logs', route: '/audit-logs', icon: 'audit', permissions: ['audit:read'] }]
     },
     {
       id: 'g-catalog',

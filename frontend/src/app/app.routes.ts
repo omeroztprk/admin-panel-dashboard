@@ -29,10 +29,11 @@ export const routes: Routes = [
           import('./features/sessions/sessions').then(m => m.SessionsList)
       },
       {
-        path: '',
-        pathMatch: 'full',
-        redirectTo: 'dashboard'
-      }
+        path: 'users',
+        loadChildren: () =>
+          import('./features/user/user.routes').then(m => m.userRoutes)
+      },
+      { path: '', pathMatch: 'full', redirectTo: 'dashboard' }
     ]
   },
   { path: '**', redirectTo: '/auth/login' }
