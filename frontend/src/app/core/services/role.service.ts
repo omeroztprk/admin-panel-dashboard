@@ -17,10 +17,21 @@ export interface RoleListResponse {
   meta: RoleListMeta;
 }
 
+export interface CreateRoleRequest {
+  name: string;
+  displayName?: string;
+  permissions?: string[];
+}
+export interface UpdateRoleRequest {
+  name?: string;
+  displayName?: string;
+  permissions?: string[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class RoleService {
   private readonly api = `${environment.apiUrl}/roles`;
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   list(page = 1, limit = 50): Observable<RoleListResponse> {
     const params = new HttpParams().set('page', page).set('limit', limit);
@@ -29,5 +40,17 @@ export class RoleService {
 
   getById(id: string) {
     return this.http.get<{ data: Role }>(`${this.api}/${id}`);
+  }
+
+  create(data: CreateRoleRequest) {
+    return this.http.post<{ data: Role }>(this.api, data);
+  }
+
+  update(id: string, data: UpdateRoleRequest) {
+    return this.http.patch<{ data: Role }>(`${this.api}/${id}`, data);
+  }
+
+  remove(id: string) {
+    return this.http.delete<void>(`${this.api}/${id}`);
   }
 }
