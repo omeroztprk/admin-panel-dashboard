@@ -1,0 +1,82 @@
+<div class="page-wrap">
+  <h1 class="page-title gradient-text">{{ title() }}</h1>
+
+  <div class="app-card permission-form-card with-accent">
+    <section class="permission-form__header">
+      <button class="back-btn" type="button" (click)="goBack()" aria-label="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <span>Back</span>
+      </button>
+    </section>
+
+    <section class="form-section form-section--form">
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="form-row">
+          <div class="input-group">
+            <label for="resource">Resource</label>
+            <div class="input-wrapper" [class.error]="form.get('resource')?.touched && form.get('resource')?.invalid">
+              <select id="resource" formControlName="resource">
+                <option value="" disabled>Select resource</option>
+                <option *ngFor="let r of resources" [value]="r">{{ r }}</option>
+              </select>
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="3" y="6" width="18" height="12" rx="2" />
+                  <path d="M7 10h10M7 14h7" />
+                </svg>
+              </span>
+            </div>
+            <div class="field-error" *ngIf="form.get('resource')?.touched && form.get('resource')?.invalid">
+              <div *ngIf="form.get('resource')?.errors?.['required']">Resource is required</div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="action">Action</label>
+            <div class="input-wrapper" [class.error]="form.get('action')?.touched && form.get('action')?.invalid">
+              <select id="action" formControlName="action">
+                <option value="" disabled>Select action</option>
+                <option *ngFor="let a of actions" [value]="a">{{ a }}</option>
+              </select>
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="3" y="6" width="18" height="12" rx="2" />
+                  <path d="M7 10h10M7 14h7" />
+                </svg>
+              </span>
+            </div>
+            <div class="field-error" *ngIf="form.get('action')?.touched && form.get('action')?.invalid">
+              <div *ngIf="form.get('action')?.errors?.['required']">Action is required</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="description">Description</label>
+          <div class="input-wrapper"
+            [class.error]="form.get('description')?.touched && form.get('description')?.invalid">
+            <input id="description" type="text" formControlName="description" placeholder="Optional description">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="6" width="18" height="12" rx="2" />
+                <path d="M7 10h10M7 14h7" />
+              </svg>
+            </span>
+          </div>
+          <div class="field-error" *ngIf="form.get('description')?.touched && form.get('description')?.invalid">
+            <div *ngIf="form.get('description')?.errors?.['maxlength']">Description must be at most 200 characters</div>
+          </div>
+        </div>
+
+        <div class="alert alert-error" *ngIf="error()" aria-live="assertive">{{ error() }}</div>
+
+        <button class="btn" type="submit" [disabled]="form.invalid || saving()" [class.loading]="saving()">
+          <span *ngIf="!saving()">{{ submitLabel() }}</span>
+        </button>
+      </form>
+    </section>
+  </div>
+</div>

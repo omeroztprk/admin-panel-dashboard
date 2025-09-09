@@ -20,7 +20,7 @@ export interface PermissionListResponse {
 @Injectable({ providedIn: 'root' })
 export class PermissionService {
   private readonly api = `${environment.apiUrl}/permissions`;
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   list(page = 1, limit = 100): Observable<PermissionListResponse> {
     const params = new HttpParams().set('page', page).set('limit', limit);
@@ -29,5 +29,17 @@ export class PermissionService {
 
   getById(id: string) {
     return this.http.get<{ data: Permission }>(`${this.api}/${id}`);
+  }
+
+  create(data: Partial<Permission>) {
+    return this.http.post<{ data: Permission }>(this.api, data);
+  }
+
+  update(id: string, data: Partial<Permission>) {
+    return this.http.patch<{ data: Permission }>(`${this.api}/${id}`, data);
+  }
+
+  remove(id: string) {
+    return this.http.delete<void>(`${this.api}/${id}`);
   }
 }

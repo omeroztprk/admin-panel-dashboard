@@ -38,20 +38,20 @@
     <section class="role-section role-section--meta" *ngIf="role() as r">
       <div class="meta-grid">
         <div class="meta-item">
-          <span class="label">Created</span>
-          <span class="value">{{ r.createdAt | date:'mediumDate' }}</span>
-        </div>
-        <div class="meta-item" *ngIf="r.updatedAt">
-          <span class="label">Updated</span>
-          <span class="value">{{ r.updatedAt | date:'mediumDate' }}</span>
-        </div>
-        <div class="meta-item">
           <span class="label">Type</span>
           <span class="value">
             <span class="chip" [ngClass]="r.isSystem ? 'chip--success' : 'chip--muted'"><span class="dot"></span>
               {{ r.isSystem ? 'System' : 'Custom' }}
             </span>
           </span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Created</span>
+          <span class="value">{{ r.createdAt | date:'mediumDate' }}</span>
+        </div>
+        <div class="meta-item" *ngIf="r.updatedAt">
+          <span class="label">Updated</span>
+          <span class="value">{{ r.updatedAt | date:'mediumDate' }}</span>
         </div>
       </div>
 

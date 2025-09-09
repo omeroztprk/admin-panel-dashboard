@@ -1,0 +1,76 @@
+<div class="page-wrap">
+  <h1 class="page-title gradient-text">Permission Details</h1>
+
+  <div class="app-card permission-detail-card with-accent" *ngIf="!loading(); else loadingTpl">
+    <section class="permission-detail__header">
+      <button class="back-btn" type="button" (click)="goBack()" aria-label="Back">
+        <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <span>Back</span>
+      </button>
+
+      <div class="permission-detail__actions">
+        <button class="btn--ghost" type="button" (click)="goEdit()" [disabled]="item()?.isSystem"
+          [attr.title]="item()?.isSystem ? 'System permissions cannot be edited' : null">
+          Edit
+        </button>
+        <button class="btn--ghost btn--danger" type="button" (click)="remove()" [disabled]="item()?.isSystem"
+          [attr.title]="item()?.isSystem ? 'System permissions cannot be deleted' : null">
+          Delete
+        </button>
+      </div>
+    </section>
+
+    <div class="alert alert-success" *ngIf="success()" aria-live="polite">{{ success() }}</div>
+    <div class="alert alert-error" *ngIf="error()" aria-live="assertive">{{ error() }}</div>
+
+    <section class="permission-section permission-section--top" *ngIf="item() as p">
+      <div class="identity">
+        <div class="name">{{ p.name }}</div>
+        <div class="muted">{{ p.description || '—' }}</div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="permission-section permission-section--meta" *ngIf="item() as p">
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="label">Resource</span>
+          <span class="value"><span class="chip">{{ p.resource }}</span></span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Action</span>
+          <span class="value"><span class="chip">{{ p.action }}</span></span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Type</span>
+          <span class="value">
+            <span class="chip" [ngClass]="p.isSystem ? 'chip--success' : 'chip--muted'">
+              <span class="dot"></span>{{ p.isSystem ? 'System' : 'Custom' }}
+            </span>
+          </span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Created</span>
+          <span class="value">{{ p.createdAt | date:'mediumDate' }}</span>
+        </div>
+        <div class="meta-item" *ngIf="p.updatedAt">
+          <span class="label">Updated</span>
+          <span class="value">{{ p.updatedAt | date:'mediumDate' }}</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="app-card permission-detail-card with-accent skeleton">
+    <div class="skeleton-line wide"></div>
+    <div class="skeleton-line"></div>
+    <div class="skeleton-line"></div>
+    <div class="skeleton-line half"></div>
+  </div>
+</ng-template>

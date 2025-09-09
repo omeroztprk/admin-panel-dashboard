@@ -41,6 +41,10 @@
                     <span class="label">Created</span>
                     <span class="value">{{ u.createdAt | date:'mediumDate' }}</span>
                 </div>
+                <div class="meta-item" *ngIf="u.updatedAt">
+                    <span class="label">Updated</span>
+                    <span class="value">{{ u.updatedAt | date:'mediumDate' }}</span>
+                </div>
                 <div class="meta-item" *ngIf="u.lastLogin">
                     <span class="label">Last Login</span>
                     <span class="value">{{ u.lastLogin | date:'short' }}</span>

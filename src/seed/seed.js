@@ -12,19 +12,45 @@ const logger = require('../utils/Logger');
     await connectDB();
 
     const permissionNames = Object.values(PERMISSIONS);
+
+    const DESCRIPTIONS = {
+      [PERMISSIONS.USER_READ]: 'Viewing users and their details',
+      [PERMISSIONS.USER_CREATE]: 'Creating a new user',
+      [PERMISSIONS.USER_UPDATE]: 'Updating users',
+      [PERMISSIONS.USER_DELETE]: 'Deleting users',
+
+      [PERMISSIONS.ROLE_READ]: 'Viewing roles and their details',
+      [PERMISSIONS.ROLE_CREATE]: 'Creating a new role',
+      [PERMISSIONS.ROLE_UPDATE]: 'Updating roles',
+      [PERMISSIONS.ROLE_DELETE]: 'Deleting roles',
+
+      [PERMISSIONS.PERMISSION_READ]: 'Viewing permissions and their details',
+      [PERMISSIONS.PERMISSION_CREATE]: 'Creating a new permission',
+      [PERMISSIONS.PERMISSION_UPDATE]: 'Updating permissions',
+      [PERMISSIONS.PERMISSION_DELETE]: 'Deleting permissions',
+
+      [PERMISSIONS.AUDIT_READ]: 'Viewing audit logs and system events',
+
+      [PERMISSIONS.CATEGORY_READ]: 'Viewing categories and their details',
+      [PERMISSIONS.CATEGORY_CREATE]: 'Creating a new category',
+      [PERMISSIONS.CATEGORY_UPDATE]: 'Updating categories',
+      [PERMISSIONS.CATEGORY_DELETE]: 'Deleting categories',
+    };
+
     const systemPermissions = [];
-
-    const permissions = await Permission.find({ name: { $in: permissionNames } });
-    const existingPermissionMap = {};
-    permissions.forEach(p => {
-      existingPermissionMap[p.name] = p;
-    });
-
     for (const name of permissionNames) {
       const [resource, action] = name.split(':');
-      const perm = existingPermissionMap[name] || await Permission.findOneAndUpdate(
+      const perm = await Permission.findOneAndUpdate(
         { name },
-        { name, resource, action, isSystem: true },
+        {
+          $set: {
+            resource,
+            action,
+            isSystem: true,
+            description: DESCRIPTIONS[name] || ''
+          },
+          $setOnInsert: { name }
+        },
         { upsert: true, new: true, setDefaultsOnInsert: true }
       );
       systemPermissions.push(perm._id);
