@@ -1,11 +1,11 @@
 @use "../../../../styles/core" as *;
 
-.permission-detail-card {
+.category-detail-card {
   padding: 0;
   animation: fadeIn 0.8s ease-out;
 }
 
-.permission-detail__header {
+.category-detail__header {
   @include flex-between;
   padding: $spacing-lg $spacing-xl $spacing-sm;
 
@@ -13,27 +13,23 @@
     padding: $spacing-md $spacing-lg $spacing-sm;
   }
 
-  .permission-detail__actions {
+  .category-detail__actions {
     display: flex;
     align-items: center;
     gap: $spacing-sm;
   }
 }
 
-.permission-section {
+.category-section {
   padding: $spacing-xl;
 
-  &+.permission-section {
+  &+.category-section {
     border-top: 1px solid rgba($primary-color, 0.08);
   }
 
   &--top {
     @include flex-start;
     gap: $spacing-md;
-  }
-
-  &--meta {
-    background: transparent;
   }
 }
 

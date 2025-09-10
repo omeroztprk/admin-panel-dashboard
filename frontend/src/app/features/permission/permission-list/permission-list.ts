@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { PermissionService, PermissionListMeta } from '../../../core/services/permission.service';
@@ -12,7 +12,7 @@ import { finalize } from 'rxjs';
   templateUrl: './permission-list.html',
   styleUrls: ['./permission-list.scss']
 })
-export class PermissionList implements OnInit {
+export class PermissionList implements OnInit, OnDestroy {
   readonly limit = 10;
 
   loading = signal(true);
@@ -20,6 +20,7 @@ export class PermissionList implements OnInit {
   error = signal<string | null>(null);
   success = signal<string | null>(null);
   private successTimer: any;
+  private errorTimer: any;
 
   items = signal<Permission[]>([]);
   meta = signal<PermissionListMeta | null>(null);
@@ -50,6 +51,14 @@ export class PermissionList implements OnInit {
     }, 3000);
   }
 
+  private showError(message: string): void {
+    this.error.set(message);
+    clearTimeout(this.errorTimer);
+    this.errorTimer = setTimeout(() => {
+      if (this.error() === message) this.error.set(null);
+    }, 3000);
+  }
+
   load(page: number): void {
     this.loading.set(true);
     this.error.set(null);
@@ -57,7 +66,7 @@ export class PermissionList implements OnInit {
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: res => { this.items.set(res.data); this.meta.set(res.meta); },
-        error: e => this.error.set(e?.error?.error?.message || 'Failed to load permissions')
+        error: e => this.showError(e?.error?.error?.message || 'Failed to load permissions')
       });
   }
 
@@ -92,11 +101,11 @@ export class PermissionList implements OnInit {
           this.showSuccess('Permission deleted successfully');
           this.load(nextPage);
         },
-        error: e => this.error.set(e?.error?.error?.message || 'Failed to delete permission')
+        error: e => this.showError(e?.error?.error?.message || 'Failed to delete permission')
       });
   }
-
   ngOnDestroy(): void {
     if (this.successTimer) clearTimeout(this.successTimer);
+    if (this.errorTimer) clearTimeout(this.errorTimer);
   }
 }

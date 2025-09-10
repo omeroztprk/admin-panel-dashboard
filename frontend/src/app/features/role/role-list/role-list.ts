@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { RoleService, RoleListMeta } from '../../../core/services/role.service';
@@ -12,7 +12,7 @@ import { finalize } from 'rxjs';
   templateUrl: './role-list.html',
   styleUrls: ['./role-list.scss']
 })
-export class RoleList implements OnInit {
+export class RoleList implements OnInit, OnDestroy {
   readonly limit = 10;
 
   loading = signal(true);
@@ -20,6 +20,7 @@ export class RoleList implements OnInit {
   error = signal<string | null>(null);
   success = signal<string | null>(null);
   private successTimer: any;
+  private errorTimer: any;
 
   roles = signal<Role[]>([]);
   meta = signal<RoleListMeta | null>(null);
@@ -50,6 +51,14 @@ export class RoleList implements OnInit {
     }, 3000);
   }
 
+  private showError(message: string): void {
+    this.error.set(message);
+    clearTimeout(this.errorTimer);
+    this.errorTimer = setTimeout(() => {
+      if (this.error() === message) this.error.set(null);
+    }, 3000);
+  }
+
   load(page: number): void {
     this.loading.set(true);
     this.error.set(null);
@@ -57,7 +66,7 @@ export class RoleList implements OnInit {
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: res => { this.roles.set(res.data); this.meta.set(res.meta); },
-        error: e => this.error.set(e?.error?.error?.message || 'Failed to load roles')
+        error: e => this.showError(e?.error?.error?.message || 'Failed to load roles')
       });
   }
 
@@ -102,15 +111,15 @@ export class RoleList implements OnInit {
           this.showSuccess('Role deleted successfully');
           this.load(nextPage);
         },
-        error: e => this.error.set(e?.error?.error?.message || 'Failed to delete role')
+        error: e => this.showError(e?.error?.error?.message || 'Failed to delete role')
       });
+  }
+  ngOnDestroy(): void {
+    if (this.successTimer) clearTimeout(this.successTimer);
+    if (this.errorTimer) clearTimeout(this.errorTimer);
   }
 
   permissionLabels(r: Role): string[] {
     return Array.isArray(r.permissions) ? r.permissions.map(p => p.name) : [];
-  }
-
-  ngOnDestroy(): void {
-    if (this.successTimer) clearTimeout(this.successTimer);
   }
 }

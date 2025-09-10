@@ -1,6 +1,6 @@
 @use "../../../../styles/core" as *;
 
-.role-list-card {
+.category-list-card {
   animation: fadeIn 0.6s ease-out;
   padding: $spacing-xl $spacing-xl $spacing-lg;
 
@@ -9,7 +9,7 @@
   }
 }
 
-.role-list__header {
+.category-list__header {
   @include flex-between;
   margin-bottom: $spacing-lg;
 
@@ -21,21 +21,12 @@
   }
 }
 
-.role-list-card .data-table {
-  --data-cols: minmax(220px, 1.4fr) minmax(220px, 1.2fr) 120px 200px;
+.category-list-card .data-table {
+  --data-cols: minmax(220px, 1.6fr) minmax(200px, 1fr) 200px;
   --data-min-width: 960px;
 }
 
-.role-list-card .data-head,
-.role-list-card .data-row {
+.category-list-card .data-head,
+.category-list-card .data-row {
   padding: $spacing-sm $spacing-sm;
-}
-
-.role-list-card .data-row [data-label="Permissions"] {
-  flex-wrap: wrap;
-  gap: 6px 8px;
-}
-
-.data-row .chip {
-  margin-right: 4px;
 }

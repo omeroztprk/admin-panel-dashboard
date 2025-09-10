@@ -1,0 +1,74 @@
+@use "../../../../styles/core" as *;
+
+.category-tree-card {
+  padding: $spacing-xl;
+  animation: fadeIn 0.8s ease-out;
+
+  @media (max-width: 768px) {
+    padding: $spacing-lg;
+  }
+}
+
+.category-tree__header {
+  @include flex-between;
+  margin-bottom: $spacing-lg;
+}
+
+.tree {
+
+  .tree-root {
+    margin: 0;
+    padding-left: 18px;
+
+    >li.has-children {
+      list-style-type: disc;
+    }
+
+    >li.leaf {
+      list-style-type: circle;
+    }
+  }
+
+  details {
+    margin: 6px 0;
+
+    summary {
+      cursor: pointer;
+      list-style: none;
+      @include flex-start;
+      gap: $spacing-xs;
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      .node-name {
+        font-weight: $font-weight-medium;
+        color: $text-color;
+      }
+
+      .muted {
+        color: $text-secondary;
+        font-size: 13px;
+      }
+    }
+
+    ul {
+      margin: 6px 0 6px 16px;
+      padding-left: 12px;
+      border-left: 1px dashed rgba($primary-color, .2);
+
+      li {
+        margin: 4px 0;
+
+        &.has-children {
+          list-style-type: disc;
+        }
+
+        &.leaf {
+          list-style-type: circle;
+        }
+      }
+    }
+  }
+}

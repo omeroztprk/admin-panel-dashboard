@@ -1,0 +1,75 @@
+<div class="page-wrap">
+  <h1 class="page-title gradient-text">Categories</h1>
+
+  <div class="app-card with-accent category-list-card">
+    <section class="category-list__header">
+      <div class="left">
+        <button class="back-btn" type="button" (click)="goBack()" aria-label="Back">
+          <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+          <span>Back</span>
+        </button>
+      </div>
+      <div class="right">
+        <button class="btn--ghost" type="button" (click)="goTree()">View Tree</button>
+        <button class="btn--ghost" type="button" (click)="goCreate()">Create New Category</button>
+      </div>
+    </section>
+
+    <div class="alert alert-success" *ngIf="success()" aria-live="polite">{{ success() }}</div>
+    <div class="alert alert-error" *ngIf="error()" aria-live="assertive">{{ error() }}</div>
+
+    <ng-container *ngIf="!loading(); else loadingTpl">
+      <div class="data-table-wrap">
+        <div class="data-table">
+          <div class="data-head">
+            <div class="data-cell">Name</div>
+            <div class="data-cell">Parent</div>
+            <div class="data-cell">Actions</div>
+          </div>
+
+          <div class="data-row" *ngFor="let c of items(); trackBy: trackById">
+            <div class="data-cell" data-label="Name">
+              <span class="truncate">{{ c.name }}</span>
+            </div>
+            <div class="data-cell" data-label="Parent">
+              <span class="truncate muted">{{ parentName(c) }}</span>
+            </div>
+            <div class="data-cell" data-label="Actions">
+              <button class="btn--ghost btn--sm" type="button" (click)="goDetail(c._id)">Details</button>
+              <button class="btn--ghost btn--sm" type="button" (click)="goEdit(c._id)">Edit</button>
+              <button class="btn--ghost btn--danger btn--sm" type="button" (click)="remove(c._id)"
+                [disabled]="actionLoading()">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="pagination" *ngIf="meta()" aria-label="Pagination">
+        <div class="pagination-controls" *ngIf="meta()!.totalPages > 1">
+          <button class="btn--ghost btn--sm" [disabled]="!hasPrev()" (click)="changePage(meta()!.page - 1)"
+            type="button">Previous</button>
+          <span class="page-info">Page {{ meta()!.page }} of {{ meta()!.totalPages }}</span>
+          <button class="btn--ghost btn--sm" [disabled]="!hasNext()" (click)="changePage(meta()!.page + 1)"
+            type="button">Next</button>
+        </div>
+        <div class="pagination-meta">
+          <div class="meta-chip">Total: <strong>{{ meta()!.total }}</strong></div>
+          <div class="meta-chip" *ngIf="meta()!.totalPages > 1">Page <strong>{{ meta()!.page }}</strong> / {{
+            meta()!.totalPages }}</div>
+        </div>
+      </nav>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="app-card with-accent category-list-card skeleton">
+    <div class="skeleton-line wide"></div>
+    <div class="skeleton-line"></div>
+    <div class="skeleton-line"></div>
+    <div class="skeleton-line half"></div>
+  </div>
+</ng-template>

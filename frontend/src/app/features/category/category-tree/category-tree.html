@@ -1,0 +1,71 @@
+<div class="page-wrap">
+  <h1 class="page-title gradient-text">Category Tree</h1>
+
+  <div class="app-card category-tree-card with-accent" *ngIf="!loading(); else loadingTpl">
+    <section class="category-tree__header">
+      <button class="back-btn" type="button" (click)="goBack()" aria-label="Back">
+        <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <span>Back</span>
+      </button>
+    </section>
+
+    <div class="alert alert-error" *ngIf="error()" aria-live="assertive">{{ error() }}</div>
+
+    <div class="tree">
+      <ul class="tree-root">
+        <li *ngFor="let n of nodes(); trackBy: trackById" [class.has-children]="n.children?.length"
+          [class.leaf]="!n.children?.length">
+          <details>
+            <summary>
+              <span class="node-name">{{ n.name }}</span>
+              <span class="muted" *ngIf="n.description"> — {{ n.description }}</span>
+            </summary>
+
+            <ng-container *ngIf="n.children?.length">
+              <ul>
+                <li *ngFor="let child of n.children; trackBy: trackById" [class.has-children]="child.children?.length"
+                  [class.leaf]="!child.children?.length">
+                  <ng-container [ngTemplateOutlet]="nodeContent" [ngTemplateOutletContext]="{ $implicit: child }">
+                  </ng-container>
+                </li>
+              </ul>
+            </ng-container>
+          </details>
+        </li>
+      </ul>
+
+      <ng-template #nodeContent let-node>
+        <details>
+          <summary>
+            <span class="node-name">{{ node.name }}</span>
+            <span class="muted" *ngIf="node.description"> — {{ node.description }}</span>
+          </summary>
+
+          <ng-container *ngIf="node.children?.length">
+            <ul>
+              <li *ngFor="let c of node.children; trackBy: trackById" [class.has-children]="c.children?.length"
+                [class.leaf]="!c.children?.length">
+                <ng-container [ngTemplateOutlet]="nodeContent" [ngTemplateOutletContext]="{ $implicit: c }">
+                </ng-container>
+              </li>
+            </ul>
+          </ng-container>
+        </details>
+      </ng-template>
+
+      <div class="chip chip--muted" *ngIf="!nodes().length">No categories</div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="app-card category-tree-card with-accent skeleton">
+    <div class="skeleton-line wide"></div>
+    <div class="skeleton-line"></div>
+    <div class="skeleton-line"></div>
+    <div class="skeleton-line half"></div>
+  </div>
+</ng-template>

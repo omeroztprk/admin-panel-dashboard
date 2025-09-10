@@ -1,18 +1,18 @@
 import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
-import { UserService, ListMeta } from '../../../core/services/user.service';
-import { User } from '../../../core/models/user.model';
+import { Router, RouterModule } from '@angular/router';
+import { CategoryService, CategoryListMeta } from '../../../core/services/category.service';
+import { Category } from '../../../core/models/category.model';
 import { finalize } from 'rxjs';
 
 @Component({
-  selector: 'app-user-list',
+  selector: 'app-category-list',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './user-list.html',
-  styleUrls: ['./user-list.scss']
+  templateUrl: './category-list.html',
+  styleUrls: ['./category-list.scss']
 })
-export class UserList implements OnInit, OnDestroy {
+export class CategoryList implements OnInit, OnDestroy {
   readonly limit = 10;
 
   loading = signal(true);
@@ -22,13 +22,13 @@ export class UserList implements OnInit, OnDestroy {
   private successTimer: any;
   private errorTimer: any;
 
-  users = signal<User[]>([]);
-  meta = signal<ListMeta | null>(null);
+  items = signal<Category[]>([]);
+  meta = signal<CategoryListMeta | null>(null);
 
   hasPrev = computed(() => !!this.meta() && this.meta()!.hasPrevPage);
   hasNext = computed(() => !!this.meta() && this.meta()!.hasNextPage);
 
-  constructor(private api: UserService, private router: Router) {}
+  constructor(private api: CategoryService, private router: Router) { }
 
   ngOnInit(): void {
     this.load(1);
@@ -51,16 +51,6 @@ export class UserList implements OnInit, OnDestroy {
     }, 3000);
   }
 
-  load(page: number): void {
-    this.loading.set(true);
-    this.error.set(null);
-    this.api.list(page, this.limit)
-      .pipe(finalize(() => this.loading.set(false)))
-      .subscribe({
-        next: res => { this.users.set(res.data); this.meta.set(res.meta); },
-        error: e => this.showError(e?.error?.error?.message || 'Failed to load users')
-      });
-  }
   private showError(message: string): void {
     this.error.set(message);
     clearTimeout(this.errorTimer);
@@ -69,12 +59,15 @@ export class UserList implements OnInit, OnDestroy {
     }, 3000);
   }
 
-  roleLabels(u: User): string[] {
-    return Array.isArray(u.roles) ? u.roles.map(r => r.displayName || r.name) : [];
-  }
-
-  isActiveChipClass(u: User): string {
-    return u.isActive ? 'chip chip--success' : 'chip chip--danger';
+  load(page: number): void {
+    this.loading.set(true);
+    this.error.set(null);
+    this.api.list(page, this.limit)
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe({
+        next: res => { this.items.set(res.data); this.meta.set(res.meta); },
+        error: e => this.showError(e?.error?.error?.message || 'Failed to load categories')
+      });
   }
 
   changePage(p: number): void {
@@ -84,28 +77,19 @@ export class UserList implements OnInit, OnDestroy {
     this.load(p);
   }
 
-  trackById = (_: number, u: User) => u._id;
+  trackById = (_: number, c: Category) => c._id;
 
-  goBack(): void {
-    this.router.navigate(['/dashboard']);
-  }
-
-  goCreate(): void {
-    this.router.navigate(['/users/new']);
-  }
-
-  goDetail(id: string): void {
-    this.router.navigate(['/users', id]);
-  }
-
-  goEdit(id: string): void {
-    this.router.navigate(['/users', id, 'edit']);
-  }
+  goBack(): void { this.router.navigate(['/dashboard']); }
+  goCreate(): void { this.router.navigate(['/categories/new']); }
+  goTree(): void { this.router.navigate(['/categories/tree']); }
+  goDetail(id: string): void { this.router.navigate(['/categories', id]); }
+  goEdit(id: string): void { this.router.navigate(['/categories', id, 'edit']); }
 
   remove(id: string): void {
-    if (!confirm('Delete this user?')) return;
+    if (!confirm('Delete this category?')) return;
+
     const m = this.meta();
-    const isLastItemOnPage = !!m && m.page > 1 && this.users().length === 1;
+    const isLastItemOnPage = !!m && m.page > 1 && this.items().length === 1;
     const nextPage = isLastItemOnPage ? (m!.page - 1) : (m?.page || 1);
 
     this.actionLoading.set(true);
@@ -114,11 +98,23 @@ export class UserList implements OnInit, OnDestroy {
       .pipe(finalize(() => this.actionLoading.set(false)))
       .subscribe({
         next: () => {
-          this.showSuccess('User deleted successfully');
+          this.showSuccess('Category deleted successfully');
           this.load(nextPage);
         },
-        error: e => this.showError(e?.error?.error?.message || 'Failed to delete user')
+        error: e => {
+          const status = e?.status || e?.error?.statusCode;
+          this.showError(
+            status === 409
+              ? 'Category has child categories and cannot be deleted'
+              : (e?.error?.error?.message || 'Failed to delete category')
+          );
+        }
       });
+  }
+
+  parentName(cat: any): string {
+    const p = (cat as any)?.parent;
+    return p && typeof p === 'object' ? (p.name || '—') : '—';
   }
 
   ngOnDestroy(): void {

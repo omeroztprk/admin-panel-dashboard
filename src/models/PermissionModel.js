@@ -19,7 +19,8 @@ const permissionSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    trim: true
+    trim: true,
+    maxlength: 255
   },
   isSystem: {
     type: Boolean,

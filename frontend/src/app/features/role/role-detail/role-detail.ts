@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -13,7 +13,7 @@ import { finalize } from 'rxjs';
   templateUrl: './role-detail.html',
   styleUrls: ['./role-detail.scss']
 })
-export class RoleDetail implements OnInit {
+export class RoleDetail implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private api = inject(RoleService);
@@ -23,6 +23,7 @@ export class RoleDetail implements OnInit {
   role = signal<Role | null>(null);
   success = signal<string | null>(null);
   private successTimer: any;
+  private errorTimer: any;
 
   resourceOrder = ['user', 'role', 'permission', 'audit', 'category'] as const;
   resourceLabels: Record<string, string> = {
@@ -73,6 +74,14 @@ export class RoleDetail implements OnInit {
     }, 3000);
   }
 
+  private showError(message: string): void {
+    this.error.set(message);
+    clearTimeout(this.errorTimer);
+    this.errorTimer = setTimeout(() => {
+      if (this.error() === message) this.error.set(null);
+    }, 3000);
+  }
+
   private load(id: string) {
     this.loading.set(true);
     this.error.set(null);
@@ -80,7 +89,7 @@ export class RoleDetail implements OnInit {
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: res => this.role.set(res.data),
-        error: e => this.error.set(e?.error?.error?.message || 'Failed to load role')
+        error: e => this.showError(e?.error?.error?.message || 'Failed to load role')
       });
   }
 
@@ -99,14 +108,14 @@ export class RoleDetail implements OnInit {
     const id = this.role()?._id;
     if (!id) return;
     if (!confirm('Delete this role?')) return;
-
     this.api.remove(id).subscribe({
       next: () => this.router.navigate(['/roles'], { state: { success: 'Role deleted successfully' } }),
-      error: e => this.error.set(e?.error?.error?.message || 'Failed to delete role')
+      error: e => this.showError(e?.error?.error?.message || 'Failed to delete role')
     });
   }
 
   ngOnDestroy(): void {
     if (this.successTimer) clearTimeout(this.successTimer);
+    if (this.errorTimer) clearTimeout(this.errorTimer);
   }
 }

@@ -55,7 +55,7 @@ export class PermissionForm implements OnInit {
     this.form = this.fb.group({
       resource: ['', [Validators.required]],
       action: ['', [Validators.required]],
-      description: ['', [Validators.maxLength(200)]]
+      description: ['', [Validators.maxLength(255)]]
     });
   }
 

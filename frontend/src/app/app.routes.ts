@@ -43,6 +43,11 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./features/permission/permission.routes').then(m => m.permissionRoutes)
       },
+      {
+        path: 'categories',
+        loadChildren: () =>
+          import('./features/category/category.routes').then(m => m.categoryRoutes)
+      },
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' }
     ]
   },

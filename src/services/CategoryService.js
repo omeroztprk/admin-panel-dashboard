@@ -24,6 +24,7 @@ const categoryService = {
 
   create: async (data, currentUserId) => {
     try {
+      if (data.parent === '') data.parent = null;
       const cat = await Category.create(data);
       await auditLogService.log({
         user: currentUserId,
@@ -44,12 +45,38 @@ const categoryService = {
     }
   },
 
+  async willCreateCycle(candidateParentId, id) {
+    let current = candidateParentId;
+    while (current) {
+      if (String(current) === String(id)) return true;
+      const node = await Category.findById(current).select('parent').lean();
+      if (!node) break;
+      current = node.parent;
+    }
+    return false;
+  },
+
   update: async (id, updateData, currentUserId) => {
     try {
-      if (updateData.parent && updateData.parent === id) {
+      if (updateData.parent === '') updateData.parent = null;
+      if (updateData.parent && String(updateData.parent) === String(id)) {
         const err = new Error('Category cannot be its own parent');
         err.statusCode = 400;
         throw err;
+      }
+      if (updateData.parent) {
+        const parentExists = await Category.exists({ _id: updateData.parent });
+        if (!parentExists) {
+          const err = new Error('Parent category not found');
+          err.statusCode = 400;
+          throw err;
+        }
+        const cycle = await categoryService.willCreateCycle(updateData.parent, id);
+        if (cycle) {
+          const err = new Error('Cannot set parent to a descendant category (circular dependency)');
+          err.statusCode = 400;
+          throw err;
+        }
       }
       const existing = await Category.findById(id);
       if (!existing) {

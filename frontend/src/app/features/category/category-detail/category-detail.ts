@@ -1,21 +1,21 @@
 import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { PermissionService } from '../../../core/services/permission.service';
-import { Permission } from '../../../core/models/permission.model';
+import { CategoryService } from '../../../core/services/category.service';
+import { Category } from '../../../core/models/category.model';
 import { finalize } from 'rxjs';
 
 @Component({
-  selector: 'app-permission-detail',
+  selector: 'app-category-detail',
   standalone: true,
   imports: [CommonModule, RouterModule, DatePipe],
-  templateUrl: './permission-detail.html',
-  styleUrls: ['./permission-detail.scss']
+  templateUrl: './category-detail.html',
+  styleUrls: ['./category-detail.scss']
 })
-export class PermissionDetail implements OnInit, OnDestroy {
+export class CategoryDetail implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private api = inject(PermissionService);
+  private api = inject(CategoryService);
 
   loading = signal(true);
   error = signal<string | null>(null);
@@ -23,7 +23,7 @@ export class PermissionDetail implements OnInit, OnDestroy {
   private successTimer: any;
   private errorTimer: any;
 
-  item = signal<Permission | null>(null);
+  item = signal<Category | null>(null);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')!;
@@ -58,25 +58,38 @@ export class PermissionDetail implements OnInit, OnDestroy {
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: res => this.item.set(res.data),
-        error: e => this.showError(e?.error?.error?.message || 'Failed to load permission')
+        error: e => this.showError(e?.error?.error?.message || 'Failed to load category')
       });
   }
 
-  goBack(): void { this.router.navigate(['/permissions']); }
+  goBack(): void { this.router.navigate(['/categories']); }
 
   goEdit(): void {
     const id = this.item()?._id;
-    if (id) this.router.navigate(['/permissions', id, 'edit'], { state: { fromDetail: true } });
+    if (id) this.router.navigate(['/categories', id, 'edit'], { state: { fromDetail: true } });
   }
 
   remove(): void {
     const id = this.item()?._id;
     if (!id) return;
-    if (!confirm('Delete this permission?')) return;
+    if (!confirm('Delete this category?')) return;
+
     this.api.remove(id).subscribe({
-      next: () => this.router.navigate(['/permissions'], { state: { success: 'Permission deleted successfully' } }),
-      error: e => this.showError(e?.error?.error?.message || 'Failed to delete permission')
+      next: () => this.router.navigate(['/categories'], { state: { success: 'Category deleted successfully' } }),
+      error: e => {
+        const status = e?.status || e?.error?.statusCode;
+        this.showError(
+          status === 409
+            ? 'Category has child categories and cannot be deleted'
+            : (e?.error?.error?.message || 'Failed to delete category')
+        );
+      }
     });
+  }
+
+  parentName(cat: any): string {
+    const p = (cat as any)?.parent;
+    return p && typeof p === 'object' ? (p.name || '—') : '—';
   }
 
   ngOnDestroy(): void {

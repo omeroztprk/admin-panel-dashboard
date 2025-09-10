@@ -15,6 +15,8 @@ const PermissionValidator = {
     body('description')
       .optional()
       .trim()
+      .isLength({ max: 255 })
+      .withMessage('Description max length is 255 characters')
   ],
 
   update: [
