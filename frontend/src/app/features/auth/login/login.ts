@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -13,22 +13,18 @@ import { finalize } from 'rxjs';
   templateUrl: './login.html',
   styleUrls: ['./login.scss']
 })
-export class Login {
-  loginForm: FormGroup;
+export class Login implements OnDestroy {
+  private fb = inject(FormBuilder);
+  private auth = inject(AuthService);
+  private router = inject(Router);
+  loginForm: FormGroup = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.required]
+  });
   loading = signal(false);
   error = signal<string | null>(null);
+  private errorTimer: any;
   showPassword = signal(false);
-
-  constructor(
-    private fb: FormBuilder,
-    private auth: AuthService,
-    private router: Router
-  ) {
-    this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
-    });
-  }
 
   togglePassword(): void {
     this.showPassword.set(!this.showPassword());
@@ -52,7 +48,19 @@ export class Login {
           this.router.navigate(['/']);
         }
       },
-      error: (e) => this.error.set(e.error?.error?.message || 'Login failed')
+      error: (e) => this.showError(e.error?.error?.message || 'Login failed')
     });
+  }
+
+  private showError(message: string): void {
+    this.error.set(message);
+    clearTimeout(this.errorTimer);
+    this.errorTimer = setTimeout(() => {
+      if (this.error() === message) this.error.set(null);
+    }, 3000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.errorTimer) clearTimeout(this.errorTimer);
   }
 }

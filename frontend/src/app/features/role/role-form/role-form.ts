@@ -2,11 +2,13 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { RoleService, CreateRoleRequest, UpdateRoleRequest } from '../../../core/services/role.service';
+import { RoleService } from '../../../core/services/role.service';
+import { CreateRoleRequest, UpdateRoleRequest } from '../../../core/models/role.model';
 import { PermissionService } from '../../../core/services/permission.service';
 import { Permission } from '../../../core/models/permission.model';
-import { Role } from '../../../core/models/role.model';
 import { finalize } from 'rxjs';
+import { AuthService } from '../../../core/services/auth.service';
+import { ProfileService } from '../../../core/services/profile.service';
 
 @Component({
   selector: 'app-role-form',
@@ -21,6 +23,8 @@ export class RoleForm implements OnInit {
   private router = inject(Router);
   private rolesApi = inject(RoleService);
   private permissionsApi = inject(PermissionService);
+  private auth = inject(AuthService);
+  private profile = inject(ProfileService);
 
   form!: FormGroup;
   loading = signal(true);
@@ -172,6 +176,9 @@ export class RoleForm implements OnInit {
       .pipe(finalize(() => this.saving.set(false)))
       .subscribe({
         next: () => {
+          const me = this.auth.getCurrentUser();
+          const affected = !!me?.roles?.some(r => r._id === this.id());
+          if (affected) this.profile.getProfile().subscribe();
           if (this.fromDetail()) {
             this.router.navigate(['/roles', this.id()!], { state: { success: 'Role updated successfully' } });
           } else {

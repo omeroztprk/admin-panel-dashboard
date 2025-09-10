@@ -87,8 +87,8 @@ export class CategoryDetail implements OnInit, OnDestroy {
     });
   }
 
-  parentName(cat: any): string {
-    const p = (cat as any)?.parent;
+  parentName(cat: Category): string {
+    const p = cat?.parent as Category | string | null | undefined;
     return p && typeof p === 'object' ? (p.name || '—') : '—';
   }
 

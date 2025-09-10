@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, input, output, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output, computed, inject } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -33,6 +33,9 @@ interface NavGroup {
 export class Sidebar {
   mobileSidebarOpen = input<boolean>(false);
   closeSidebar = output<void>();
+  public auth = inject(AuthService);
+  private router = inject(Router);
+  private sanitizer = inject(DomSanitizer);
 
   private readonly allGroups: NavGroup[] = [
     {
@@ -93,12 +96,6 @@ export class Sidebar {
       }))
       .filter(g => g.items.length);
   });
-
-  constructor(
-    public auth: AuthService,
-    private router: Router,
-    private sanitizer: DomSanitizer
-  ) { }
 
   private canAccess(item: NavItem): boolean {
     if (item.disabled) return false;

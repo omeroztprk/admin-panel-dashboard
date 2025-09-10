@@ -1,4 +1,4 @@
-import { Component, signal, OnInit } from '@angular/core';
+import { Component, signal, OnInit, inject, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -13,22 +13,18 @@ import { finalize } from 'rxjs';
   templateUrl: './tfa-verify.html',
   styleUrls: ['./tfa-verify.scss']
 })
-export class TfaVerify implements OnInit {
-  tfaForm: FormGroup;
+export class TfaVerify implements OnInit, OnDestroy {
+  private fb = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
+  private tfa = inject(TfaService);
+  private router = inject(Router);
+  tfaForm: FormGroup = this.fb.group({
+    code: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
+  });
   loading = signal(false);
   error = signal<string | null>(null);
+  private errorTimer: any;
   tfaId = signal<string | null>(null);
-
-  constructor(
-    private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private tfa: TfaService,
-    private router: Router
-  ) {
-    this.tfaForm = this.fb.group({
-      code: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
-    });
-  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.queryParamMap.get('tfaId');
@@ -51,7 +47,19 @@ export class TfaVerify implements OnInit {
       finalize(() => this.loading.set(false))
     ).subscribe({
       next: () => this.router.navigate(['/']),
-      error: (e) => this.error.set(e.error?.error?.message || 'Verification failed')
+      error: (e) => this.showError(e.error?.error?.message || 'Verification failed')
     });
+  }
+
+  private showError(message: string): void {
+    this.error.set(message);
+    clearTimeout(this.errorTimer);
+    this.errorTimer = setTimeout(() => {
+      if (this.error() === message) this.error.set(null);
+    }, 3000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.errorTimer) clearTimeout(this.errorTimer);
   }
 }

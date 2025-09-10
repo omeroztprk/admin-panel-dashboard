@@ -1,7 +1,8 @@
-import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { CategoryService, CategoryListMeta } from '../../../core/services/category.service';
+import { CategoryService } from '../../../core/services/category.service';
+import { ListMeta } from '../../../core/models/api.types';
 import { Category } from '../../../core/models/category.model';
 import { finalize } from 'rxjs';
 
@@ -13,6 +14,9 @@ import { finalize } from 'rxjs';
   styleUrls: ['./category-list.scss']
 })
 export class CategoryList implements OnInit, OnDestroy {
+  private api = inject(CategoryService);
+  private router = inject(Router);
+
   readonly limit = 10;
 
   loading = signal(true);
@@ -23,12 +27,10 @@ export class CategoryList implements OnInit, OnDestroy {
   private errorTimer: any;
 
   items = signal<Category[]>([]);
-  meta = signal<CategoryListMeta | null>(null);
+  meta = signal<ListMeta | null>(null);
 
   hasPrev = computed(() => !!this.meta() && this.meta()!.hasPrevPage);
   hasNext = computed(() => !!this.meta() && this.meta()!.hasNextPage);
-
-  constructor(private api: CategoryService, private router: Router) { }
 
   ngOnInit(): void {
     this.load(1);
@@ -112,8 +114,8 @@ export class CategoryList implements OnInit, OnDestroy {
       });
   }
 
-  parentName(cat: any): string {
-    const p = (cat as any)?.parent;
+  parentName(cat: Category): string {
+    const p = cat?.parent as Category | string | null | undefined;
     return p && typeof p === 'object' ? (p.name || '—') : '—';
   }
 

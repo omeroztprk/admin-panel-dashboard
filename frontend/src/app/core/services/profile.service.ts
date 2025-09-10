@@ -7,16 +7,16 @@ import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
-  private readonly apiUrl = `${environment.apiUrl}/profile`;
+  private readonly api = `${environment.apiUrl}/profile`;
   constructor(private http: HttpClient, private auth: AuthService) {}
 
   getProfile(): Observable<{ data: User }> {
-    return this.http.get<{ data: User }>(this.apiUrl)
+    return this.http.get<{ data: User }>(this.api)
       .pipe(tap(res => this.auth.setCurrentUser(res.data)));
   }
 
   updateProfile(payload: ProfileUpdateRequest): Observable<{ data: User }> {
-    return this.http.patch<{ data: User }>(this.apiUrl, payload)
+    return this.http.patch<{ data: User }>(this.api, payload)
       .pipe(tap(res => this.auth.setCurrentUser(res.data)));
   }
 }

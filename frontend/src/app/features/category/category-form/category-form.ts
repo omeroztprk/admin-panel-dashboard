@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CategoryService } from '../../../core/services/category.service';
-import { Category } from '../../../core/models/category.model';
+import { Category, CreateCategoryRequest, UpdateCategoryRequest } from '../../../core/models/category.model';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -154,7 +154,12 @@ export class CategoryForm implements OnInit {
     const { name, parent, description } = this.form.getRawValue() as { name: string; parent: string | null; description?: string; };
 
     if (!this.isEdit()) {
-      this.api.create({ name, parent: parent || null, description: description?.trim() })
+      const payload: CreateCategoryRequest = {
+        name,
+        parent: parent || null,
+        description: description?.trim() || undefined
+      };
+      this.api.create(payload)
         .pipe(finalize(() => this.saving.set(false)))
         .subscribe({
           next: () => this.router.navigate(['/categories'], { state: { success: 'Category created successfully' } }),
@@ -163,7 +168,12 @@ export class CategoryForm implements OnInit {
       return;
     }
 
-    this.api.update(this.id()!, { name, parent: parent || null, description: description?.trim() })
+    const updatePayload: UpdateCategoryRequest = {
+      name,
+      parent: parent || null,
+      description: description?.trim() || undefined
+    };
+    this.api.update(this.id()!, updatePayload)
       .pipe(finalize(() => this.saving.set(false)))
       .subscribe({
         next: () => {

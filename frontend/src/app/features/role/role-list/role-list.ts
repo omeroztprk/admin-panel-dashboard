@@ -1,9 +1,12 @@
-import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { RoleService, RoleListMeta } from '../../../core/services/role.service';
+import { RoleService } from '../../../core/services/role.service';
+import { ListMeta } from '../../../core/models/api.types';
 import { Role } from '../../../core/models/role.model';
 import { finalize } from 'rxjs';
+import { AuthService } from '../../../core/services/auth.service';
+import { ProfileService } from '../../../core/services/profile.service';
 
 @Component({
   selector: 'app-role-list',
@@ -13,6 +16,11 @@ import { finalize } from 'rxjs';
   styleUrls: ['./role-list.scss']
 })
 export class RoleList implements OnInit, OnDestroy {
+  private api = inject(RoleService);
+  private router = inject(Router);
+  private auth = inject(AuthService);
+  private profile = inject(ProfileService);
+
   readonly limit = 10;
 
   loading = signal(true);
@@ -23,12 +31,10 @@ export class RoleList implements OnInit, OnDestroy {
   private errorTimer: any;
 
   roles = signal<Role[]>([]);
-  meta = signal<RoleListMeta | null>(null);
+  meta = signal<ListMeta | null>(null);
 
   hasPrev = computed(() => !!this.meta() && this.meta()!.hasPrevPage);
   hasNext = computed(() => !!this.meta() && this.meta()!.hasNextPage);
-
-  constructor(private api: RoleService, private router: Router) { }
 
   ngOnInit(): void {
     this.load(1);
@@ -108,12 +114,16 @@ export class RoleList implements OnInit, OnDestroy {
       .pipe(finalize(() => this.actionLoading.set(false)))
       .subscribe({
         next: () => {
+          const me = this.auth.getCurrentUser();
+          const affected = !!me?.roles?.some(r => r._id === id);
+          if (affected) this.profile.getProfile().subscribe();
           this.showSuccess('Role deleted successfully');
           this.load(nextPage);
         },
         error: e => this.showError(e?.error?.error?.message || 'Failed to delete role')
       });
   }
+
   ngOnDestroy(): void {
     if (this.successTimer) clearTimeout(this.successTimer);
     if (this.errorTimer) clearTimeout(this.errorTimer);

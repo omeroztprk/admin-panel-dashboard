@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { PermissionService } from '../../../core/services/permission.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { ProfileService } from '../../../core/services/profile.service';
 import { Permission } from '../../../core/models/permission.model';
 import { finalize } from 'rxjs';
 
@@ -16,6 +18,8 @@ export class PermissionDetail implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private api = inject(PermissionService);
+  private auth = inject(AuthService);
+  private profile = inject(ProfileService);
 
   loading = signal(true);
   error = signal<string | null>(null);
@@ -74,7 +78,12 @@ export class PermissionDetail implements OnInit, OnDestroy {
     if (!id) return;
     if (!confirm('Delete this permission?')) return;
     this.api.remove(id).subscribe({
-      next: () => this.router.navigate(['/permissions'], { state: { success: 'Permission deleted successfully' } }),
+      next: () => {
+        const me = this.auth.getCurrentUser();
+        const affected = !!me?.roles?.some(r => Array.isArray(r.permissions) && r.permissions.some(p => p._id === id));
+        if (affected) this.profile.getProfile().subscribe();
+        this.router.navigate(['/permissions'], { state: { success: 'Permission deleted successfully' } });
+      },
       error: e => this.showError(e?.error?.error?.message || 'Failed to delete permission')
     });
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -21,7 +21,12 @@ import { ProfileUpdateRequest } from '../../../core/models/user.model';
   templateUrl: './profile-update.html',
   styleUrls: ['./profile-update.scss']
 })
-export class ProfileUpdate implements OnInit {
+export class ProfileUpdate implements OnInit, OnDestroy {
+  private fb = inject(FormBuilder);
+  private profile = inject(ProfileService);
+  public auth = inject(AuthService);
+  private router = inject(Router);
+
   form!: FormGroup;
   loading = signal(true);
   saving = signal(false);
@@ -30,12 +35,15 @@ export class ProfileUpdate implements OnInit {
   showCurrent = signal(false);
   showNew = signal(false);
 
-  constructor(
-    private fb: FormBuilder,
-    private profile: ProfileService,
-    public auth: AuthService,
-    private router: Router
-  ) { }
+  private errorTimer: any;
+
+  private showError(message: string): void {
+    this.error.set(message);
+    clearTimeout(this.errorTimer);
+    this.errorTimer = setTimeout(() => {
+      if (this.error() === message) this.error.set(null);
+    }, 3000);
+  }
 
   ngOnInit(): void {
     this.buildForm();
@@ -49,7 +57,7 @@ export class ProfileUpdate implements OnInit {
             email: res.data.email
           });
         },
-        error: e => this.error.set(e.error?.error?.message || 'Profile load failed')
+        error: e => this.showError(e.error?.error?.message || 'Profile load failed')
       });
   }
 
@@ -105,7 +113,7 @@ export class ProfileUpdate implements OnInit {
             state: { success: 'Profile updated' }
           });
         },
-        error: e => this.error.set(e.error?.error?.message || 'Update failed')
+        error: e => this.showError(e.error?.error?.message || 'Update failed')
       });
   }
 
@@ -115,5 +123,9 @@ export class ProfileUpdate implements OnInit {
 
   passwordFormError(code: string): boolean {
     return !!this.form.errors?.[code];
+  }
+
+  ngOnDestroy(): void {
+    if (this.errorTimer) clearTimeout(this.errorTimer);
   }
 }

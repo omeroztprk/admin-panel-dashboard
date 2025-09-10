@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { PermissionService } from '../../../core/services/permission.service';
-import { Permission } from '../../../core/models/permission.model';
+import { AuthService } from '../../../core/services/auth.service';
+import { ProfileService } from '../../../core/services/profile.service';
+import { CreatePermissionRequest, UpdatePermissionRequest } from '../../../core/models/permission.model';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -18,6 +20,8 @@ export class PermissionForm implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private api = inject(PermissionService);
+  private auth = inject(AuthService);
+  private profile = inject(ProfileService);
 
   form!: FormGroup;
   loading = signal(true);
@@ -96,10 +100,15 @@ export class PermissionForm implements OnInit {
     this.error.set(null);
     this.saving.set(true);
 
-    const raw = this.form.getRawValue() as Pick<Permission, 'resource' | 'action' | 'description'>;
+    const raw = this.form.getRawValue() as { resource: string; action: string; description?: string; };
 
     if (!this.isEdit()) {
-      this.api.create(raw)
+      const payload: CreatePermissionRequest = {
+        resource: raw.resource,
+        action: raw.action,
+        description: raw.description?.trim() || undefined
+      };
+      this.api.create(payload)
         .pipe(finalize(() => this.saving.set(false)))
         .subscribe({
           next: () => this.router.navigate(['/permissions'], { state: { success: 'Permission created successfully' } }),
@@ -108,10 +117,19 @@ export class PermissionForm implements OnInit {
       return;
     }
 
-    this.api.update(this.id()!, raw)
+    const updatePayload: UpdatePermissionRequest = {
+      resource: raw.resource,
+      action: raw.action,
+      description: raw.description?.trim() || undefined
+    };
+    this.api.update(this.id()!, updatePayload)
       .pipe(finalize(() => this.saving.set(false)))
       .subscribe({
         next: () => {
+          const me = this.auth.getCurrentUser();
+          const pid = this.id()!;
+          const affected = !!me?.roles?.some(r => Array.isArray(r.permissions) && r.permissions.some(p => p._id === pid));
+          if (affected) this.profile.getProfile().subscribe();
           if (this.fromDetail()) {
             this.router.navigate(['/permissions', this.id()!], { state: { success: 'Permission updated successfully' } });
           } else {

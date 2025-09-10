@@ -1,7 +1,8 @@
-import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { UserService, ListMeta } from '../../../core/services/user.service';
+import { UserService } from '../../../core/services/user.service';
+import { ListMeta } from '../../../core/models/api.types';
 import { User } from '../../../core/models/user.model';
 import { finalize } from 'rxjs';
 
@@ -13,6 +14,9 @@ import { finalize } from 'rxjs';
   styleUrls: ['./user-list.scss']
 })
 export class UserList implements OnInit, OnDestroy {
+  private api = inject(UserService);
+  private router = inject(Router);
+
   readonly limit = 10;
 
   loading = signal(true);
@@ -27,8 +31,6 @@ export class UserList implements OnInit, OnDestroy {
 
   hasPrev = computed(() => !!this.meta() && this.meta()!.hasPrevPage);
   hasNext = computed(() => !!this.meta() && this.meta()!.hasNextPage);
-
-  constructor(private api: UserService, private router: Router) {}
 
   ngOnInit(): void {
     this.load(1);
@@ -61,6 +63,7 @@ export class UserList implements OnInit, OnDestroy {
         error: e => this.showError(e?.error?.error?.message || 'Failed to load users')
       });
   }
+
   private showError(message: string): void {
     this.error.set(message);
     clearTimeout(this.errorTimer);

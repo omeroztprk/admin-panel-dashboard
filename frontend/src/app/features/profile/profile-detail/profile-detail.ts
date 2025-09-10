@@ -39,7 +39,7 @@ export class ProfileDetail implements OnInit, OnDestroy {
     this.clearTimer && clearTimeout(this.clearTimer);
     this.clearTimer = setTimeout(() => {
       if (this.success() === message) this.success.set(null);
-    }, 2500);
+    }, 3000);
   }
   ngOnDestroy(): void {
     if (this.clearTimer) clearTimeout(this.clearTimer);

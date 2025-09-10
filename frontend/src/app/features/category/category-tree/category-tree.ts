@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { CategoryService } from '../../../core/services/category.service';
@@ -12,12 +12,13 @@ import { finalize } from 'rxjs';
   templateUrl: './category-tree.html',
   styleUrls: ['./category-tree.scss']
 })
-export class CategoryTree implements OnInit {
+export class CategoryTree implements OnInit, OnDestroy {
   private api = inject(CategoryService);
   private router = inject(Router);
 
   loading = signal(true);
   error = signal<string | null>(null);
+  private errorTimer: any;
   nodes = signal<Category[]>([]);
 
   ngOnInit(): void {
@@ -31,8 +32,16 @@ export class CategoryTree implements OnInit {
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: res => this.nodes.set(res.data || []),
-        error: e => this.error.set(e?.error?.error?.message || 'Failed to load category tree')
+        error: e => this.showError(e?.error?.error?.message || 'Failed to load category tree')
       });
+  }
+
+  private showError(message: string): void {
+    this.error.set(message);
+    clearTimeout(this.errorTimer);
+    this.errorTimer = setTimeout(() => {
+      if (this.error() === message) this.error.set(null);
+    }, 3000);
   }
 
   goBack(): void {
@@ -40,4 +49,8 @@ export class CategoryTree implements OnInit {
   }
 
   trackById = (_: number, c: Category) => c._id;
+
+  ngOnDestroy(): void {
+    if (this.errorTimer) clearTimeout(this.errorTimer);
+  }
 }

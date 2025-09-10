@@ -1,21 +1,25 @@
-import { Component, OnInit, signal, computed, OnDestroy } from '@angular/core';
+import { Component, OnInit, signal, computed, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { SessionsService, SessionsMeta } from '../../core/services/sessions.service';
+import { SessionsService } from '../../core/services/sessions.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Session } from '../../core/models/session.model';
+import { ListMeta } from '../../core/models/api.types';
 import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-sessions',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './sessions.html',
-  styleUrls: ['./sessions.scss'],
+  templateUrl: './session-list.html',
+  styleUrls: ['./session-list.scss'],
   providers: []
 })
-export class SessionsList implements OnInit, OnDestroy {
+export class SessionList implements OnInit, OnDestroy {
   readonly limit = 5;
+  private sessionsService = inject(SessionsService);
+  private auth = inject(AuthService);
+  private router = inject(Router);
 
   loading = signal(true);
   actionLoading = signal(false);
@@ -23,21 +27,34 @@ export class SessionsList implements OnInit, OnDestroy {
   success = signal<string | null>(null);
 
   sessions = signal<Session[]>([]);
-  meta = signal<SessionsMeta | null>(null);
+  meta = signal<ListMeta | null>(null);
 
   hasPrev = computed(() => !!this.meta() && this.meta()!.hasPrevPage);
   hasNext = computed(() => !!this.meta() && this.meta()!.hasNextPage);
 
   private successTimer: any;
+  private errorTimer: any;
 
-  constructor(
-    private sessionsService: SessionsService,
-    private auth: AuthService,
-    private router: Router
-  ) { }
+  constructor() { }
 
   ngOnInit(): void {
     this.load(1);
+  }
+
+  private showSuccess(message: string) {
+    this.success.set(message);
+    clearTimeout(this.successTimer);
+    this.successTimer = setTimeout(() => {
+      if (this.success() === message) this.success.set(null);
+    }, 3000);
+  }
+
+  private showError(message: string): void {
+    this.error.set(message);
+    clearTimeout(this.errorTimer);
+    this.errorTimer = setTimeout(() => {
+      if (this.error() === message) this.error.set(null);
+    }, 3000);
   }
 
   load(page: number): void {
@@ -50,16 +67,8 @@ export class SessionsList implements OnInit, OnDestroy {
           this.sessions.set(res.data);
           this.meta.set(res.meta);
         },
-        error: e => this.error.set(e.error?.error?.message || 'Failed to load sessions')
+        error: e => this.showError(e.error?.error?.message || 'Failed to load sessions')
       });
-  }
-
-  private showSuccess(message: string) {
-    this.success.set(message);
-    clearTimeout(this.successTimer);
-    this.successTimer = setTimeout(() => {
-      if (this.success() === message) this.success.set(null);
-    }, 2500);
   }
 
   sortedSessions = computed((): Session[] => {
@@ -67,7 +76,7 @@ export class SessionsList implements OnInit, OnDestroy {
     const m = this.meta();
     if (!list.length || !m || m.page !== 1) return list;
 
-    const currentJti = this.auth.getCurrentJti?.();
+    const currentJti = this.auth.getCurrentJti();
     if (!currentJti) return list;
 
     const idx = list.findIndex(s => s.jti && s.jti === currentJti);
@@ -78,7 +87,7 @@ export class SessionsList implements OnInit, OnDestroy {
   });
 
   isCurrent = (s: Session): boolean => {
-    const jti = this.auth.getCurrentJti?.();
+    const jti = this.auth.getCurrentJti();
     return !!(s.jti && jti && s.jti === jti);
   };
 
@@ -110,7 +119,7 @@ export class SessionsList implements OnInit, OnDestroy {
           this.showSuccess('Session deleted');
           this.load(nextPage);
         },
-        error: e => this.error.set(e.error?.error?.message || 'Failed to revoke session')
+        error: e => this.showError(e.error?.error?.message || 'Failed to revoke session')
       });
   }
 
@@ -126,7 +135,7 @@ export class SessionsList implements OnInit, OnDestroy {
           this.auth.clear();
           this.router.navigate(['/auth/login']);
         },
-        error: e => this.error.set(e.error?.error?.message || 'Failed to revoke sessions')
+        error: e => this.showError(e.error?.error?.message || 'Failed to revoke sessions')
       });
   }
 
@@ -143,5 +152,6 @@ export class SessionsList implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.successTimer) clearTimeout(this.successTimer);
+    if (this.errorTimer) clearTimeout(this.errorTimer);
   }
 }

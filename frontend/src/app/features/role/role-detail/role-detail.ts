@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RoleService } from '../../../core/services/role.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { ProfileService } from '../../../core/services/profile.service';
 import { Role } from '../../../core/models/role.model';
 import { finalize } from 'rxjs';
 
@@ -17,6 +19,8 @@ export class RoleDetail implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private api = inject(RoleService);
+  private auth = inject(AuthService);
+  private profile = inject(ProfileService);
 
   loading = signal(true);
   error = signal<string | null>(null);
@@ -109,7 +113,12 @@ export class RoleDetail implements OnInit, OnDestroy {
     if (!id) return;
     if (!confirm('Delete this role?')) return;
     this.api.remove(id).subscribe({
-      next: () => this.router.navigate(['/roles'], { state: { success: 'Role deleted successfully' } }),
+      next: () => {
+        const me = this.auth.getCurrentUser();
+        const affected = !!me?.roles?.some(r => r._id === id);
+        if (affected) this.profile.getProfile().subscribe();
+        this.router.navigate(['/roles'], { state: { success: 'Role deleted successfully' } });
+      },
       error: e => this.showError(e?.error?.error?.message || 'Failed to delete role')
     });
   }

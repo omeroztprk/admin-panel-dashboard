@@ -5,6 +5,8 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
 import { RoleService } from '../../../core/services/role.service';
 import { Role } from '../../../core/models/role.model';
+import { CreateUserRequest, UpdateUserRequest } from '../../../core/models/user.model';
+import { AuthService } from '../../../core/services/auth.service';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -20,6 +22,7 @@ export class UserForm implements OnInit {
   private router = inject(Router);
   private users = inject(UserService);
   private rolesApi = inject(RoleService);
+  private auth = inject(AuthService);
 
   form!: FormGroup;
   loading = signal(true);
@@ -176,8 +179,10 @@ export class UserForm implements OnInit {
     }
   }
 
-  private createUser(data: any): void {
-    const payload = {
+  private createUser(data: {
+    firstName: string; lastName: string; email: string; roles: string[]; isActive: boolean; newPassword?: string;
+  }): void {
+    const payload: CreateUserRequest = {
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
@@ -196,20 +201,25 @@ export class UserForm implements OnInit {
       });
   }
 
-  private updateUser(data: any): void {
-    const payload: any = {
+  private updateUser(data: {
+    firstName: string; lastName: string; roles: string[]; isActive: boolean; newPassword?: string;
+  }): void {
+    const payload: UpdateUserRequest = {
       firstName: data.firstName,
       lastName: data.lastName,
       roles: data.roles,
       isActive: data.isActive
     };
-
     if (data.newPassword?.trim()) payload.password = data.newPassword;
 
     this.users.update(this.id()!, payload)
       .pipe(finalize(() => this.saving.set(false)))
       .subscribe({
-        next: () => {
+        next: (res) => {
+          const me = this.auth.getCurrentUser();
+          if (me && res.data && me._id === res.data._id) {
+            this.auth.setCurrentUser(res.data);
+          }
           if (this.fromDetail()) {
             this.router.navigate(['/users', this.id()!], { state: { success: 'User updated successfully' } });
           } else {

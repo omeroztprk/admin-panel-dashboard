@@ -1,7 +1,10 @@
-import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { PermissionService, PermissionListMeta } from '../../../core/services/permission.service';
+import { PermissionService } from '../../../core/services/permission.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { ProfileService } from '../../../core/services/profile.service';
+import { ListMeta } from '../../../core/models/api.types';
 import { Permission } from '../../../core/models/permission.model';
 import { finalize } from 'rxjs';
 
@@ -13,6 +16,11 @@ import { finalize } from 'rxjs';
   styleUrls: ['./permission-list.scss']
 })
 export class PermissionList implements OnInit, OnDestroy {
+  private api = inject(PermissionService);
+  private router = inject(Router);
+  private auth = inject(AuthService);
+  private profile = inject(ProfileService);
+
   readonly limit = 10;
 
   loading = signal(true);
@@ -23,12 +31,10 @@ export class PermissionList implements OnInit, OnDestroy {
   private errorTimer: any;
 
   items = signal<Permission[]>([]);
-  meta = signal<PermissionListMeta | null>(null);
+  meta = signal<ListMeta | null>(null);
 
   hasPrev = computed(() => !!this.meta() && this.meta()!.hasPrevPage);
   hasNext = computed(() => !!this.meta() && this.meta()!.hasNextPage);
-
-  constructor(private api: PermissionService, private router: Router) {}
 
   ngOnInit(): void {
     this.load(1);
@@ -98,12 +104,16 @@ export class PermissionList implements OnInit, OnDestroy {
       .pipe(finalize(() => this.actionLoading.set(false)))
       .subscribe({
         next: () => {
-          this.showSuccess('Permission deleted successfully');
-          this.load(nextPage);
+          const me = this.auth.getCurrentUser();
+          const affected = !!me?.roles?.some(r => Array.isArray(r.permissions) && r.permissions.some(p => p._id === id));
+          if (affected) this.profile.getProfile().subscribe();
+           this.showSuccess('Permission deleted successfully');
+           this.load(nextPage);
         },
         error: e => this.showError(e?.error?.error?.message || 'Failed to delete permission')
       });
   }
+
   ngOnDestroy(): void {
     if (this.successTimer) clearTimeout(this.successTimer);
     if (this.errorTimer) clearTimeout(this.errorTimer);

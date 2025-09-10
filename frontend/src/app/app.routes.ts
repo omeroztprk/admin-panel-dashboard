@@ -26,7 +26,7 @@ export const routes: Routes = [
       {
         path: 'sessions',
         loadComponent: () =>
-          import('./features/sessions/sessions').then(m => m.SessionsList)
+          import('./features/session/session-list').then(m => m.SessionList)
       },
       {
         path: 'users',
