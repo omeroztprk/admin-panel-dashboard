@@ -27,7 +27,6 @@ export class RoleDetail implements OnInit, OnDestroy {
   role = signal<Role | null>(null);
   success = signal<string | null>(null);
   private successTimer: any;
-  private errorTimer: any;
 
   resourceOrder = ['user', 'role', 'permission', 'audit', 'category'] as const;
   resourceLabels: Record<string, string> = {
@@ -80,10 +79,6 @@ export class RoleDetail implements OnInit, OnDestroy {
 
   private showError(message: string): void {
     this.error.set(message);
-    clearTimeout(this.errorTimer);
-    this.errorTimer = setTimeout(() => {
-      if (this.error() === message) this.error.set(null);
-    }, 3000);
   }
 
   private load(id: string) {
@@ -125,6 +120,5 @@ export class RoleDetail implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.successTimer) clearTimeout(this.successTimer);
-    if (this.errorTimer) clearTimeout(this.errorTimer);
   }
 }

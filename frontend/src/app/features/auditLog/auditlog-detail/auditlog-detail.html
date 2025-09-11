@@ -1,0 +1,68 @@
+<div class="page-wrap">
+  <h1 class="page-title gradient-text">Audit Log</h1>
+
+  <div class="app-card with-accent" *ngIf="!loading(); else loadingTpl">
+    <div class="card-header">
+      <button class="back-btn" type="button" (click)="goBack()" aria-label="Back">
+        <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <span>Back</span>
+      </button>
+    </div>
+
+    <div class="alert alert-error" *ngIf="error()" aria-live="assertive">
+      <span class="alert__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="15" y1="9" x2="9" y2="15" />
+          <line x1="9" y1="9" x2="15" y2="15" />
+        </svg>
+      </span>
+      {{ error() }}
+    </div>
+
+    <ng-container *ngIf="log() as l">
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="label">User</span>
+          <span class="value truncate">{{ userLabel() }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Action</span>
+          <span class="value">{{ l.action }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Resource</span>
+          <span class="value">{{ l.resource }}</span>
+        </div>
+        <div class="meta-item" *ngIf="l.resourceId">
+          <span class="label">Resource ID</span>
+          <span class="value truncate">{{ l.resourceId }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Status</span>
+          <span class="value">
+            <span [class]="statusChip(l)">
+              <span class="dot"></span>{{ l.status }}
+            </span>
+          </span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Created</span>
+          <span class="value">{{ l.createdAt | date:'medium' }}</span>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="app-card with-accent skeleton">
+    <div class="skeleton-line wide"></div>
+    <div class="skeleton-line"></div>
+    <div class="skeleton-line"></div>
+    <div class="skeleton-line half"></div>
+  </div>
+</ng-template>

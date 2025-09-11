@@ -21,7 +21,6 @@ export class CategoryDetail implements OnInit, OnDestroy {
   error = signal<string | null>(null);
   success = signal<string | null>(null);
   private successTimer: any;
-  private errorTimer: any;
 
   item = signal<Category | null>(null);
 
@@ -47,8 +46,6 @@ export class CategoryDetail implements OnInit, OnDestroy {
 
   private showError(message: string): void {
     this.error.set(message);
-    clearTimeout(this.errorTimer);
-    this.errorTimer = setTimeout(() => { if (this.error() === message) this.error.set(null); }, 3000);
   }
 
   private load(id: string): void {
@@ -94,6 +91,5 @@ export class CategoryDetail implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.successTimer) clearTimeout(this.successTimer);
-    if (this.errorTimer) clearTimeout(this.errorTimer);
   }
 }

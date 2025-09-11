@@ -30,7 +30,6 @@ export class Register implements OnDestroy {
   loading = signal(false);
   error = signal<string | null>(null);
   success = signal<string | null>(null);
-  private errorTimer: any;
   showPassword = signal(false);
 
   togglePassword(): void {
@@ -58,13 +57,7 @@ export class Register implements OnDestroy {
 
   private showError(message: string): void {
     this.error.set(message);
-    clearTimeout(this.errorTimer);
-    this.errorTimer = setTimeout(() => {
-      if (this.error() === message) this.error.set(null);
-    }, 3000);
   }
 
-  ngOnDestroy(): void {
-    if (this.errorTimer) clearTimeout(this.errorTimer);
-  }
+  ngOnDestroy(): void {}
 }

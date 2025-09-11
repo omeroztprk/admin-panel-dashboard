@@ -35,14 +35,8 @@ export class ProfileUpdate implements OnInit, OnDestroy {
   showCurrent = signal(false);
   showNew = signal(false);
 
-  private errorTimer: any;
-
   private showError(message: string): void {
     this.error.set(message);
-    clearTimeout(this.errorTimer);
-    this.errorTimer = setTimeout(() => {
-      if (this.error() === message) this.error.set(null);
-    }, 3000);
   }
 
   ngOnInit(): void {
@@ -125,7 +119,5 @@ export class ProfileUpdate implements OnInit, OnDestroy {
     return !!this.form.errors?.[code];
   }
 
-  ngOnDestroy(): void {
-    if (this.errorTimer) clearTimeout(this.errorTimer);
-  }
+  ngOnDestroy(): void {}
 }

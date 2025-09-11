@@ -1,6 +1,13 @@
+export interface PopulatedAuditUser {
+  _id: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+}
+
 export interface AuditLog {
   _id: string;
-  user?: string;
+  user?: PopulatedAuditUser;
   action: string;
   resource: string;
   resourceId?: string;

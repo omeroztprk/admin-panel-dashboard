@@ -1,0 +1,59 @@
+@use "../../../../styles/core" as *;
+
+.data-table {
+  --data-cols: minmax(220px, 1.4fr) minmax(160px, 1.05fr) minmax(150px, 1.05fr) 160px 120px 60px;
+  --data-min-width: 960px;
+}
+
+.filters {
+  animation: fadeIn 0.4s ease;
+
+  .filters-form {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  .filters-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: $spacing-sm;
+    margin-top: -4px;
+  }
+
+  .form-row {
+    gap: $spacing-sm + 4px;
+  }
+
+  .input-group {
+    margin-bottom: $spacing-md;
+  }
+
+  .input-wrapper {
+    .icon {
+      left: $spacing-sm + 4px;
+
+      svg {
+        width: 18px;
+        height: 18px;
+      }
+    }
+
+    input,
+    select {
+      height: 40px;
+      padding: 10px $spacing-sm 10px 40px;
+      font-size: 14px;
+      line-height: 1.2;
+    }
+  }
+
+  input[type="date"] {
+    padding-right: $spacing-md;
+  }
+
+  .filters-actions {
+    margin-top: -2px;
+    gap: $spacing-sm;
+  }
+}

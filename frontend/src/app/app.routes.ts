@@ -48,6 +48,11 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./features/category/category.routes').then(m => m.categoryRoutes)
       },
+      {
+        path: 'audit-logs',
+        loadChildren: () =>
+          import('./features/auditLog/auditLog.routes').then(m => m.auditLogRoutes)
+      },
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' }
     ]
   },

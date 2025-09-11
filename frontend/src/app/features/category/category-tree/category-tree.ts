@@ -18,7 +18,6 @@ export class CategoryTree implements OnInit, OnDestroy {
 
   loading = signal(true);
   error = signal<string | null>(null);
-  private errorTimer: any;
   nodes = signal<Category[]>([]);
 
   ngOnInit(): void {
@@ -38,10 +37,6 @@ export class CategoryTree implements OnInit, OnDestroy {
 
   private showError(message: string): void {
     this.error.set(message);
-    clearTimeout(this.errorTimer);
-    this.errorTimer = setTimeout(() => {
-      if (this.error() === message) this.error.set(null);
-    }, 3000);
   }
 
   goBack(): void {
@@ -51,6 +46,5 @@ export class CategoryTree implements OnInit, OnDestroy {
   trackById = (_: number, c: Category) => c._id;
 
   ngOnDestroy(): void {
-    if (this.errorTimer) clearTimeout(this.errorTimer);
   }
 }

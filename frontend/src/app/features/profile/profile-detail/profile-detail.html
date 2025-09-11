@@ -15,7 +15,15 @@
       </div>
     </div>
 
-    <div class="alert alert-success" *ngIf="success()" aria-live="polite">{{ success() }}</div>
+    <div class="alert alert-success" *ngIf="success()" aria-live="polite">
+      <span class="alert__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M8 12l3 3 6-6"/>
+        </svg>
+      </span>
+      {{ success() }}
+    </div>
 
     <div class="identity-section" *ngIf="user() as u">
       <div class="app-avatar" aria-label="Avatar">{{ u.avatar }}</div>

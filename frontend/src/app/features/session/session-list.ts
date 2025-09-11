@@ -33,7 +33,6 @@ export class SessionList implements OnInit, OnDestroy {
   hasNext = computed(() => !!this.meta() && this.meta()!.hasNextPage);
 
   private successTimer: any;
-  private errorTimer: any;
 
   constructor() { }
 
@@ -51,10 +50,6 @@ export class SessionList implements OnInit, OnDestroy {
 
   private showError(message: string): void {
     this.error.set(message);
-    clearTimeout(this.errorTimer);
-    this.errorTimer = setTimeout(() => {
-      if (this.error() === message) this.error.set(null);
-    }, 3000);
   }
 
   load(page: number): void {
@@ -152,6 +147,5 @@ export class SessionList implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.successTimer) clearTimeout(this.successTimer);
-    if (this.errorTimer) clearTimeout(this.errorTimer);
   }
 }

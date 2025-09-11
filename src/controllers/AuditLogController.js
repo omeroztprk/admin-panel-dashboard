@@ -5,8 +5,8 @@ const auditLogController = {
   list: asyncHandler(async (req, res) => {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 20;
-    const { user, action, status, from, to } = req.query;
-    const result = await auditLogService.list({ user, action, status, from, to }, { page, limit });
+    const { user, action, resource, status, from, to } = req.query;
+    const result = await auditLogService.list({ user, action, resource, status, from, to }, { page, limit });
     res.json(result);
   }),
 
