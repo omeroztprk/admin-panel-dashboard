@@ -1,23 +1,21 @@
 <header class="app-header surface-glass" aria-label="Top bar">
-  <div class="app-header__inner">
+  <div class="app-header-inner">
     <button type="button" class="hamburger-btn" (click)="onToggleSidebar()" [class.active]="mobileSidebarOpen()"
       aria-label="Toggle navigation" aria-controls="primary-sidebar" [attr.aria-expanded]="mobileSidebarOpen()">
-      <span class="hamburger-lines">
-        <span></span><span></span><span></span>
-      </span>
+      <span class="hamburger-lines"><span></span><span></span><span></span></span>
     </button>
 
-    <div class="app-header__spacer"></div>
+    <div class="app-header-spacer"></div>
 
     <div class="user-menu" #menuRoot *ngIf="user() as u">
       <button id="user-menu-trigger" type="button" class="user-trigger" (click)="toggleMenu()"
         [attr.aria-expanded]="showMenu()" aria-haspopup="menu">
         <div class="app-avatar avatar-sm" aria-hidden="true">{{ u.avatar }}</div>
-        <div class="user-trigger__meta">
-          <span class="user-trigger__name">{{ u.firstName }} {{ u.lastName }}</span>
-          <span class="user-trigger__email">{{ u.email }}</span>
+        <div class="user-trigger-meta">
+          <span class="user-trigger-name">{{ u.firstName }} {{ u.lastName }}</span>
+          <span class="user-trigger-email">{{ u.email }}</span>
         </div>
-        <span class="user-trigger__caret" [class.open]="showMenu()">
+        <span class="user-trigger-caret" [class.open]="showMenu()">
           <svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
             <path d="m6 9 6 6 6-6" />
           </svg>
@@ -25,7 +23,7 @@
       </button>
 
       <div class="user-dropdown" role="menu" [class.show]="showMenu()" aria-labelledby="user-menu-trigger">
-        <div class="user-dropdown__list">
+        <div class="user-dropdown-list">
           <button type="button" class="dropdown-item" role="menuitem" (click)="gotoProfile()">Profile</button>
           <button type="button" class="dropdown-item" role="menuitem" (click)="gotoSessions()">Sessions</button>
           <div class="dropdown-separator" role="separator"></div>

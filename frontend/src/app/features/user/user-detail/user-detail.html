@@ -1,72 +1,67 @@
 <div class="page-wrap">
-    <h1 class="page-title gradient-text">User Details</h1>
+  <h1 class="page-title gradient-text">User Details</h1>
 
-    <div class="app-card user-detail-card with-accent" *ngIf="!loading(); else loadingTpl">
-        <section class="user-detail__header">
-            <button class="back-btn" type="button" (click)="goBack()" aria-label="Back">
-                <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <path d="M15 18l-6-6 6-6" />
-                </svg>
-                <span>Back</span>
-            </button>
+  <div class="app-card with-accent" *ngIf="!loading(); else loadingTpl">
+    <div class="card-header">
+      <button class="back-btn" type="button" (click)="goBack()" aria-label="Back">
+        <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <span>Back</span>
+      </button>
 
-            <div class="user-detail__actions">
-                <button class="btn--ghost" type="button" (click)="goEdit()">Edit</button>
-                <button class="btn--ghost btn--danger" type="button" (click)="remove()">Delete</button>
-            </div>
-        </section>
-
-        <div class="alert alert-success" *ngIf="success()" aria-live="polite">{{ success() }}</div>
-        <div class="alert alert-error" *ngIf="error()" aria-live="assertive">{{ error() }}</div>
-
-        <section class="user-section user-section--top" *ngIf="user() as u">
-            <div class="app-avatar" aria-label="Avatar">{{ u.avatar }}</div>
-            <div class="identity">
-                <div class="fullname">{{ fullName() }}</div>
-                <div class="email">{{ u.email }}</div>
-            </div>
-        </section>
-
-        <div class="divider"></div>
-
-        <section class="user-section user-section--meta" *ngIf="user() as u">
-            <div class="meta-grid">
-                <div class="meta-item">
-                    <span class="label">Status</span>
-                    <span [class]="chipClass(u)"><span class="dot"></span>{{ u.isActive ? 'Active' : 'Inactive'
-                        }}</span>
-                </div>
-                <div class="meta-item" *ngIf="u.createdAt">
-                    <span class="label">Created</span>
-                    <span class="value">{{ u.createdAt | date:'mediumDate' }}</span>
-                </div>
-                <div class="meta-item" *ngIf="u.updatedAt">
-                    <span class="label">Updated</span>
-                    <span class="value">{{ u.updatedAt | date:'mediumDate' }}</span>
-                </div>
-                <div class="meta-item" *ngIf="u.lastLogin">
-                    <span class="label">Last Login</span>
-                    <span class="value">{{ u.lastLogin | date:'short' }}</span>
-                </div>
-            </div>
-
-            <div class="roles-block">
-                <div class="label">Roles</div>
-                <div class="chip-row">
-                    <span class="chip" *ngFor="let r of roleLabels()">{{ r }}</span>
-                    <span class="chip chip--muted" *ngIf="!roleLabels().length">No roles</span>
-                </div>
-            </div>
-        </section>
+      <div class="header-actions">
+        <button class="btn--ghost" type="button" (click)="goEdit()">Edit</button>
+        <button class="btn--ghost btn--danger" type="button" (click)="remove()">Delete</button>
+      </div>
     </div>
+
+    <div class="alert alert-success" *ngIf="success()" aria-live="polite">{{ success() }}</div>
+    <div class="alert alert-error" *ngIf="error()" aria-live="assertive">{{ error() }}</div>
+
+    <div class="identity-section" *ngIf="user() as u">
+      <div class="app-avatar" aria-label="Avatar">{{ u.avatar }}</div>
+      <div class="identity-info">
+        <div class="name">{{ fullName() }}</div>
+        <div class="email">{{ u.email }}</div>
+      </div>
+    </div>
+
+    <div class="meta-grid" *ngIf="user() as u">
+      <div class="meta-item">
+        <span class="label">Status</span>
+        <span [class]="chipClass(u)"><span class="dot"></span>{{ u.isActive ? 'Active' : 'Inactive' }}</span>
+      </div>
+      <div class="meta-item" *ngIf="u.createdAt">
+        <span class="label">Created</span>
+        <span class="value">{{ u.createdAt | date:'mediumDate' }}</span>
+      </div>
+      <div class="meta-item" *ngIf="u.updatedAt">
+        <span class="label">Updated</span>
+        <span class="value">{{ u.updatedAt | date:'mediumDate' }}</span>
+      </div>
+      <div class="meta-item" *ngIf="u.lastLogin">
+        <span class="label">Last Login</span>
+        <span class="value">{{ u.lastLogin | date:'short' }}</span>
+      </div>
+    </div>
+
+    <div class="roles-section">
+      <div class="label">Roles</div>
+      <div class="chip-row">
+        <span class="chip" *ngFor="let r of roleLabels()">{{ r }}</span>
+        <span class="chip chip--muted" *ngIf="!roleLabels().length">No roles</span>
+      </div>
+    </div>
+  </div>
 </div>
 
 <ng-template #loadingTpl>
-    <div class="app-card user-detail-card with-accent skeleton">
-        <div class="skeleton-line wide"></div>
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line half"></div>
-    </div>
+  <div class="app-card with-accent skeleton">
+    <div class="skeleton-line wide"></div>
+    <div class="skeleton-line"></div>
+    <div class="skeleton-line"></div>
+    <div class="skeleton-line half"></div>
+  </div>
 </ng-template>

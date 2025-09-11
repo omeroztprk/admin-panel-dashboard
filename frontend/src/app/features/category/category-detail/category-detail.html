@@ -1,8 +1,8 @@
 <div class="page-wrap">
   <h1 class="page-title gradient-text">Category Details</h1>
 
-  <div class="app-card category-detail-card with-accent" *ngIf="!loading(); else loadingTpl">
-    <section class="category-detail__header">
+  <div class="app-card with-accent" *ngIf="!loading(); else loadingTpl">
+    <div class="card-header">
       <button class="back-btn" type="button" (click)="goBack()" aria-label="Back">
         <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"
           stroke-linejoin="round">
@@ -10,46 +10,40 @@
         </svg>
         <span>Back</span>
       </button>
-
-      <div class="category-detail__actions">
+      <div class="header-actions">
         <button class="btn--ghost" type="button" (click)="goEdit()">Edit</button>
         <button class="btn--ghost btn--danger" type="button" (click)="remove()">Delete</button>
       </div>
-    </section>
+    </div>
 
-    <div class="alert alert-success" *ngIf="success()" aria-live="polite">{{ success() }}</div>
-    <div class="alert alert-error" *ngIf="error()" aria-live="assertive">{{ error() }}</div>
-
-    <section class="category-section category-section--top" *ngIf="item() as c">
-      <div class="identity">
+    <div class="identity-section" *ngIf="item() as c">
+      <div class="identity-info">
         <div class="name">{{ c.name }}</div>
         <div class="muted">{{ c.description || '—' }}</div>
       </div>
-    </section>
+    </div>
 
     <div class="divider"></div>
 
-    <section class="category-section category-section--meta" *ngIf="item() as c">
-      <div class="meta-grid">
-        <div class="meta-item">
-          <span class="label">Parent</span>
-          <span class="value"><span class="chip chip--muted">{{ parentName(c) }}</span></span>
-        </div>
-        <div class="meta-item" *ngIf="c.createdAt">
-          <span class="label">Created</span>
-          <span class="value">{{ c.createdAt | date:'mediumDate' }}</span>
-        </div>
-        <div class="meta-item" *ngIf="c.updatedAt">
-          <span class="label">Updated</span>
-          <span class="value">{{ c.updatedAt | date:'mediumDate' }}</span>
-        </div>
+    <div class="meta-grid" *ngIf="item() as c">
+      <div class="meta-item">
+        <span class="label">Parent</span>
+        <span class="value"><span class="chip chip--muted">{{ parentName(c) }}</span></span>
       </div>
-    </section>
+      <div class="meta-item" *ngIf="c.createdAt">
+        <span class="label">Created</span>
+        <span class="value">{{ c.createdAt | date:'mediumDate' }}</span>
+      </div>
+      <div class="meta-item" *ngIf="c.updatedAt">
+        <span class="label">Updated</span>
+        <span class="value">{{ c.updatedAt | date:'mediumDate' }}</span>
+      </div>
+    </div>
   </div>
 </div>
 
 <ng-template #loadingTpl>
-  <div class="app-card category-detail-card with-accent skeleton">
+  <div class="app-card with-accent skeleton">
     <div class="skeleton-line wide"></div>
     <div class="skeleton-line"></div>
     <div class="skeleton-line"></div>

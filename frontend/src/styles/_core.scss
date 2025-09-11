@@ -1,26 +1,42 @@
 @use "sass:color";
 
-// VARIABLES
+/* =========================================================
+   CORE DESIGN TOKENS, MIXINS & ANIMATIONS
+   ========================================================= */
+
+/* ========================
+   Design Tokens: Colors
+   ======================== */
 $primary-color: #0071e3;
 $primary-gradient: linear-gradient(135deg, #0070e0, #42a5f5);
 $primary-dark: #0051d5;
 $primary-light: #42a5f5;
+
 $background-color: #f5f5f7;
 $card-background: #ffffff;
 $surface-color: #fafafa;
+
 $text-color: #1d1d1f;
 $text-secondary: #86868b;
 $text-muted: #a1a1a6;
+
 $error-color: #ff3b30;
 $success-color: #34c759;
 $warning-color: #ff9500;
 $info-color: #007aff;
+
+/* ==============================
+   Design Tokens: Borders/Radii
+   ============================== */
 $border-radius: 12px;
 $border-radius-sm: 8px;
 $border-radius-lg: 16px;
 $input-border: #d2d2d7;
 $input-focus: #0071e3;
 
+/* ========================
+   Design Tokens: Shadows
+   ======================== */
 $shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
 $shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
 $shadow-md: 0 8px 16px rgba(0, 0, 0, 0.12);
@@ -28,10 +44,16 @@ $shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.16);
 $card-shadow: 0 12px 28px rgba(0, 0, 0, 0.08), 0 4px 8px rgba(0, 0, 0, 0.04);
 $hover-shadow: 0 16px 32px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.06);
 
-$transition-speed: 0.3s;
+/* ==============================
+   Design Tokens: Motion/Timing
+   ============================== */
 $transition-fast: 0.2s;
+$transition-speed: 0.3s;
 $transition-slow: 0.5s;
 
+/* =========================
+   Design Tokens: Typography
+   ========================= */
 $font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 $font-weight-light: 300;
 $font-weight-normal: 400;
@@ -39,6 +61,9 @@ $font-weight-medium: 500;
 $font-weight-semibold: 600;
 $font-weight-bold: 700;
 
+/* ======================
+   Design Tokens: Spacing
+   ====================== */
 $spacing-xs: 4px;
 $spacing-sm: 8px;
 $spacing-md: 16px;
@@ -46,6 +71,9 @@ $spacing-lg: 24px;
 $spacing-xl: 32px;
 $spacing-2xl: 48px;
 
+/* ==========================
+   Design Tokens: Z-Indexes
+   ========================== */
 $z-dropdown: 1000;
 $z-sticky: 1020;
 $z-fixed: 1030;
@@ -54,7 +82,9 @@ $z-modal: 1050;
 $z-popover: 1060;
 $z-tooltip: 1070;
 
-// MIXINS
+/* ========================
+   Mixins: Layout helpers
+   ======================== */
 @mixin flex-center {
   display: flex;
   align-items: center;
@@ -78,6 +108,9 @@ $z-tooltip: 1070;
   justify-content: flex-start;
 }
 
+/* ==========================
+   Mixins: Interactions/UI
+   ========================== */
 @mixin button-reset {
   border: none;
   background: none;
@@ -93,6 +126,9 @@ $z-tooltip: 1070;
   outline: none;
 }
 
+/* ===================
+   Mixins: Surfaces
+   =================== */
 @mixin card-style {
   background: $card-background;
   border-radius: $border-radius;
@@ -105,6 +141,9 @@ $z-tooltip: 1070;
   }
 }
 
+/* ==============================
+   Mixins: Text & Iconography
+   ============================== */
 @mixin gradient-text {
   background: $primary-gradient;
   -webkit-background-clip: text;
@@ -122,67 +161,33 @@ $z-tooltip: 1070;
   stroke-linejoin: round;
 }
 
-// KEYFRAMES
+/* =================
+   Keyframes
+   ================= */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulse {
-
-  0%,
-  100% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.05);
-  }
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes spin-centered {
-  from {
-    transform: translate(-50%, -50%) rotate(0);
-  }
-
-  to {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-
-  100% {
-    background-position: 200% 0;
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes inputFocus {
-  0% {
-    box-shadow: 0 0 0 0 rgba($primary-color, 0);
-  }
+  0% { box-shadow: 0 0 0 0 rgba($primary-color, 0); }
+  70% { box-shadow: 0 0 0 6px rgba($primary-color, 0.2); }
+  100% { box-shadow: 0 0 0 4px rgba($primary-color, 0.15); }
+}
 
-  70% {
-    box-shadow: 0 0 0 6px rgba($primary-color, 0.2);
-  }
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
 
-  100% {
-    box-shadow: 0 0 0 4px rgba($primary-color, 0.15);
-  }
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes spin-centered {
+  from { transform: translate(-50%, -50%) rotate(0); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
 }

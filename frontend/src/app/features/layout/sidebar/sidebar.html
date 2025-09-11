@@ -1,11 +1,11 @@
-<aside class="app-sidebar surface-glass" aria-label="Main navigation">
-  <div class="app-sidebar__inner">
-    <header class="app-sidebar__header">
+<aside id="primary-sidebar" class="app-sidebar surface-glass" aria-label="Main navigation">
+  <div class="app-sidebar-inner">
+    <header class="app-sidebar-header">
       <div class="brand">
         <div class="app-avatar avatar-sm" aria-label="Logo">Ö</div>
-        <div class="brand__meta">
-          <span class="brand__title">Admin Panel</span>
-          <span class="brand__subtitle">Control Center</span>
+        <div class="brand-meta">
+          <span class="brand-title">Admin Panel</span>
+          <span class="brand-subtitle">Control Center</span>
         </div>
       </div>
       <button type="button" class="btn--ghost btn--sm sidebar-close-btn" *ngIf="mobileSidebarOpen()"
@@ -19,18 +19,18 @@
     <nav class="nav scrollbar-thin">
       <ng-container *ngFor="let group of navGroups()">
         <section class="nav-group">
-          <h2 class="nav-group__title">{{ group.title }}</h2>
+          <h2 class="nav-group-title">{{ group.title }}</h2>
           <ul class="nav-list">
             <li *ngFor="let item of group.items">
               <a class="nav-link" [routerLink]="item.route" routerLinkActive="active"
                 [routerLinkActiveOptions]="{ exact: item.exact === true }" [class.disabled]="item.disabled"
                 (click)="onCloseSidebar()" [attr.aria-disabled]="item.disabled ? 'true': null">
-                <span class="nav-link__icon" aria-hidden="true">
+                <span class="nav-link-icon" aria-hidden="true">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
                     [innerHTML]="getIcon(item.icon)">
                   </svg>
                 </span>
-                <span class="nav-link__label">{{ item.label }}</span>
+                <span class="nav-link-label">{{ item.label }}</span>
               </a>
             </li>
           </ul>
@@ -38,15 +38,15 @@
       </ng-container>
     </nav>
 
-    <footer class="app-sidebar__footer" *ngIf="user() as u">
+    <footer class="app-sidebar-footer" *ngIf="user() as u">
       <div class="user-card">
         <div class="app-avatar avatar-sm" aria-hidden="true">{{ u.avatar }}</div>
-        <div class="user-card__info">
-          <span class="user-card__name">{{ u.firstName }} {{ u.lastName }}</span>
-          <span class="user-card__email">{{ u.email }}</span>
+        <div class="user-card-info">
+          <span class="user-card-name">{{ u.firstName }} {{ u.lastName }}</span>
+          <span class="user-card-email">{{ u.email }}</span>
         </div>
       </div>
-      <button type="button" class="btn--ghost btn--danger btn--sm sidebar__logout" (click)="logout()">Logout</button>
+      <button type="button" class="btn--ghost btn--danger btn--sm sidebar-logout" (click)="logout()">Logout</button>
     </footer>
   </div>
 </aside>

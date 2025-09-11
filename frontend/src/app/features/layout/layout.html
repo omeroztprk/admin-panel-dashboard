@@ -1,18 +1,16 @@
 <div class="layout">
-  <app-sidebar class="layout__sidebar" [class.is-open]="mobileSidebarOpen()" [mobileSidebarOpen]="mobileSidebarOpen()"
+  <app-sidebar class="layout-sidebar" [class.is-open]="mobileSidebarOpen()" [mobileSidebarOpen]="mobileSidebarOpen()"
     (closeSidebar)="closeMobileSidebar()">
   </app-sidebar>
-  <div class="layout__main">
-    <app-header class="layout__header" [mobileSidebarOpen]="mobileSidebarOpen()"
-      (toggleSidebar)="toggleMobileSidebar()">
+  <div class="layout-main">
+    <app-header class="layout-header" [mobileSidebarOpen]="mobileSidebarOpen()" (toggleSidebar)="toggleMobileSidebar()">
     </app-header>
-    <main id="app-main" class="layout__content" tabindex="-1" aria-label="Main content">
+    <main id="app-main" class="layout-content" tabindex="-1" aria-label="Main content">
       <div class="content-shell">
         <router-outlet></router-outlet>
       </div>
     </main>
-    <app-footer class="layout__footer"></app-footer>
+    <app-footer class="layout-footer"></app-footer>
   </div>
 </div>
-<div class="mobile-overlay" *ngIf="mobileSidebarOpen()" (click)="closeMobileSidebar()" aria-hidden="true">
-</div>
+<div class="mobile-overlay" *ngIf="mobileSidebarOpen()" (click)="closeMobileSidebar()" aria-hidden="true"></div>

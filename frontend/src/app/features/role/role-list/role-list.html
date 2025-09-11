@@ -1,21 +1,19 @@
 <div class="page-wrap">
   <h1 class="page-title gradient-text">Roles</h1>
 
-  <div class="app-card with-accent role-list-card">
-    <section class="role-list__header">
-      <div class="left">
-        <button class="back-btn" type="button" (click)="goBack()" aria-label="Back">
-          <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-          <span>Back</span>
-        </button>
-      </div>
-      <div class="right">
+  <div class="app-card with-accent">
+    <div class="card-header">
+      <button class="back-btn" type="button" (click)="goBack()" aria-label="Back">
+        <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <span>Back</span>
+      </button>
+      <div class="header-actions">
         <button class="btn--ghost" type="button" (click)="goCreate()">Create New Role</button>
       </div>
-    </section>
+    </div>
 
     <div class="alert alert-success" *ngIf="success()" aria-live="polite">{{ success() }}</div>
     <div class="alert alert-error" *ngIf="error()" aria-live="assertive">{{ error() }}</div>
@@ -45,14 +43,13 @@
             </div>
             <div class="data-cell" data-label="Actions">
               <button class="btn--ghost btn--sm" type="button" (click)="goDetail(r._id)">Details</button>
-              <button class="btn--ghost btn--sm" type="button" (click)="goEdit(r._id)"
-                     [disabled]="r.isSystem"
-                     [attr.title]="r.isSystem ? 'System roles cannot be edited' : null">
+              <button class="btn--ghost btn--sm" type="button" (click)="goEdit(r._id)" [disabled]="r.isSystem"
+                [attr.title]="r.isSystem ? 'System roles cannot be edited' : null">
                 Edit
               </button>
               <button class="btn--ghost btn--danger btn--sm" type="button" (click)="remove(r._id)"
-                     [disabled]="actionLoading() || r.isSystem"
-                     [attr.title]="r.isSystem ? 'System roles cannot be deleted' : null">
+                [disabled]="actionLoading() || r.isSystem"
+                [attr.title]="r.isSystem ? 'System roles cannot be deleted' : null">
                 Delete
               </button>
             </div>
@@ -70,8 +67,7 @@
         </div>
         <div class="pagination-meta">
           <div class="meta-chip">Total: <strong>{{ meta()!.total }}</strong></div>
-          <div class="meta-chip" *ngIf="meta()!.totalPages > 1">Page <strong>{{ meta()!.page }}</strong> / {{
-            meta()!.totalPages }}</div>
+          <div class="meta-chip" *ngIf="meta()!.totalPages > 1">Page {{ meta()!.page }} / <strong>{{ meta()!.totalPages }}</strong></div>
         </div>
       </nav>
     </ng-container>
@@ -79,7 +75,7 @@
 </div>
 
 <ng-template #loadingTpl>
-  <div class="app-card with-accent role-list-card skeleton">
+  <div class="app-card with-accent skeleton">
     <div class="skeleton-line wide"></div>
     <div class="skeleton-line"></div>
     <div class="skeleton-line"></div>

@@ -1,8 +1,8 @@
 <div class="page-wrap">
   <h1 class="page-title gradient-text">Active Sessions</h1>
 
-  <div *ngIf="!loading(); else loadingTpl" class="app-card sessions-card with-accent">
-    <section class="sessions-header">
+  <div class="app-card with-accent" *ngIf="!loading(); else loadingTpl">
+    <div class="card-header">
       <button class="back-btn" (click)="back()" aria-label="Back to dashboard">
         <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"
           stroke-linejoin="round">
@@ -16,17 +16,17 @@
           {{ actionLoading() ? 'Processing…' : 'Revoke All' }}
         </button>
       </div>
-    </section>
+    </div>
 
-    <div class="alert alert-success" *ngIf="success()">{{ success() }}</div>
-    <div class="alert alert-error" *ngIf="error()">{{ error() }}</div>
+    <div class="alert alert-success" *ngIf="success()" aria-live="polite">{{ success() }}</div>
+    <div class="alert alert-error" *ngIf="error()" aria-live="assertive">{{ error() }}</div>
 
-    <section *ngIf="sessions().length;" class="sessions-list">
+    <section *ngIf="sessions().length" class="sessions-list">
       <div class="session-item" *ngFor="let s of sortedSessions(); trackBy: trackById"
         [class.is-current]="isCurrent(s)">
         <div class="session-body">
           <div class="row-1">
-            <span class="ip" title="Client IP">{{ s.ip || 'Unknown IP' }}</span>
+            <span class="chip" title="Client IP">{{ s.ip || 'Unknown IP' }}</span>
             <span class="ua" *ngIf="s.userAgent" title="User Agent">{{ s.userAgent }}</span>
           </div>
           <div class="row-2">
@@ -42,34 +42,34 @@
         </div>
         <div class="session-actions">
           <button class="btn--ghost btn--danger btn--sm" (click)="revokeOne(s._id)" [disabled]="actionLoading()"
-            type="button">Revoke</button>
+            type="button">
+            Revoke
+          </button>
         </div>
       </div>
     </section>
 
     <nav class="pagination" *ngIf="meta()" aria-label="Pagination">
       <div class="pagination-controls" *ngIf="meta()!.totalPages > 1">
-        <button class="btn--ghost btn--sm" [disabled]="!hasPrev()" (click)="changePage(meta()!.page - 1)"
-          type="button">Previous</button>
+        <button class="btn--ghost btn--sm" [disabled]="!hasPrev()" (click)="changePage(meta()!.page - 1)" type="button">
+          Previous
+        </button>
         <span class="page-info">Page {{ meta()!.page }} of {{ meta()!.totalPages }}</span>
-        <button class="btn--ghost btn--sm" [disabled]="!hasNext()" (click)="changePage(meta()!.page + 1)"
-          type="button">Next</button>
+        <button class="btn--ghost btn--sm" [disabled]="!hasNext()" (click)="changePage(meta()!.page + 1)" type="button">
+          Next
+        </button>
       </div>
 
       <div class="pagination-meta">
-        <div class="meta-chip">
-          Total: <strong>{{ meta()!.total }}</strong>
-        </div>
-        <div class="meta-chip" *ngIf="meta()!.totalPages > 1">
-          Page <strong>{{ meta()!.page }}</strong> / {{ meta()!.totalPages }}
-        </div>
+        <div class="meta-chip">Total: <strong>{{ meta()!.total }}</strong></div>
+          <div class="meta-chip" *ngIf="meta()!.totalPages > 1">Page {{ meta()!.page }} / <strong>{{ meta()!.totalPages }}</strong></div>
       </div>
     </nav>
   </div>
 </div>
 
 <ng-template #loadingTpl>
-  <div class="app-card sessions-card skeleton with-accent">
+  <div class="app-card skeleton with-accent">
     <div class="skeleton-line wide"></div>
     <div class="skeleton-line"></div>
     <div class="skeleton-line"></div>

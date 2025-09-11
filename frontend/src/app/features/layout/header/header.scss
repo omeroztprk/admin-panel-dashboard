@@ -1,12 +1,12 @@
 @use "../../../../styles/core" as *;
 
 .app-header {
-  height: 78px;
+  height: var(--header-h, 78px);
   position: relative;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset;
 
-  &__inner {
+  &-inner {
     height: 100%;
     display: flex;
     align-items: center;
@@ -20,7 +20,7 @@
     }
   }
 
-  &__spacer {
+  &-spacer {
     margin-right: auto;
   }
 }
@@ -148,14 +148,14 @@
   }
 }
 
-.user-trigger__meta {
+.user-trigger-meta {
   display: flex;
   flex-direction: column;
   min-width: 0;
   line-height: 1.2;
   text-align: left;
 
-  .user-trigger__name {
+  .user-trigger-name {
     font-size: 14px;
     font-weight: $font-weight-semibold;
     color: $text-color;
@@ -165,7 +165,7 @@
     max-width: 160px;
   }
 
-  .user-trigger__email {
+  .user-trigger-email {
     margin-top: 4px;
     font-size: 12px;
     font-weight: $font-weight-medium;
@@ -178,7 +178,7 @@
   }
 }
 
-.user-trigger__caret {
+.user-trigger-caret {
   display: flex;
   align-items: center;
   color: $text-secondary;
@@ -216,7 +216,7 @@
     visibility: visible;
   }
 
-  &__list {
+  .user-dropdown-list {
     display: flex;
     flex-direction: column;
     gap: 4px;

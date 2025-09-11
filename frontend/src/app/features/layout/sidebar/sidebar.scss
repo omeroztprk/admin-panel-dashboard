@@ -8,7 +8,7 @@
 }
 
 .app-sidebar {
-  width: 280px;
+  width: var(--sidebar-w, 280px);
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -26,14 +26,14 @@
   }
 }
 
-.app-sidebar__inner {
+.app-sidebar-inner {
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
 }
 
-.app-sidebar__header {
+.app-sidebar-header {
   @include flex-between;
   align-items: center;
   height: 78px;
@@ -78,14 +78,14 @@
   gap: $spacing-sm + 6px;
   min-width: 0;
 
-  &__meta {
+  .brand-meta {
     display: flex;
     flex-direction: column;
     gap: 2px;
     min-width: 0;
   }
 
-  &__title {
+  .brand-title {
     margin: 0;
     font-size: 15px;
     font-weight: $font-weight-semibold;
@@ -93,7 +93,7 @@
     color: $text-color;
   }
 
-  &__subtitle {
+  .brand-subtitle {
     font-size: 10.5px;
     font-weight: $font-weight-medium;
     letter-spacing: .35px;
@@ -117,7 +117,7 @@
 .nav-group {
   padding: 0 18px 22px;
 
-  &__title {
+  .nav-group-title {
     margin: 0 0 10px;
     font-size: 11px;
     font-weight: $font-weight-semibold;
@@ -131,10 +131,10 @@
   list-style: none;
   margin: 0;
   padding: 0;
-}
 
-.nav-list__item {
-  margin: 0 0 4px;
+  li {
+    margin: 0 0 4px;
+  }
 }
 
 .nav-link {
@@ -150,14 +150,14 @@
   position: relative;
   transition: all $transition-speed ease;
 
-  &__icon {
+  .nav-link-icon {
     color: currentColor;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  &__label {
+  .nav-link-label {
     white-space: nowrap;
     letter-spacing: -.2px;
   }
@@ -190,7 +190,7 @@
   }
 }
 
-.app-sidebar__footer {
+.app-sidebar-footer {
   padding: 18px 18px 20px;
   border-top: 1px solid rgba(0, 0, 0, 0.06);
   display: flex;
@@ -222,13 +222,13 @@
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
   }
 
-  &__info {
+  .user-card-info {
     display: flex;
     flex-direction: column;
     min-width: 0;
   }
 
-  &__name {
+  .user-card-name {
     font-size: 14px;
     font-weight: $font-weight-semibold;
     line-height: 1.2;
@@ -238,7 +238,7 @@
     max-width: 140px;
   }
 
-  &__email {
+  .user-card-email {
     margin-top: 4px;
     font-size: 12px;
     font-weight: $font-weight-medium;
@@ -252,7 +252,7 @@
   }
 }
 
-.sidebar__logout {
+.sidebar-logout {
   width: 100%;
 }
 

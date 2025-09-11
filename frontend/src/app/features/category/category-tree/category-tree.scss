@@ -1,21 +1,6 @@
 @use "../../../../styles/core" as *;
 
-.category-tree-card {
-  padding: $spacing-xl;
-  animation: fadeIn 0.8s ease-out;
-
-  @media (max-width: 768px) {
-    padding: $spacing-lg;
-  }
-}
-
-.category-tree__header {
-  @include flex-between;
-  margin-bottom: $spacing-lg;
-}
-
 .tree {
-
   .tree-root {
     margin: 0;
     padding-left: 18px;

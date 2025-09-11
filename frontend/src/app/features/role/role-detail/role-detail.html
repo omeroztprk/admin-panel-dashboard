@@ -1,86 +1,72 @@
 <div class="page-wrap">
   <h1 class="page-title gradient-text">Role Details</h1>
 
-  <div class="app-card role-detail-card with-accent" *ngIf="!loading(); else loadingTpl">
-    <section class="role-detail__header">
+  <div class="app-card with-accent" *ngIf="!loading(); else loadingTpl">
+    <div class="card-header">
       <button class="back-btn" type="button" (click)="goBack()" aria-label="Back">
         <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round">
-          <path d="M15 18l-6-6 6-6" />
-        </svg>
+          stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
         <span>Back</span>
       </button>
-
-      <div class="role-detail__actions">
+      <div class="header-actions">
         <button class="btn--ghost" type="button" (click)="goEdit()" [disabled]="role()?.isSystem"
-          [attr.title]="role()?.isSystem ? 'System roles cannot be edited' : null">
-          Edit
-        </button>
+          [attr.title]="role()?.isSystem ? 'System roles cannot be edited' : null">Edit</button>
         <button class="btn--ghost btn--danger" type="button" (click)="remove()" [disabled]="role()?.isSystem"
-          [attr.title]="role()?.isSystem ? 'System roles cannot be deleted' : null">
-          Delete
-        </button>
+          [attr.title]="role()?.isSystem ? 'System roles cannot be deleted' : null">Delete</button>
       </div>
-    </section>
+    </div>
 
-    <div class="alert alert-success" *ngIf="success()" aria-live="polite">{{ success() }}</div>
-    <div class="alert alert-error" *ngIf="error()" aria-live="assertive">{{ error() }}</div>
-
-    <section class="role-section role-section--top" *ngIf="role() as r">
-      <div class="identity">
+    <div class="identity-section" *ngIf="role() as r">
+      <div class="identity-info">
         <div class="name">{{ r.name }}</div>
         <div class="muted">{{ r.displayName || '—' }}</div>
       </div>
-    </section>
+    </div>
 
     <div class="divider"></div>
 
-    <section class="role-section role-section--meta" *ngIf="role() as r">
-      <div class="meta-grid">
-        <div class="meta-item">
-          <span class="label">Type</span>
-          <span class="value">
-            <span class="chip" [ngClass]="r.isSystem ? 'chip--success' : 'chip--muted'"><span class="dot"></span>
-              {{ r.isSystem ? 'System' : 'Custom' }}
-            </span>
+    <div class="meta-grid" *ngIf="role() as r">
+      <div class="meta-item">
+        <span class="label">Type</span>
+        <span class="value">
+          <span class="chip" [ngClass]="r.isSystem ? 'chip--success' : 'chip--muted'">
+            <span class="dot"></span>{{ r.isSystem ? 'System' : 'Custom' }}
           </span>
-        </div>
-        <div class="meta-item">
-          <span class="label">Created</span>
-          <span class="value">{{ r.createdAt | date:'mediumDate' }}</span>
-        </div>
-        <div class="meta-item" *ngIf="r.updatedAt">
-          <span class="label">Updated</span>
-          <span class="value">{{ r.updatedAt | date:'mediumDate' }}</span>
-        </div>
+        </span>
       </div>
-
-      <div class="permissions-block">
-        <div class="label">Permissions</div>
-
-        <ng-container *ngIf="role()?.permissions?.length; else noPermsAll">
-          <div class="permissions-group" *ngFor="let key of resourceOrder">
-            <ng-container *ngIf="groupedPermissions()[key]?.length">
-              <div class="group-title">{{ resourceLabels[key] }}</div>
-              <div class="chip-row">
-                <span class="chip" *ngFor="let name of groupedPermissions()[key]">{{ name }}</span>
-              </div>
-            </ng-container>
-          </div>
-        </ng-container>
-
-        <ng-template #noPermsAll>
-          <div class="chip-row">
-            <span class="chip chip--muted">No permissions</span>
-          </div>
-        </ng-template>
+      <div class="meta-item">
+        <span class="label">Created</span>
+        <span class="value">{{ r.createdAt | date:'mediumDate' }}</span>
       </div>
-    </section>
+      <div class="meta-item" *ngIf="r.updatedAt">
+        <span class="label">Updated</span>
+        <span class="value">{{ r.updatedAt | date:'mediumDate' }}</span>
+      </div>
+    </div>
+
+    <div class="roles-section">
+      <div class="label">Permissions</div>
+      <ng-container *ngIf="role()?.permissions?.length; else noPermsAll">
+        <div class="permissions-group" *ngFor="let key of resourceOrder">
+          <ng-container *ngIf="groupedPermissions()[key]?.length">
+            <div class="group-title">{{ resourceLabels[key] }}</div>
+            <div class="chip-row">
+              <span class="chip" *ngFor="let name of groupedPermissions()[key]">{{ name }}</span>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+      <ng-template #noPermsAll>
+        <div class="chip-row">
+          <span class="chip chip--muted">No permissions</span>
+        </div>
+      </ng-template>
+    </div>
   </div>
 </div>
 
 <ng-template #loadingTpl>
-  <div class="app-card role-detail-card with-accent skeleton">
+  <div class="app-card with-accent skeleton">
     <div class="skeleton-line wide"></div>
     <div class="skeleton-line"></div>
     <div class="skeleton-line"></div>

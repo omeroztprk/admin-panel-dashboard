@@ -1,20 +1,19 @@
 <div class="page-wrap">
   <h1 class="page-title gradient-text">Permissions</h1>
 
-  <div class="app-card with-accent permission-list-card">
-    <section class="permission-list__header">
-      <div class="left">
-        <button class="back-btn" type="button" (click)="goBack()" aria-label="Back">
-          <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-          <span>Back</span>
-        </button>
-      </div>
-      <div class="right">
+  <div class="app-card with-accent">
+    <div class="card-header">
+      <button class="back-btn" type="button" (click)="goBack()" aria-label="Back">
+        <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <span>Back</span>
+      </button>
+      <div class="header-actions">
         <button class="btn--ghost" type="button" (click)="goCreate()">Create New Permission</button>
       </div>
-    </section>
+    </div>
 
     <div class="alert alert-success" *ngIf="success()" aria-live="polite">{{ success() }}</div>
     <div class="alert alert-error" *ngIf="error()" aria-live="assertive">{{ error() }}</div>
@@ -47,14 +46,13 @@
             </div>
             <div class="data-cell" data-label="Actions">
               <button class="btn--ghost btn--sm" type="button" (click)="goDetail(p._id)">Details</button>
-              <button class="btn--ghost btn--sm" type="button" (click)="goEdit(p._id)"
-                      [disabled]="p.isSystem"
-                      [attr.title]="p.isSystem ? 'System permissions cannot be edited' : null">
+              <button class="btn--ghost btn--sm" type="button" (click)="goEdit(p._id)" [disabled]="p.isSystem"
+                [attr.title]="p.isSystem ? 'System permissions cannot be edited' : null">
                 Edit
               </button>
               <button class="btn--ghost btn--danger btn--sm" type="button" (click)="remove(p._id, p.isSystem)"
-                      [disabled]="actionLoading() || p.isSystem"
-                      [attr.title]="p.isSystem ? 'System permissions cannot be deleted' : null">
+                [disabled]="actionLoading() || p.isSystem"
+                [attr.title]="p.isSystem ? 'System permissions cannot be deleted' : null">
                 Delete
               </button>
             </div>
@@ -64,13 +62,15 @@
 
       <nav class="pagination" *ngIf="meta()" aria-label="Pagination">
         <div class="pagination-controls" *ngIf="meta()!.totalPages > 1">
-          <button class="btn--ghost btn--sm" [disabled]="!hasPrev()" (click)="changePage(meta()!.page - 1)" type="button">Previous</button>
+          <button class="btn--ghost btn--sm" [disabled]="!hasPrev()" (click)="changePage(meta()!.page - 1)"
+            type="button">Previous</button>
           <span class="page-info">Page {{ meta()!.page }} of {{ meta()!.totalPages }}</span>
-          <button class="btn--ghost btn--sm" [disabled]="!hasNext()" (click)="changePage(meta()!.page + 1)" type="button">Next</button>
+          <button class="btn--ghost btn--sm" [disabled]="!hasNext()" (click)="changePage(meta()!.page + 1)"
+            type="button">Next</button>
         </div>
         <div class="pagination-meta">
           <div class="meta-chip">Total: <strong>{{ meta()!.total }}</strong></div>
-          <div class="meta-chip" *ngIf="meta()!.totalPages > 1">Page <strong>{{ meta()!.page }}</strong> / {{ meta()!.totalPages }}</div>
+          <div class="meta-chip" *ngIf="meta()!.totalPages > 1">Page {{ meta()!.page }} / <strong>{{ meta()!.totalPages }}</strong></div>
         </div>
       </nav>
     </ng-container>
@@ -78,7 +78,7 @@
 </div>
 
 <ng-template #loadingTpl>
-  <div class="app-card with-accent permission-list-card skeleton">
+  <div class="app-card with-accent skeleton">
     <div class="skeleton-line wide"></div>
     <div class="skeleton-line"></div>
     <div class="skeleton-line"></div>

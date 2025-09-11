@@ -1,66 +1,61 @@
 <div class="page-wrap">
   <h1 class="page-title gradient-text">Profile Details</h1>
 
-  <div class="app-card profile-detail-card with-accent">
-    <section class="profile-detail__header">
+  <div class="app-card with-accent" *ngIf="!loading(); else loadingTpl">
+    <div class="card-header">
       <button class="back-btn" type="button" (click)="goBack()" aria-label="Back to dashboard">
-        <svg class="icon-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
           <path d="M15 18l-6-6 6-6" />
         </svg>
         <span>Back</span>
       </button>
-
-      <div class="profile-detail__actions">
-        <button class="btn--ghost" type="button" (click)="goEdit()" aria-label="Edit profile">
-          Edit
-        </button>
+      <div class="header-actions">
+        <button class="btn--ghost" type="button" (click)="goEdit()" aria-label="Edit profile">Edit</button>
       </div>
-    </section>
+    </div>
 
     <div class="alert alert-success" *ngIf="success()" aria-live="polite">{{ success() }}</div>
 
-    <section class="profile-section profile-section--top" *ngIf="user() as u">
+    <div class="identity-section" *ngIf="user() as u">
       <div class="app-avatar" aria-label="Avatar">{{ u.avatar }}</div>
-      <div class="identity">
-        <div class="fullname">{{ u.firstName }} {{ u.lastName }}</div>
+      <div class="identity-info">
+        <div class="name">{{ u.firstName }} {{ u.lastName }}</div>
         <div class="email">{{ u.email }}</div>
       </div>
-    </section>
+    </div>
 
-    <section class="profile-section profile-section--meta" *ngIf="user() as u">
-      <div class="meta-grid">
-        <div class="meta-item" *ngIf="u.createdAt">
-          <span class="label">Created</span>
-          <span class="value">{{ u.createdAt | date:'mediumDate' }}</span>
-        </div>
-        <div class="meta-item" *ngIf="u.updatedAt">
-          <span class="label">Updated</span>
-          <span class="value">{{ u.updatedAt | date:'mediumDate' }}</span>
-        </div>
-        <div class="meta-item" *ngIf="u.lastLogin">
-          <span class="label">Last Login</span>
-          <span class="value">{{ u.lastLogin | date:'short' }}</span>
-        </div>
-      </div>
+    <div class="divider"></div>
 
-      <div class="roles-block" *ngIf="roles().length">
-        <div class="label">Roles</div>
-        <div class="chip-row">
-          <span class="chip" *ngFor="let r of roles()">{{ roleLabel(r) }}</span>
-        </div>
+    <div class="meta-grid" *ngIf="user() as u">
+      <div class="meta-item" *ngIf="u.createdAt">
+        <span class="label">Created</span>
+        <span class="value">{{ u.createdAt | date:'mediumDate' }}</span>
       </div>
-    </section>
+      <div class="meta-item" *ngIf="u.updatedAt">
+        <span class="label">Updated</span>
+        <span class="value">{{ u.updatedAt | date:'mediumDate' }}</span>
+      </div>
+      <div class="meta-item" *ngIf="u.lastLogin">
+        <span class="label">Last Login</span>
+        <span class="value">{{ u.lastLogin | date:'short' }}</span>
+      </div>
+    </div>
+
+    <div class="roles-section" *ngIf="roles().length">
+      <div class="label">Roles</div>
+      <div class="chip-row">
+        <span class="chip" *ngFor="let r of roles()">{{ roleLabel(r) }}</span>
+      </div>
+    </div>
   </div>
 </div>
 
 <ng-template #loadingTpl>
-  <div class="profile-container">
-    <div class="profile-card skeleton">
-      <div class="skeleton-line title"></div>
-      <div class="skeleton-line"></div>
-      <div class="skeleton-line"></div>
-      <div class="skeleton-line half"></div>
-    </div>
+  <div class="app-card with-accent skeleton">
+    <div class="skeleton-line wide"></div>
+    <div class="skeleton-line"></div>
+    <div class="skeleton-line"></div>
+    <div class="skeleton-line half"></div>
   </div>
 </ng-template>

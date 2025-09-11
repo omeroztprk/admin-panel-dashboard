@@ -1,40 +1,36 @@
 <div class="page-wrap">
   <h1 class="page-title gradient-text">Dashboard</h1>
 
-  <div *ngIf="user() as u" class="app-card dashboard-card with-accent" aria-label="Current user profile">
-    <div class="profile-section profile-section--top">
-      <div class="app-avatar" aria-label="Avatar">
-        {{ u.avatar }}
-      </div>
-      <div class="identity">
-        <div class="fullname">{{ u.firstName }} {{ u.lastName }}</div>
+  <div *ngIf="user() as u" class="app-card with-accent" aria-label="Current user profile">
+    <div class="identity-section">
+      <div class="app-avatar" aria-label="Avatar">{{ u.avatar }}</div>
+      <div class="identity-info">
+        <div class="name">{{ u.firstName }} {{ u.lastName }}</div>
         <div class="email">{{ u.email }}</div>
       </div>
     </div>
 
     <div class="divider"></div>
 
-    <div class="profile-section profile-section--meta">
-      <div class="meta-grid">
-        <div class="meta-item" *ngIf="u.createdAt">
-          <span class="label">Created</span>
-          <span class="value">{{ u.createdAt | date:'mediumDate' }}</span>
-        </div>
-        <div class="meta-item" *ngIf="u.updatedAt">
-          <span class="label">Updated</span>
-          <span class="value">{{ u.updatedAt | date:'mediumDate' }}</span>
-        </div>
-        <div class="meta-item" *ngIf="u.lastLogin">
-          <span class="label">Last Login</span>
-          <span class="value">{{ u.lastLogin | date:'short' }}</span>
-        </div>
+    <div class="meta-grid">
+      <div class="meta-item" *ngIf="u.createdAt">
+        <span class="label">Created</span>
+        <span class="value">{{ u.createdAt | date:'mediumDate' }}</span>
       </div>
+      <div class="meta-item" *ngIf="u.updatedAt">
+        <span class="label">Updated</span>
+        <span class="value">{{ u.updatedAt | date:'mediumDate' }}</span>
+      </div>
+      <div class="meta-item" *ngIf="u.lastLogin">
+        <span class="label">Last Login</span>
+        <span class="value">{{ u.lastLogin | date:'short' }}</span>
+      </div>
+    </div>
 
-      <div class="roles-block" *ngIf="roleLabels().length">
-        <div class="label">Roles</div>
-        <div class="chip-row">
-          <span class="chip" *ngFor="let r of roleLabels()">{{ r }}</span>
-        </div>
+    <div class="roles-section" *ngIf="roleLabels().length">
+      <div class="label">Roles</div>
+      <div class="chip-row">
+        <span class="chip" *ngFor="let r of roleLabels()">{{ r }}</span>
       </div>
     </div>
   </div>

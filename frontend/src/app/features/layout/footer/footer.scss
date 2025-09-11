@@ -12,7 +12,7 @@
   }
 }
 
-.app-footer__inner {
+.app-footer-inner {
   min-height: 60px;
   display: flex;
   align-items: center;
@@ -28,13 +28,13 @@
   }
 }
 
-.app-footer__primary {
+.app-footer-primary {
   display: flex;
   align-items: center;
   min-width: 0;
 }
 
-.app-footer__copyright {
+.app-footer-copyright {
   font-size: 12px;
   font-weight: $font-weight-medium;
   color: $text-secondary;
@@ -47,7 +47,7 @@
   }
 }
 
-.app-footer__links {
+.app-footer-links {
   display: flex;
   align-items: center;
   gap: $spacing-lg;

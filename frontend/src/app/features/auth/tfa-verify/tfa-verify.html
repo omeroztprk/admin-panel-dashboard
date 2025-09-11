@@ -1,5 +1,5 @@
 <div class="auth-page-wrap">
-  <div class="app-card auth-card with-accent narrow">
+  <div class="app-card with-accent narrow">
     <div class="tfa-header">
       <div class="tfa-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -17,7 +17,6 @@
       <div class="input-group">
         <label for="code">Verification Code</label>
         <div class="input-wrapper" [class.error]="tfaForm.get('code')?.touched && tfaForm.get('code')?.invalid">
-          <input id="code" type="text" formControlName="code" maxlength="6" placeholder="000000" class="code-input">
           <span class="icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
               stroke-linejoin="round">
@@ -27,6 +26,8 @@
               <path d="M7 16h4" />
             </svg>
           </span>
+          <input id="code" type="text" formControlName="code" maxlength="6" placeholder="000000" class="code-input"
+            inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*">
         </div>
         <div class="field-error" *ngIf="tfaForm.get('code')?.touched && tfaForm.get('code')?.invalid">
           <div *ngIf="tfaForm.get('code')?.errors?.['required']">Verification code is required</div>

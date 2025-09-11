@@ -1,5 +1,5 @@
 <div class="auth-page-wrap">
-  <div class="app-card auth-card with-accent wide">
+  <div class="app-card with-accent wide">
     <h2 class="card-title gradient-text">Register</h2>
     <div class="card-subtitle">Create your new account</div>
 
@@ -9,7 +9,6 @@
           <label for="firstName">First Name</label>
           <div class="input-wrapper"
             [class.error]="registerForm.get('firstName')?.touched && registerForm.get('firstName')?.invalid">
-            <input id="firstName" type="text" formControlName="firstName" placeholder="John">
             <span class="icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                 stroke-linejoin="round">
@@ -17,6 +16,7 @@
                 <circle cx="12" cy="7" r="4" />
               </svg>
             </span>
+            <input id="firstName" type="text" formControlName="firstName" placeholder="John" autocomplete="given-name">
           </div>
           <div class="field-error"
             *ngIf="registerForm.get('firstName')?.touched && registerForm.get('firstName')?.invalid">
@@ -32,7 +32,6 @@
           <label for="lastName">Last Name</label>
           <div class="input-wrapper"
             [class.error]="registerForm.get('lastName')?.touched && registerForm.get('lastName')?.invalid">
-            <input id="lastName" type="text" formControlName="lastName" placeholder="Doe">
             <span class="icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                 stroke-linejoin="round">
@@ -40,6 +39,7 @@
                 <circle cx="12" cy="7" r="4" />
               </svg>
             </span>
+            <input id="lastName" type="text" formControlName="lastName" placeholder="Doe" autocomplete="family-name">
           </div>
           <div class="field-error"
             *ngIf="registerForm.get('lastName')?.touched && registerForm.get('lastName')?.invalid">
@@ -56,7 +56,6 @@
         <label for="email">Email</label>
         <div class="input-wrapper"
           [class.error]="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
-          <input id="email" type="email" formControlName="email" placeholder="you@example.com">
           <span class="icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
               stroke-linejoin="round">
@@ -64,6 +63,8 @@
               <polyline points="2,6 12,13 22,6" />
             </svg>
           </span>
+          <input id="email" type="email" formControlName="email" placeholder="you@example.com" autocomplete="email"
+            spellcheck="false">
         </div>
         <div class="field-error" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
           <div *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</div>
@@ -75,8 +76,6 @@
         <label for="password">Password</label>
         <div class="input-wrapper"
           [class.error]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
-          <input id="password" [type]="showPassword() ? 'text':'password'" formControlName="password"
-            placeholder="••••••••">
           <span class="icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
               stroke-linejoin="round">
@@ -84,6 +83,8 @@
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
           </span>
+          <input id="password" [type]="showPassword() ? 'text':'password'" formControlName="password"
+            placeholder="••••••••" autocomplete="new-password">
           <button type="button" class="password-toggle" (click)="togglePassword()"
             [attr.aria-label]="showPassword() ? 'Hide password':'Show password'">
             <svg *ngIf="!showPassword()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
