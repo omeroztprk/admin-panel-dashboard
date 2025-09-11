@@ -41,7 +41,10 @@ export class Sidebar {
     {
       id: 'g-general',
       title: 'General',
-      items: [{ id: 'dashboard', label: 'Dashboard', route: '/dashboard', icon: 'dashboard', exact: true }]
+      items: [
+        { id: 'dashboard', label: 'Dashboard', route: '/dashboard', icon: 'dashboard', exact: true },
+        { id: 'statistics', label: 'Statistics', route: '/statistics', icon: 'stats', permissions: ['user:read'] }
+      ]
     },
     {
       id: 'g-account',
@@ -127,6 +130,7 @@ export class Sidebar {
 
   iconMap: Record<string, string> = {
     dashboard: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>',
+    stats: '<path d="M4 20V10M10 20V4M16 20v-6M22 20V8"/>',
     profile: '<circle cx="12" cy="7" r="4"/><path d="M6 21v-2a6 6 0 0 1 12 0v2"/>',
     sessions: '<rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V8a5 5 0 0 1 10 0v3"/>',
     users: '<circle cx="9" cy="7" r="4"/><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="17" cy="11" r="3"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/>',
@@ -136,6 +140,7 @@ export class Sidebar {
     categories: '<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>',
     fallback: '<rect x="4" y="4" width="16" height="16" rx="4"/>'
   };
+
 
   private iconCache = new Map<string, SafeHtml>();
 
