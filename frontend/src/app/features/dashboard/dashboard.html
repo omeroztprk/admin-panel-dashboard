@@ -1,37 +1,213 @@
 <div class="page-wrap">
   <h1 class="page-title gradient-text">Dashboard</h1>
 
-  <div *ngIf="user() as u" class="app-card with-accent" aria-label="Current user profile">
-    <div class="identity-section">
-      <div class="app-avatar" aria-label="Avatar">{{ u.avatar }}</div>
-      <div class="identity-info">
-        <div class="name">{{ u.firstName }} {{ u.lastName }}</div>
-        <div class="email">{{ u.email }}</div>
+  <div class="dashboard-grid">
+    <div class="app-card with-accent quick-actions-card" aria-label="Quick actions">
+      <div class="card-header">
+        <h2 class="card-title gradient-text">Quick Actions</h2>
+      </div>
+      <div class="quick-grid">
+        <a class="quick-card" routerLink="/users/new" aria-label="Create User">
+          <span class="quick-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.75" stroke-linecap="round"
+              stroke-linejoin="round">
+              <circle cx="9" cy="7" r="4" />
+              <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" />
+              <circle cx="17" cy="11" r="3" />
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+            </svg>
+          </span>
+          <span class="quick-label">Create User</span>
+        </a>
+
+        <a class="quick-card" routerLink="/roles/new" aria-label="Create Role">
+          <span class="quick-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.75" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M12 3 5 6v5c0 5 3.6 9.4 7 10 3.4-.6 7-5 7-10V6l-7-3Z" />
+              <path d="M9.5 12l2 2 3.5-3.5" />
+            </svg>
+          </span>
+          <span class="quick-label">Create Role</span>
+        </a>
+
+        <a class="quick-card" routerLink="/permissions/new" aria-label="Create Permission">
+          <span class="quick-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.75" stroke-linecap="round"
+              stroke-linejoin="round">
+              <circle cx="9" cy="12" r="4" />
+              <path d="M13 12h7v2h-2v2h-2v-2h-3z" />
+            </svg>
+          </span>
+          <span class="quick-label">Create Permission</span>
+        </a>
+
+        <a class="quick-card" routerLink="/categories/new" aria-label="Create Category">
+          <span class="quick-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.75" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="4" y="4" width="6" height="6" rx="1" />
+              <rect x="14" y="4" width="6" height="6" rx="1" />
+              <rect x="4" y="14" width="6" height="6" rx="1" />
+              <rect x="14" y="14" width="6" height="6" rx="1" />
+            </svg>
+          </span>
+          <span class="quick-label">Create Category</span>
+        </a>
       </div>
     </div>
 
-    <div class="divider"></div>
+    <!-- Profile -->
+    <!--<div *ngIf="user() as u" class="app-card with-accent profile-card" aria-label="Current user profile">
+      <div class="card-header">
+        <h2 class="card-title gradient-text">Profile</h2>
+      </div>
 
-    <div class="meta-grid">
-      <div class="meta-item" *ngIf="u.createdAt">
-        <span class="label">Created</span>
-        <span class="value">{{ u.createdAt | date:'mediumDate' }}</span>
+      <div class="identity-section">
+        <div class="app-avatar" aria-label="Avatar">{{ u.avatar }}</div>
+        <div class="identity-info">
+          <div class="name">{{ u.firstName }} {{ u.lastName }}</div>
+          <div class="email">{{ u.email }}</div>
+        </div>
       </div>
-      <div class="meta-item" *ngIf="u.updatedAt">
-        <span class="label">Updated</span>
-        <span class="value">{{ u.updatedAt | date:'mediumDate' }}</span>
+
+      <div class="divider"></div>
+
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="label">Status</span>
+          <span class="chip chip--success" [class.inactive]="!u.isActive">
+            {{ u.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </div>
+        <div class="meta-item" *ngIf="u.createdAt">
+          <span class="label">Created</span>
+          <span class="value">{{ u.createdAt | date:'mediumDate' }}</span>
+        </div>
+        <div class="meta-item" *ngIf="u.updatedAt">
+          <span class="label">Updated</span>
+          <span class="value">{{ u.updatedAt | date:'mediumDate' }}</span>
+        </div>
+        <div class="meta-item" *ngIf="u.lastLogin">
+          <span class="label">Last Login</span>
+          <span class="value">{{ u.lastLogin | date:'short' }}</span>
+        </div>
       </div>
-      <div class="meta-item" *ngIf="u.lastLogin">
-        <span class="label">Last Login</span>
-        <span class="value">{{ u.lastLogin | date:'short' }}</span>
+
+      <div class="roles-section" *ngIf="roleLabels().length">
+        <div class="label">Roles</div>
+        <div class="chip-row">
+          <span class="chip" *ngFor="let r of roleLabels()">{{ r }}</span>
+        </div>
       </div>
+    </div>-->
+
+    <div class="app-card with-accent" aria-label="System health status">
+      <div class="card-header">
+        <h2 class="card-title gradient-text">System Health</h2>
+        <div class="header-actions">
+          <button class="btn--ghost" type="button" (click)="loadHealth()" [disabled]="healthLoading()">Refresh</button>
+        </div>
+      </div>
+
+      <div class="alert alert-error" *ngIf="healthError()" aria-live="assertive">
+        <span class="alert__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="15" y1="9" x2="9" y2="15" />
+            <line x1="9" y1="9" x2="15" y2="15" />
+          </svg>
+        </span>
+        {{ healthError() }}
+      </div>
+
+      <ng-container *ngIf="!healthLoading() && health() as h; else healthLoadingTpl">
+        <div class="health-grid">
+          <div class="health-item">
+            <span class="label">Status</span>
+            <span class="value" [class.ok]="h.status === 'OK'">{{ h.status }}</span>
+          </div>
+          <div class="health-item">
+            <span class="label">Environment</span>
+            <span class="value">{{ h.environment }}</span>
+          </div>
+          <div class="health-item">
+            <span class="label">Database</span>
+            <span class="value" [class.ok]="h.services.database==='connected'"
+              [class.down]="h.services.database!=='connected'">{{ h.services.database }}</span>
+          </div>
+          <div class="health-item">
+            <span class="label">Uptime</span>
+            <span class="value">{{ uptimeFmt() }}</span>
+          </div>
+          <div class="health-item">
+            <span class="label">Memory Used</span>
+            <span class="value">{{ h.services.memory.used }}</span>
+          </div>
+          <div class="health-item">
+            <span class="label">Memory Total</span>
+            <span class="value">{{ h.services.memory.total }}</span>
+          </div>
+          <div class="health-item">
+            <span class="label">Timestamp</span>
+            <span class="value">{{ h.timestamp | date:'short' }}</span>
+          </div>
+        </div>
+      </ng-container>
     </div>
 
-    <div class="roles-section" *ngIf="roleLabels().length">
-      <div class="label">Roles</div>
-      <div class="chip-row">
-        <span class="chip" *ngFor="let r of roleLabels()">{{ r }}</span>
+    <div class="app-card with-accent" aria-label="Recent audit logs">
+      <div class="card-header">
+        <h2 class="card-title gradient-text">Recent Audit Logs</h2>
+        <div class="header-actions">
+          <button class="btn--ghost" type="button" (click)="loadRecentAuditLogs()"
+            [disabled]="recentLoading()">Refresh</button>
+        </div>
       </div>
+
+      <div class="alert alert-error" *ngIf="recentError()" aria-live="assertive">
+        <span class="alert__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="15" y1="9" x2="9" y2="15" />
+            <line x1="9" y1="9" x2="15" y2="15" />
+          </svg>
+        </span>
+        {{ recentError() }}
+      </div>
+
+      <ng-container *ngIf="!recentLoading(); else recentAuditLoadingTpl">
+        <ul class="recent-audit-list" *ngIf="recentLogs().length; else noRecent">
+          <li *ngFor="let l of recentLogs(); trackBy: trackById">
+            <span class="user truncate" [title]="auditUserLabel(l)">{{ auditUserLabel(l) }}</span>
+            <span class="sep">:</span>
+            <span class="action">{{ l.action }}</span>
+            <span class="resource muted">{{ l.resource }}</span>
+            <span [class]="statusChip(l)"><span class="dot"></span>{{ l.status }}</span>
+            <span class="time">{{ l.createdAt | date:'shortTime' }}</span>
+          </li>
+        </ul>
+        <ng-template #noRecent>
+          <div class="muted small">No recent activity.</div>
+        </ng-template>
+      </ng-container>
     </div>
   </div>
 </div>
+
+<ng-template #healthLoadingTpl>
+  <div class="skeleton">
+    <div class="skeleton-line wide"></div>
+    <div class="skeleton-line"></div>
+    <div class="skeleton-line"></div>
+    <div class="skeleton-line half"></div>
+  </div>
+</ng-template>
+
+<ng-template #recentAuditLoadingTpl>
+  <div class="skeleton">
+    <div class="skeleton-line wide"></div>
+    <div class="skeleton-line"></div>
+    <div class="skeleton-line"></div>
+  </div>
+</ng-template>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { StatisticsService, StatsResult } from '../../core/services/statistics.service';
 import { Router } from '@angular/router';
 import { finalize, take } from 'rxjs/operators';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-stats',
@@ -28,12 +29,25 @@ export class Stats implements OnInit {
 
   maxRoleCount = computed(() => {
     const d = this.data();
-    if (!d || !d.roleDistribution.length) return 0;
-    return d.roleDistribution[0].count;
+    if (!d || !d.roleDistribution?.length) return 0;
+    return d.roleDistribution.reduce((m, x) => Math.max(m, x.count), 0);
   });
 
   ngOnInit(): void {
     this.load();
+  }
+
+  private formatError(err: unknown): string {
+    const fallback = 'Failed to load statistics';
+    if (!err) return fallback;
+    if (err instanceof HttpErrorResponse) {
+      if (err.status === 0) return fallback;
+      const backendMsg =
+        (err.error && (err.error.message || err.error.error?.message)) || '';
+      return backendMsg || err.message || fallback;
+    }
+    const anyErr = err as any;
+    return anyErr?.error?.error?.message || anyErr?.message || fallback;
   }
 
   load(): void {
@@ -43,8 +57,7 @@ export class Stats implements OnInit {
       .pipe(take(1), finalize(() => this.loading.set(false)))
       .subscribe({
         next: (res: StatsResult) => this.data.set(res),
-        error: (err: any) =>
-          this.error.set(err?.error?.error?.message || err?.message || 'Failed to load statistics')
+        error: (err: unknown) => this.error.set(this.formatError(err))
       });
   }
 

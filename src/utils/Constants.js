@@ -13,6 +13,7 @@ const RESOURCES = {
   SESSION: 'session',
   AUDIT: 'audit',
   CATEGORY: 'category',
+  STAT: 'stat',
 };
 
 const ACTIONS = {
@@ -51,6 +52,8 @@ const PERMISSIONS = {
   CATEGORY_CREATE: 'category:create',
   CATEGORY_UPDATE: 'category:update',
   CATEGORY_DELETE: 'category:delete',
+
+  STAT_READ: 'stat:read',
 };
 
 module.exports = { ROLES, RESOURCES, ACTIONS, AUTH_ACTIONS, PERMISSIONS };

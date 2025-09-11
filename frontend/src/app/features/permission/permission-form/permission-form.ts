@@ -31,7 +31,7 @@ export class PermissionForm implements OnInit {
   id = signal<string | null>(null);
   fromDetail = signal(false);
 
-  readonly resources = ['user', 'role', 'permission', 'audit', 'category'] as const;
+  readonly resources = ['user', 'role', 'permission', 'audit', 'category', 'stat'] as const;
   readonly actions = ['create', 'read', 'update', 'delete'] as const;
 
   isEdit = computed(() => !!this.id());

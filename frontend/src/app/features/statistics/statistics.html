@@ -118,7 +118,7 @@
 
           <div class="chart-card" role="group" aria-label="Users by role bar chart">
             <h2 class="chart-title">Users by Role</h2>
-            <div *ngIf="d.roleDistribution.length; else noRolesDist" class="bars">
+            <div *ngIf="d.roleDistribution?.length; else noRolesDist" class="bars">
               <div class="bar-row" *ngFor="let r of d.roleDistribution; trackBy: trackRole">
                 <span class="bar-label truncate" [title]="r.role">{{ r.role }}</span>
                 <div class="bar-track">

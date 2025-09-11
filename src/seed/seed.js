@@ -35,6 +35,8 @@ const logger = require('../utils/Logger');
       [PERMISSIONS.CATEGORY_CREATE]: 'Creating a new category',
       [PERMISSIONS.CATEGORY_UPDATE]: 'Updating categories',
       [PERMISSIONS.CATEGORY_DELETE]: 'Deleting categories',
+
+      [PERMISSIONS.STAT_READ]: 'Viewing system statistics and reports'
     };
 
     const systemPermissions = [];
@@ -76,7 +78,8 @@ const logger = require('../utils/Logger');
           PERMISSIONS.ROLE_READ, PERMISSIONS.ROLE_CREATE, PERMISSIONS.ROLE_UPDATE,
           PERMISSIONS.PERMISSION_READ, PERMISSIONS.PERMISSION_CREATE, PERMISSIONS.PERMISSION_UPDATE,
           PERMISSIONS.AUDIT_READ,
-          PERMISSIONS.CATEGORY_READ, PERMISSIONS.CATEGORY_CREATE, PERMISSIONS.CATEGORY_UPDATE, PERMISSIONS.CATEGORY_DELETE
+          PERMISSIONS.CATEGORY_READ, PERMISSIONS.CATEGORY_CREATE, PERMISSIONS.CATEGORY_UPDATE, PERMISSIONS.CATEGORY_DELETE,
+          PERMISSIONS.STAT_READ
         )
       },
       {
@@ -86,7 +89,8 @@ const logger = require('../utils/Logger');
           PERMISSIONS.USER_READ, PERMISSIONS.USER_UPDATE,
           PERMISSIONS.ROLE_READ,
           PERMISSIONS.PERMISSION_READ,
-          PERMISSIONS.CATEGORY_READ
+          PERMISSIONS.CATEGORY_READ,
+          PERMISSIONS.STAT_READ
         )
       },
       {

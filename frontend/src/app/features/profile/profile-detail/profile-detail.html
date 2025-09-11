@@ -18,8 +18,8 @@
     <div class="alert alert-success" *ngIf="success()" aria-live="polite">
       <span class="alert__icon" aria-hidden="true">
         <svg viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10"/>
-          <path d="M8 12l3 3 6-6"/>
+          <circle cx="12" cy="12" r="10" />
+          <path d="M8 12l3 3 6-6" />
         </svg>
       </span>
       {{ success() }}
@@ -36,6 +36,12 @@
     <div class="divider"></div>
 
     <div class="meta-grid" *ngIf="user() as u">
+      <div class="meta-item">
+        <span class="label">Status</span>
+        <span class="chip chip--success" [class.inactive]="!u.isActive">
+          {{ u.isActive ? 'Active' : 'Inactive' }}
+        </span>
+      </div>
       <div class="meta-item" *ngIf="u.createdAt">
         <span class="label">Created</span>
         <span class="value">{{ u.createdAt | date:'mediumDate' }}</span>

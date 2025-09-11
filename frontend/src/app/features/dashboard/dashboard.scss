@@ -1,1 +1,201 @@
-@use "../../../styles/core" as *; 
+@use "../../../styles/core" as *;
+
+.dashboard-grid {
+  display: grid;
+  gap: $spacing-xl;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+
+  @media (max-width: 1000px) {
+    gap: $spacing-lg;
+  }
+
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
+    gap: $spacing-lg;
+  }
+}
+
+.profile-card {
+  grid-column: 1 / -1;
+}
+
+
+.health-grid {
+  display: grid;
+  gap: $spacing-lg;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  margin-top: $spacing-md;
+
+  @media (max-width: 600px) {
+    gap: $spacing-md;
+  }
+}
+
+.health-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: fadeIn .4s ease;
+
+  .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: $text-secondary;
+    font-weight: $font-weight-medium;
+  }
+
+  .value {
+    font-size: 14px;
+    font-weight: $font-weight-medium;
+    color: $text-color;
+
+    &.ok {
+      color: $success-color;
+    }
+
+    &.down {
+      color: $error-color;
+    }
+  }
+}
+
+.recent-audit-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px 14px;
+    border: 1px solid rgba($primary-color, 0.08);
+    border-radius: $border-radius;
+    background: $card-background;
+    font-size: 13px;
+    transition: border-color .25s ease, background .25s ease;
+
+    &:hover {
+      border-color: rgba($primary-color, 0.16);
+      background: linear-gradient(0deg, rgba($primary-color, 0.04), rgba($primary-color, 0.04)), $card-background;
+    }
+
+    .user {
+      font-weight: $font-weight-medium;
+      color: $text-color;
+      max-width: 160px;
+    }
+
+    .sep {
+      color: $text-secondary;
+      font-size: 12px;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .action {
+      font-weight: $font-weight-medium;
+      color: $primary-color;
+    }
+
+    .resource {
+      font-size: 12px;
+    }
+
+    .time {
+      margin-left: 0;
+      order: 99;
+      white-space: nowrap;
+      font-size: 11px;
+      font-weight: $font-weight-medium;
+      color: $text-secondary;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .chip {
+      margin-left: auto;
+      order: 98;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .recent-audit-list li {
+
+    .chip,
+    .time {
+      width: auto;
+    }
+  }
+}
+
+/* Quick Actions */
+.quick-actions-card {
+  grid-column: 1 / -1;
+}
+
+.quick-grid {
+  display: grid;
+  gap: $spacing-lg;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.quick-card {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  border: 1px solid rgba($primary-color, 0.08);
+  border-radius: $border-radius;
+  background: $card-background;
+  color: inherit;
+  text-decoration: none;
+  transition: transform .25s ease, border-color .25s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba($primary-color, 0.16);
+  }
+
+  &:focus-visible {
+    outline: 0;
+    box-shadow: 0 0 0 4px rgba($primary-color, .15);
+  }
+}
+
+.quick-icon {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba($primary-color, 0.08);
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.quick-label {
+  font-weight: $font-weight-medium;
+  color: $text-color;
+}
+
+@media (max-width: 480px) {
+  .quick-card {
+    padding: $spacing-sm $spacing-md;
+  }
+
+  .quick-icon {
+    width: 24px;
+    height: 24px;
+  }
+}

@@ -34,18 +34,6 @@
             </div>
           </div>
           <div class="input-group">
-            <label for="fAction">Action</label>
-            <div class="input-wrapper">
-              <span class="icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                  <path d="M5 12h14" />
-                  <path d="M12 5l7 7-7 7" />
-                </svg>
-              </span>
-              <input id="fAction" type="text" formControlName="action" placeholder="e.g. login">
-            </div>
-          </div>
-          <div class="input-group">
             <label for="fResource">Resource</label>
             <div class="input-wrapper">
               <span class="icon" aria-hidden="true">
@@ -55,6 +43,18 @@
                 </svg>
               </span>
               <input id="fResource" type="text" formControlName="resource" placeholder="e.g. user, role">
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="fAction">Action</label>
+            <div class="input-wrapper">
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M5 12h14" />
+                  <path d="M12 5l7 7-7 7" />
+                </svg>
+              </span>
+              <input id="fAction" type="text" formControlName="action" placeholder="e.g. login">
             </div>
           </div>
         </div>
@@ -127,8 +127,8 @@
         <div class="data-table">
           <div class="data-head">
             <div class="data-cell">User</div>
-            <div class="data-cell">Action</div>
             <div class="data-cell">Resource</div>
+            <div class="data-cell">Action</div>
             <div class="data-cell">Date</div>
             <div class="data-cell">Status</div>
             <div class="data-cell">Actions</div>
@@ -136,13 +136,13 @@
 
           <div class="data-row" *ngFor="let l of logs(); trackBy: trackById">
             <div class="data-cell" data-label="User">
-              <span class="truncate muted">{{ userLabel(l) }}</span>
-            </div>
-            <div class="data-cell" data-label="Action">
-              <span class="truncate">{{ l.action }}</span>
+              <span class="truncate">{{ userLabel(l) }}</span>
             </div>
             <div class="data-cell" data-label="Resource">
-              <span class="truncate">{{ l.resource }}</span>
+              <span class="chip">{{ l.resource }}</span>
+            </div>
+            <div class="data-cell" data-label="Action">
+              <span class="chip">{{ l.action }}</span>
             </div>
             <div class="data-cell" data-label="Date">
               <span class="truncate">{{ l.createdAt | date:'short' }}</span>

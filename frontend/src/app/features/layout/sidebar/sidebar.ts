@@ -43,7 +43,7 @@ export class Sidebar {
       title: 'General',
       items: [
         { id: 'dashboard', label: 'Dashboard', route: '/dashboard', icon: 'dashboard', exact: true },
-        { id: 'statistics', label: 'Statistics', route: '/statistics', icon: 'stats', permissions: ['user:read'] }
+        { id: 'statistics', label: 'Statistics', route: '/statistics', icon: 'stats', permissions: ['stat:read'] }
       ]
     },
     {

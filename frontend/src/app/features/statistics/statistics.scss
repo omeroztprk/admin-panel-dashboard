@@ -20,17 +20,6 @@
   animation: fadeIn 0.5s ease;
   will-change: transform, box-shadow;
 
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(90deg, rgba($primary-color, 0.18), rgba($primary-color, 0.05) 40%, rgba($primary-color, 0.18));
-    opacity: 0;
-    transition: opacity .4s ease;
-    z-index: -1;
-  }
-
   &::after {
     content: '';
     position: absolute;
@@ -82,15 +71,9 @@
 
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 14px rgba($primary-color, 0.18);
-
-    &::before {
-      opacity: 1;
-    }
   }
 
-  transition: transform .45s cubic-bezier(.16, .8, .24, 1),
-  box-shadow .45s ease;
+  transition: transform .45s cubic-bezier(.16, .8, .24, 1);
 }
 
 .chart-section {
@@ -116,11 +99,18 @@
 }
 
 .donut-ring {
-  stroke: rgba($text-secondary, 0.18);
+  fill: none;
+  stroke: rgba($text-secondary, 0.14);
+  stroke-width: 6;
 }
 
 .donut-segment-active {
-  filter: drop-shadow(0 2px 4px rgba($success-color, 0.35));
+  fill: none;
+  stroke: $success-color;
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dasharray .5s ease;
+  filter: none;
 }
 
 .donut-layout {
@@ -293,10 +283,6 @@
   color: $text-secondary;
   min-width: 24px;
   text-align: right;
-}
-
-.small {
-  font-size: 12px;
 }
 
 .legend-footer {
