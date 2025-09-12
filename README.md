@@ -2,23 +2,23 @@
 
 ## Description
 
-A comprehensive admin panel dashboard built with Node.js, Express.js, and MongoDB. This application provides a complete role-based access control (RBAC) system with user management, session handling, audit logging, category management, authentication features, and optional two-factor authentication (email-based verification codes). The system is designed for secure administration with JWT-based authentication, permission management, and comprehensive audit trails.
+Admin Panel Dashboard is a full-stack administration platform built with **Node.js, Express, and MongoDB** on the backend, and **Angular** on the frontend.
+It provides secure JWT-based authentication, role-based access control (RBAC), permission management, audit logging, and system health monitoring.
+The Angular frontend delivers a responsive, card-based UI that follows global design standards, offering dashboards, activity insights,and CRUD management modules.
+
+The project is designed with **scalability, security, and maintainability** in mind, making it suitable for professional administration needs.
 
 ## Features
 
-- **User Management**: Complete CRUD operations for user accounts with role assignments
-- **Role-Based Access Control (RBAC)**: Flexible permission system with role and permission management
-- **JWT Authentication**: Secure authentication with access and refresh tokens
-- **Two-Factor Authentication (TFA)**: Optional Gmail-based verification code flow before issuing tokens
-- **Session Management**: Track and manage user sessions with device information
-- **Audit Logging**: Comprehensive logging of all system activities and user actions
-- **Permission System**: Granular permissions for different resources and actions
-- **Category Management**: Manage categories with CRUD operations and parent-child hierarchy
-- **Input Validation**: Robust validation using express-validator
-- **Rate Limiting**: Protection against brute force attacks on authentication endpoints
-- **Error Handling**: Centralized error handling with detailed error responses
-- **Database Seeding**: Automated setup of initial admin users and permissions
-- **Health Check**: System health monitoring endpoint
+- **Authentication**: Secure login with JWT access/refresh tokens and optional 2FA
+- **RBAC**: Role and permission management with fine-grained access control
+- **CRUD Modules**: Full management of Users, Roles, Permissions, and Categories
+- **Dashboard**: Quick Actions, System Health, Recent Audit Logs
+- **Statistics**: Totals, active/inactive users, and users by role
+- **Audit Logs**: Detailed tracking of user actions and system activities
+- **Sessions**: Session tracking, management, and audit trail
+- **List Views**: Pagination, filtering, and sorting for efficient data handling
+- **UI/UX**: Consistent, responsive, card-based design with global style guidelines
 
 ## Installation
 
@@ -28,12 +28,12 @@ A comprehensive admin panel dashboard built with Node.js, Express.js, and MongoD
    cd admin-panel-dashboard
    ```
 
-2. **Install dependencies**
+2. **Install backend dependencies**
    ```bash
    npm install
    ```
 
-3. **Set up environment variables**
+3. **Set up backend environment**
    ```bash
    cp .env.example .env
    ```
@@ -53,29 +53,49 @@ A comprehensive admin panel dashboard built with Node.js, Express.js, and MongoD
    TFA_MAX_ATTEMPTS=5
    GMAIL_USER=your-gmail-address@gmail.com
    GMAIL_PASS=your-gmail-app
+   CORS_ORIGIN=http://localhost:4200
    ```
 
-4. **Start MongoDB**
-   Make sure MongoDB is running on your system or update the `MONGO_URI` to point to your MongoDB instance.
-
-5. **Seed the database**
+4. **Start MongoDB and seed data**
    ```bash
    npm run seed
    ```
 
+5. **Install frontend dependencies**
+   ```bash
+   cd frontend
+   npm install
+   ```
+
+6. **Set up frontend environment**
+   ```bash
+   cp src/environments/environment.example.ts src/environments/environment.ts
+   ```
+   By default, the environment.ts file includes settings such as:
+   ```ts
+   export const environment = {
+      production: false,
+      apiUrl: 'http://localhost:3000/api'
+   };
+   ```
+
 ## Running the Application
 
-**Development Mode:**
+**Start the backend (Express API):**
 ```bash
-npm run dev
+npm run dev   # development mode with nodemon
+npm start     # production mode
 ```
 
-**Production Mode:**
+The backend will be available at http://localhost:3000.
+
+**Start the frontend (Angular app):**
 ```bash
-npm start
+cd frontend
+ng serve --open
 ```
 
-The application will be available at `http://localhost:3000` (or your configured PORT).
+The frontend will be available at http://localhost:4200.
 
 **Health Check:**
 ```bash
