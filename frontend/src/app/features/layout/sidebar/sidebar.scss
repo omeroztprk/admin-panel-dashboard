@@ -102,13 +102,39 @@
     line-height: 1.1;
   }
 
-  .app-avatar {
-    img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: contain;
-    }
+  .app-logo {
+    width: 72px;
+    height: 72px;
+    transition: transform 0.3s ease;
+  }
+
+  .app-logo:hover {
+    transform: scale(1.05);
+  }
+
+  .app-logo.logo-sm {
+    width: 40px;
+    height: 40px;
+  }
+
+  .app-logo.logo-md {
+    width: 56px;
+    height: 56px;
+  }
+
+  .app-logo.logo-lg {
+    width: 72px;
+    height: 72px;
+  }
+
+  .app-logo.logo-xl {
+    width: 96px;
+    height: 96px;
+  }
+
+  .app-logo img {
+    width: 100%;
+    height: 100%;
   }
 }
 

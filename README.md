@@ -24,7 +24,7 @@ The project is designed with **scalability, security, and maintainability** in m
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/OmerOztprk/admin-panel-dashboard.git
+   git clone https://github.com/omeroztprk/admin-panel-dashboard.git
    cd admin-panel-dashboard
    ```
 
