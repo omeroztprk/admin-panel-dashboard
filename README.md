@@ -2,17 +2,18 @@
 
 ## Description
 
-Admin Panel Dashboard is a full-stack administration platform built with **Node.js, Express, and MongoDB** on the backend, and **Angular** on the frontend.
-It provides secure JWT-based authentication, role-based access control (RBAC), permission management, audit logging, and system health monitoring.
-The Angular frontend delivers a responsive, card-based UI that follows global design standards, offering dashboards, activity insights,and CRUD management modules.
+Admin Panel Dashboard is a full-stack administration platform built with **Node.js**, **Express**, and **MongoDB** on the backend, and **Angular** on the frontend.
 
-The project is designed with **scalability, security, and maintainability** in mind, making it suitable for professional administration needs.
+It provides a modular architecture where all core entities — including Users, Roles, Permissions, Categories, and Customers — are fully CRUD-manageable through dedicated components. In addition, the system integrates **a customer-focused chatbot assistant**, allowing customer-specific prompts and interactions to be managed directly within the platform.
+
+With its secure authentication, flexible role-based access control, and scalable design, the Admin Panel Dashboard ensures that administrative tasks and customer management are unified in a single, professional interface.
 
 ## Features
 
 - **Authentication**: Secure login with JWT access/refresh tokens and optional 2FA
 - **RBAC**: Role and permission management with fine-grained access control
-- **CRUD Modules**: Full management of Users, Roles, Permissions, and Categories
+- **CRUD Modules**: Full management of Users, Roles, Permissions, Categories, and Customers
+- **Chatbot**: Customer-focused chatbot system with toggle-based UI
 - **Dashboard**: Quick Actions, System Health, Recent Audit Logs
 - **Statistics**: Totals, active/inactive users, and users by role
 - **Audit Logs**: Detailed tracking of user actions and system activities
