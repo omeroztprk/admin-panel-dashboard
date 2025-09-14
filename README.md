@@ -21,6 +21,45 @@ With its secure authentication, flexible role-based access control, and scalable
 - **List Views**: Pagination, filtering, and sorting for efficient data handling
 - **UI/UX**: Consistent, responsive, card-based design with global style guidelines
 
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="frontend/public/dashboard.png">
+        <img src="frontend/public/dashboard.png" alt="Dashboard" width="260">
+      </a><br/><sub>Dashboard</sub>
+    </td>
+    <td align="center">
+      <a href="frontend/public/statistics.png">
+        <img src="frontend/public/statistics.png" alt="Statistics" width="260">
+      </a><br/><sub>Statistics</sub>
+    </td>
+    <td align="center">
+      <a href="frontend/public/sessions.png">
+        <img src="frontend/public/sessions.png" alt="Sessions" width="260">
+      </a><br/><sub>Sessions</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="frontend/public/customers.png">
+        <img src="frontend/public/customers.png" alt="Customers" width="260">
+      </a><br/><sub>Customers</sub>
+    </td>
+    <td align="center">
+      <a href="frontend/public/customer-details.png">
+        <img src="frontend/public/customer-details.png" alt="Customer Details" width="260">
+      </a><br/><sub>Customer Details</sub>
+    </td>
+    <td align="center">
+      <a href="frontend/public/chatbot.png">
+        <img src="frontend/public/chatbot.png" alt="Chatbot" width="260">
+      </a><br/><sub>Chatbot</sub>
+    </td>
+  </tr>
+</table>
+
 ## Installation
 
 1. **Clone the repository**
