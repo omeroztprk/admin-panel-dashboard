@@ -1,0 +1,40 @@
+<div class="chatbot-container">
+  <button type="button" class="chatbot-toggle" [class.open]="isOpen()" (click)="toggle()" aria-label="Open chat">
+    <svg *ngIf="!isOpen()" class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+    <svg *ngIf="isOpen()" class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  </button>
+
+  <div class="chatbot-panel" *ngIf="isOpen()">
+    <div class="chatbot-header">
+      <div class="chatbot-brand">
+        <div class="app-logo logo-xs"><img src="logo.png" alt="Logo" /></div>
+        <h3 class="chatbot-title">{{ customerName() + ' Assistant' || 'Chat Assistant' }}</h3>
+      </div>
+    </div>
+
+    <div #scroller class="chatbot-messages">
+      <div *ngFor="let m of messages()" class="message" [class.user]="m.role === 'user'"
+        [class.assistant]="m.role === 'assistant'">
+        <div class="bubble">{{ m.content }}</div>
+      </div>
+    </div>
+
+    <form [formGroup]="chatForm" (ngSubmit)="onSubmit()" novalidate class="chatbot-input">
+      <textarea #messageInput class="chat-textarea" placeholder="Type a message..." rows="1" formControlName="message"
+        (input)="autoResize($event)" (keydown.enter)="onEnter($event)"></textarea>
+
+      <button type="submit" class="send-btn" [disabled]="chatForm.invalid || streaming()" aria-label="Send message">
+        <svg *ngIf="!streaming()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13" />
+          <polygon points="22,2 15,22 11,13 2,9" />
+        </svg>
+        <span *ngIf="streaming()" class="loading-spinner"></span>
+      </button>
+    </form>
+  </div>
+</div>

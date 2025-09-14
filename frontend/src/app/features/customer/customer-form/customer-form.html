@@ -1,0 +1,62 @@
+<div class="page-wrap">
+  <h1 class="page-title gradient-text">{{ title() }}</h1>
+
+  <div class="app-card with-accent">
+    <div class="card-header">
+      <button class="back-btn" type="button" (click)="goBack()" aria-label="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <span>Back</span>
+      </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="input-group">
+        <label for="name">Customer Name</label>
+        <div class="input-wrapper" [class.error]="form.get('name')?.touched && form.get('name')?.invalid">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+            </svg>
+          </span>
+          <input id="name" type="text" formControlName="name" placeholder="Enter customer name">
+        </div>
+        <div class="field-error" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">
+          <div *ngIf="form.get('name')?.errors?.['required']">Customer name is required</div>
+          <div *ngIf="form.get('name')?.errors?.['minlength']">Customer name must be at least 2 characters</div>
+          <div *ngIf="form.get('name')?.errors?.['maxlength']">Customer name must not exceed 100 characters</div>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="prompt">Chatbot Prompt</label>
+        <div class="input-wrapper">
+          <textarea id="prompt" formControlName="prompt" rows="6" 
+            placeholder="Enter custom prompt for this customer's chatbot (optional)"></textarea>
+        </div>
+        <div class="field-error" *ngIf="form.get('prompt')?.touched && form.get('prompt')?.invalid">
+          <div *ngIf="form.get('prompt')?.errors?.['maxlength']">Prompt must not exceed 2000 characters</div>
+        </div>
+      </div>
+
+      <div class="alert alert-error" *ngIf="error()" aria-live="assertive">
+        <span class="alert__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>
+        </span>
+        {{ error() }}
+      </div>
+
+      <button class="btn" type="submit" [disabled]="form.invalid || saving()" [class.loading]="saving()">
+        <span *ngIf="!saving()">{{ submitLabel() }}</span>
+      </button>
+    </form>
+  </div>
+</div>

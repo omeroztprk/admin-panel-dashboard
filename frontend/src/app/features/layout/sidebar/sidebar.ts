@@ -60,7 +60,8 @@ export class Sidebar {
       items: [
         { id: 'users', label: 'Users', route: '/users', icon: 'users', permissions: ['user:read'] },
         { id: 'roles', label: 'Roles', route: '/roles', icon: 'roles', permissions: ['role:read'] },
-        { id: 'permissions', label: 'Permissions', route: '/permissions', icon: 'permissions', permissions: ['permission:read'] }
+        { id: 'permissions', label: 'Permissions', route: '/permissions', icon: 'permissions', permissions: ['permission:read'] },
+        { id: 'customers', label: 'Customers', route: '/customers', icon: 'customers', permissions: ['customer:read'] }
       ]
     },
     {
@@ -138,6 +139,7 @@ export class Sidebar {
     permissions: '<circle cx="9" cy="12" r="4"/><path d="M13 12h7v2h-2v2h-2v-2h-3z"/>',
     audit: '<path d="M8 8h8M8 12h6M8 16h8"/><circle cx="18" cy="8" r="1.5"/><circle cx="18" cy="16" r="1.5"/>',
     categories: '<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>',
+    customers: '<circle cx="9" cy="7" r="4"/><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="17" cy="11" r="3"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/>',
     fallback: '<rect x="4" y="4" width="16" height="16" rx="4"/>'
   };
 

@@ -1,0 +1,25 @@
+@use "../../../../styles/core" as *;
+
+.meta-grid {
+  .meta-item--full {
+    grid-column: 1 / -1;
+  }
+}
+
+.prompt-content {
+  background: rgba($primary-color, 0.02);
+  border: 1px solid rgba($primary-color, 0.08);
+  border-radius: $border-radius;
+  padding: $spacing-md;
+  margin-top: $spacing-xs;
+
+  pre {
+    margin: 0;
+    font-family: $font-family;
+    font-size: 14px;
+    line-height: 1.5;
+    color: $text-color;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+}

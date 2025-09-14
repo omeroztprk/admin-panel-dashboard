@@ -30,4 +30,5 @@ module.exports = {
   GMAIL_USER: process.env.GMAIL_USER,
   GMAIL_PASS: process.env.GMAIL_PASS,
   CORS_ORIGIN: process.env.CORS_ORIGIN || '*',
+  WEBHOOK_URL: process.env.WEBHOOK_URL || 'https://your-webhook-url.com',
 };

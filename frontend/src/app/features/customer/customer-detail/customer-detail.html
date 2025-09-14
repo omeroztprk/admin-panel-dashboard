@@ -1,0 +1,85 @@
+<div class="page-wrap">
+  <h1 class="page-title gradient-text">Customer Details</h1>
+
+  <div class="app-card with-accent" *ngIf="!loading(); else loadingTpl">
+    <div class="card-header">
+      <button class="back-btn" type="button" (click)="goBack()" aria-label="Back">
+        <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <span>Back</span>
+      </button>
+
+      <div class="header-actions">
+        <button class="btn--ghost" type="button" (click)="goEdit()">Edit</button>
+        <button class="btn--ghost btn--danger" type="button" (click)="remove()">Delete</button>
+      </div>
+    </div>
+
+    <div class="alert alert-success" *ngIf="success()" aria-live="polite">
+      <span class="alert__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M8 12l3 3 6-6" />
+        </svg>
+      </span>
+      {{ success() }}
+    </div>
+    <div class="alert alert-error" *ngIf="error()" aria-live="assertive">
+      <span class="alert__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="15" y1="9" x2="9" y2="15" />
+          <line x1="9" y1="9" x2="15" y2="15" />
+        </svg>
+      </span>
+      {{ error() }}
+    </div>
+
+    <div class="identity-section" *ngIf="customer() as c">
+      <div class="app-avatar" aria-label="Avatar">{{ c.name.charAt(0).toUpperCase() }}</div>
+      <div class="identity-info">
+        <div class="name">{{ c.name }}</div>
+      </div>
+    </div>
+
+    <div class="meta-grid" *ngIf="customer() as c">
+      <div class="meta-item">
+        <span class="label">Slug</span>
+        <a class="chip" [routerLink]="['/chatbot', c.slug]" title="Open chatbot for {{ c.name }}">
+          {{ c.slug }}
+        </a>
+      </div>
+      <div class="meta-item" *ngIf="c.createdAt">
+        <span class="label">Created</span>
+        <span class="value">{{ c.createdAt | date:'mediumDate' }}</span>
+      </div>
+      <div class="meta-item" *ngIf="c.updatedAt">
+        <span class="label">Updated</span>
+        <span class="value">{{ c.updatedAt | date:'mediumDate' }}</span>
+      </div>
+
+      <div class="meta-item meta-item--full">
+        <span class="label">Chatbot Prompt</span>
+        <ng-container *ngIf="c.prompt; else noPrompt">
+          <div class="prompt-content">
+            <pre>{{ c.prompt }}</pre>
+          </div>
+        </ng-container>
+        <ng-template #noPrompt>
+          <span class="chip chip--muted">No prompt configured</span>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="app-card with-accent skeleton">
+    <div class="skeleton-line wide"></div>
+    <div class="skeleton-line"></div>
+    <div class="skeleton-line"></div>
+    <div class="skeleton-line half"></div>
+  </div>
+</ng-template>

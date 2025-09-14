@@ -35,14 +35,15 @@ export class RoleForm implements OnInit {
   fromDetail = signal(false);
 
   permissions = signal<Permission[]>([]);
-  resourceOrder = ['user', 'role', 'permission', 'audit', 'category', 'stat'] as const;
+  resourceOrder = ['user', 'role', 'permission', 'audit', 'category', 'stat', 'customer'] as const;
   resourceLabels: Record<string, string> = {
     user: 'User',
     role: 'Role',
     permission: 'Permission',
     audit: 'Audit',
     category: 'Category',
-    stat: 'Statistic'
+    stat: 'Statistic',
+    customer: 'Customer'
   };
 
   groupedPermissions = computed(() => {

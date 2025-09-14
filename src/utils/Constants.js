@@ -14,6 +14,7 @@ const RESOURCES = {
   AUDIT: 'audit',
   CATEGORY: 'category',
   STAT: 'stat',
+  CUSTOMER: 'customer'
 };
 
 const ACTIONS = {
@@ -54,6 +55,11 @@ const PERMISSIONS = {
   CATEGORY_DELETE: 'category:delete',
 
   STAT_READ: 'stat:read',
+
+  CUSTOMER_READ: 'customer:read',
+  CUSTOMER_CREATE: 'customer:create',
+  CUSTOMER_UPDATE: 'customer:update',
+  CUSTOMER_DELETE: 'customer:delete'
 };
 
 module.exports = { ROLES, RESOURCES, ACTIONS, AUTH_ACTIONS, PERMISSIONS };

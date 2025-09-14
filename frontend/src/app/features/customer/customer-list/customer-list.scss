@@ -1,0 +1,6 @@
+@use "../../../../styles/core" as *;
+
+.data-table {
+  --data-cols: minmax(220px, 1fr) minmax(220px, 1fr) 200px;
+  --data-min-width: 960px;
+}

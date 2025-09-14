@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { RoleService } from './role.service';
 import { PermissionService } from './permission.service';
 import { CategoryService } from './category.service';
+import { CustomerService } from './customer.service';
 import { forkJoin, map, switchMap, of, expand, reduce, Observable, catchError } from 'rxjs';
 import { User } from '../models/user.model';
 
@@ -11,6 +12,7 @@ interface RawTotals {
   totalRoles: number;
   totalPermissions: number;
   totalCategories: number;
+  totalCustomers: number;
   users: User[];
 }
 
@@ -19,6 +21,7 @@ export interface StatsResult {
   totalRoles: number;
   totalPermissions: number;
   totalCategories: number;
+  totalCustomers: number;
   activeUsers: number;
   inactiveUsers: number;
   roleDistribution: { role: string; count: number }[];
@@ -30,14 +33,16 @@ export class StatisticsService {
   private rolesApi = inject(RoleService);
   private permsApi = inject(PermissionService);
   private catsApi = inject(CategoryService);
-
+  private custsApi = inject(CustomerService);
+  
   loadStats(maxUserBatch = 500): Observable<StatsResult> {
     const SAFE_LIMIT = Math.min(Math.max(5, maxUserBatch), 100);
     return forkJoin({
       usersMeta: this.usersApi.list(1, SAFE_LIMIT),
       rolesMeta: this.rolesApi.list(1, 5),
       permsMeta: this.permsApi.list(1, 5),
-      catsMeta: this.catsApi.list(1, 5)
+      catsMeta: this.catsApi.list(1, 5),
+      custsMeta: this.custsApi.list(1, 5)
     }).pipe(
       switchMap(metaRes => {
         const totalUsers = metaRes.usersMeta.meta.total;
@@ -49,6 +54,7 @@ export class StatisticsService {
             totalRoles: metaRes.rolesMeta.meta.total,
             totalPermissions: metaRes.permsMeta.meta.total,
             totalCategories: metaRes.catsMeta.meta.total,
+            totalCustomers: metaRes.custsMeta.meta.total,
             users: []
           } as RawTotals);
         }
@@ -70,6 +76,7 @@ export class StatisticsService {
             totalRoles: metaRes.rolesMeta.meta.total,
             totalPermissions: metaRes.permsMeta.meta.total,
             totalCategories: metaRes.catsMeta.meta.total,
+            totalCustomers: metaRes.custsMeta.meta.total,
             users: finalState?.acc || []
           }) as RawTotals)
         );
@@ -95,6 +102,7 @@ export class StatisticsService {
           totalRoles: raw.totalRoles,
           totalPermissions: raw.totalPermissions,
           totalCategories: raw.totalCategories,
+          totalCustomers: raw.totalCustomers,
           activeUsers,
           inactiveUsers,
           roleDistribution

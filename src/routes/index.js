@@ -10,9 +10,11 @@ const sessionRoutes = require('./SessionRoutes');
 const auditLogRoutes = require('./AuditLogRoutes');
 const profileRoutes = require('./ProfileRoutes');
 const categoryRoutes = require('./CategoryRoutes');
+const customerRoutes = require('./CustomerRoutes');
+const { chatRoutes } = require('./ChatRoutes'); // updated
 
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 1000,
   max: 100,
   message: {
     error: {
@@ -50,5 +52,7 @@ router.use('/sessions', sessionRoutes);
 router.use('/audit-logs', auditLogRoutes);
 router.use('/profile', profileRoutes);
 router.use('/categories', categoryRoutes);
+router.use('/customers', customerRoutes);
+router.use('/chat', chatRoutes);
 
 module.exports = router;

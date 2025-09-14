@@ -1,5 +1,5 @@
 @use "sass:color";
-@use "styles/core" as *;
+@use "./core" as *;
 
 /* =========================================================
    GLOBAL STYLESHEET
@@ -371,7 +371,6 @@ body {
     }
   }
 
-  /* Select: same visuals as input */
   select {
     width: 100%;
     padding: 14px $spacing-md 14px 46px;

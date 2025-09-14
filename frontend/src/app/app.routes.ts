@@ -8,6 +8,11 @@ export const routes: Routes = [
       import('./features/auth/auth.routes').then(m => m.authRoutes)
   },
   {
+    path: 'chatbot/:slug',
+    loadComponent: () =>
+      import('./features/chatbot/chatbot').then(m => m.Chatbot)
+  },
+  {
     path: '',
     canActivate: [authGuard],
     loadComponent: () =>
@@ -37,6 +42,11 @@ export const routes: Routes = [
         path: 'users',
         loadChildren: () =>
           import('./features/user/user.routes').then(m => m.userRoutes)
+      },
+      {
+        path: 'customers',
+        loadChildren: () =>
+          import('./features/customer/customer.routes').then(m => m.customerRoutes)
       },
       {
         path: 'roles',
